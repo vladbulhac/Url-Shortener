@@ -104,7 +104,7 @@ dist
 .tern-port
 
 #NodeModules
-./node_modules
+**/node_modules
 
 #Env File
-./env
+*.env
