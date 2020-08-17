@@ -4,7 +4,7 @@ import { ICrudRepository } from "../Repositories/ICrudRepository";
 import { IUserRepository } from "../Repositories/IUserRepository";
 import { HttpStatusResponse } from "../Utils/HttpStatusResponse";
 
-export class UserContorller extends HttpStatusResponse implements IController{
+export class UserController extends HttpStatusResponse implements IController{
     public Path:string;
     public Router:Router;
     private UserRepository:IUserRepository;
