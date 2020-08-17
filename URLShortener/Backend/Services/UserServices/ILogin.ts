@@ -1,4 +1,4 @@
-import { User } from "../Models/User.model";
+import { User } from "../../Models/User.model";
 
 export interface ILogin{
     User:User|null,

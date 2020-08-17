@@ -1,8 +1,13 @@
 import * as mongoose from "mongoose";
-import { Typegoose, prop, post } from "typegoose";
+import { Typegoose, prop, pre } from "typegoose";
+import { ConvertShortService } from "../Services/UrlServices/ConvertShortService";
 
-@post<Url>("save", (url) => {
-  url.LastAccessDate = new Date(Date.now());
+@pre<Url>("save", function() {
+  this.LastAccessDate = new Date(Date.now());
+  if(this._id===undefined || this._id===null)
+    this._id=mongoose.Schema.Types.ObjectId;
+    let ShortService:ConvertShortService=new ConvertShortService();
+    
 })
 
 export class Url extends Typegoose {

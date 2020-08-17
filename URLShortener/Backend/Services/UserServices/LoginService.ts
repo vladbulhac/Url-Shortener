@@ -1,12 +1,12 @@
 import bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
-import { User } from "../Models/User.model";
-import { UserRepository } from "../Repositories/UserRepositories/UserRepository";
+import { User } from "../../Models/User.model";
+import { UserRepository } from "../../Repositories/UserRepositories/UserRepository";
 import { ILogin } from "./ILogin";
 require("dotenv").config();
 
 export class LoginService {
-  public async Login(email: string, password: string): Promise<ILogin | null> {
+  public async Login(email: string, password: string): Promise<ILogin> {
     let User: User | null = await UserRepository.GetInstance().FindByEmailAndPassword(
       email,
       password
@@ -29,9 +29,18 @@ export class LoginService {
         };
 
         return LoginDetails;
-      } else return null;
+      } else
+        return {
+          User: null,
+          Token: "",
+          Message:"Failure",
+        };
     } else {
-      return null;
+      return {
+        User: null,
+        Token: "",
+        Message: "Failure",
+      };
     }
   }
 }

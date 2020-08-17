@@ -1,8 +1,8 @@
 import { ILogin } from "./ILogin";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
-import { User } from "../Models/User.model";
-import { UserRepository } from "../Repositories/UserRepositories/UserRepository";
+import { User } from "../../Models/User.model";
+import { UserRepository } from "../../Repositories/UserRepositories/UserRepository";
 require("dotenv").config();
 
 export class RegisterService {
