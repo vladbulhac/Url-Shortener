@@ -1,0 +1,31 @@
+{
+  "name": "urlshortener",
+  "version": "1.0.0",
+  "description": "Url shortener project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/vladbulhac/HiddenStuff.git"
+  },
+  "keywords": [
+    "URL",
+    "SHORTENER"
+  ],
+  "author": "Bulhac Vlad",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vladbulhac/HiddenStuff/issues"
+  },
+  "homepage": "https://github.com/vladbulhac/HiddenStuff#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.6.0",
+    "mongoose": "^5.10.0",
+    "typegoose": "^5.9.1",
+    "typescript": "^3.9.7"
+  }
+}
