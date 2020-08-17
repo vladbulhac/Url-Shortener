@@ -7,6 +7,7 @@ import {LoginService} from '../Services/UserServices/LoginService';
 import { HttpCodes } from '../Utils/HttpCodes.enum';
 import { UserRepository } from '../Repositories/UserRepositories/UserRepository';
 import { RegisterService } from '../Services/UserServices/RegisterService';
+import { VerifyTokenService } from '../Services/JWTokenServices/VerifyTokenService';
 
 export class UserController extends HttpStatusResponse implements IController{
     public Path:string='/users';
@@ -26,10 +27,10 @@ export class UserController extends HttpStatusResponse implements IController{
 
         this.Router.post(`${this.Path}/register`,this.Register.bind(this));
 
-        this.Router.put(`${this.Path}/:id`,[VerifyToken],this.UpdateUser.bind(this));
+        this.Router.put(`${this.Path}/:id`,[VerifyTokenService],this.UpdateUser.bind(this));
         
-        this.Router.delete(`${this.Path}/:id`,[VerifyToken],this.DeleteUserById.bind(this));
-        this.Router.delete(`${this.Path}`,[VerifyToken],this.DeleteAll.bind(this));
+        this.Router.delete(`${this.Path}/:id`,[VerifyTokenService],this.DeleteUserById.bind(this));
+        this.Router.delete(`${this.Path}`,[VerifyTokenService],this.DeleteAll.bind(this));
     }
 
     private Login(Request:Request,Response:Response):void{
@@ -89,8 +90,18 @@ export class UserController extends HttpStatusResponse implements IController{
             });
     }
 
+    private UpdateUser(Request:Request,Response:Response):void{
+
+    }
 
 
+    private DeleteUserById(Request:Request,Response:Response):void{
+
+    }
+
+    private DeleteAll(Request:Request,Response:Response):void{
+        
+    }
 
 
 }

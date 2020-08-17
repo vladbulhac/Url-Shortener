@@ -1,38 +1,38 @@
 export class ConvertShortService {
-  private static Letters_Numbers_Map: Map<number, string>;
+  private static IndexToCharsMap: Map<number, string>;
   private static _instance: ConvertShortService;
 
   public static GetInstance(): ConvertShortService {
     if (!this._instance) {
       this._instance = new ConvertShortService();
-      this.BuildLetterNumberMap();
+      this.BuildIndexToCharsMap();
     }
     return this._instance;
   }
 
-  public static ShortUrl(Url: string): string {
-    let UrlNumber: number = this.ConvertLettersInIdToNumber(Url);
+  public static ToShortTransform(Url: string): string {
+    let UrlNumber: number = this.ConvertLettersFromIdToNumber(Url);
     let NewUrl: string = "";
-    let TotalCharacters: number = this.Letters_Numbers_Map.size;
+    let TotalCharacters: number = this.IndexToCharsMap.size;
     while (UrlNumber > 0) {
       let Remainder: number = UrlNumber % TotalCharacters;
       NewUrl += Remainder;
       UrlNumber /= TotalCharacters;
     }
 
-    return this.BuildUrl(NewUrl);
+    return this.ConvertLettersToNumbersUrl(NewUrl);
   }
 
-  private static BuildUrl(ShortUrlNumber: string) {
+  private static ConvertLettersToNumbersUrl(ShortUrlNumber: string) {
     let ShortUrl: string = "";
     for (let c of ShortUrlNumber) {
-      ShortUrl += this.Letters_Numbers_Map.get(Number(c));
+      ShortUrl += this.IndexToCharsMap.get(Number(c));
     }
 
     return ShortUrl;
   }
 
-  private static ConvertLettersInIdToNumber(Url: string): number {
+  private static ConvertLettersFromIdToNumber(Url: string): number {
     let UrlNumber: number = 0;
     for (let i = 0; i < Url.length; i++) {
       let CharacterMapIndex: number = Url[i].charCodeAt(0);
@@ -48,12 +48,12 @@ export class ConvertShortService {
     return UrlNumber;
   }
 
-  private static BuildLetterNumberMap(): void {
-    this.Letters_Numbers_Map = new Map<number, string>();
+  private static BuildIndexToCharsMap(): void {
+    this.IndexToCharsMap = new Map<number, string>();
     for (let i = 0; i < 26; i++) {
-      this.Letters_Numbers_Map.set(i,String.fromCharCode(97 + i));
-      this.Letters_Numbers_Map.set(i,String.fromCharCode(65 + i));
-      if (i < 10) this.Letters_Numbers_Map.set(i,String.fromCharCode(48 + i));
+      this.IndexToCharsMap.set(i,String.fromCharCode(97 + i));
+      this.IndexToCharsMap.set(i,String.fromCharCode(65 + i));
+      if (i < 10) this.IndexToCharsMap.set(i,String.fromCharCode(48 + i));
     }
   }
 }
