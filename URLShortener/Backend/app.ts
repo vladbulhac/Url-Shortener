@@ -4,8 +4,9 @@ import bodyParser from 'body-parser';
 import helmet from 'helmet';
 import cors from 'cors';
 import {IController} from './Controllers/IController';
+require('dotenv').config();
 
-export class App{
+export class Application{
     private App:express.Application;
 
     constructor(controllers:IController[]){

@@ -1,10 +1,9 @@
-import {App} from './app';
+import {Application} from './app';
 import { UserController } from './Controllers/UserController';
 import { UrlController } from './Controllers/UrlController';
 
-let Application:App=new App([
-    new UserController(),
-    new UrlController()
+let App:Application=new Application([
+    new UserController()
 ]);
 
-Application.Listen();
+App.Listen();
