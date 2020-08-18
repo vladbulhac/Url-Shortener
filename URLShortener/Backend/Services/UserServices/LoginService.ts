@@ -3,11 +3,18 @@ import * as jwt from "jsonwebtoken";
 import { User } from "../../Models/User.model";
 import { UserRepository } from "../../Repositories/UserRepositories/UserRepository";
 import { ILogin } from "./ILogin";
+import { IUserRepository } from "../../Repositories/UserRepositories/IUserRepository";
 require("dotenv").config();
 
 export class LoginService {
+  private UserRepository:IUserRepository;
+
+  constructor(UserRepo:IUserRepository)
+  {
+      this.UserRepository=UserRepo;
+  }
   public async Login(email: string, password: string): Promise<ILogin> {
-    let User: User | null = await UserRepository.GetInstance().FindByEmailAndPassword(
+    let User: User | null = await this.UserRepository.FindByEmailAndPassword(
       email,
       password
     );

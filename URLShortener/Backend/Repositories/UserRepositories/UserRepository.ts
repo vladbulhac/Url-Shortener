@@ -4,12 +4,6 @@ import { IUserRepository } from "./IUserRepository";
 import { User, UserModel } from "../../Models/User.model";
 
 export class UserRepository implements IUserRepository {
-  private static _instance: UserRepository | null = null;
-
-  public static GetInstance(): UserRepository {
-    if (!this._instance) this._instance = new UserRepository();
-    return this._instance;
-  }
 
   public FindByEmailAndPassword(
     email: string,

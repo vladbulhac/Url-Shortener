@@ -1,7 +1,7 @@
 import {cleanEnv,str,port} from 'envalid';
 
 
-export function validateEnv():void{
+export function ValidateEnv():void{
     cleanEnv(process.env,{
         JWT_SECRET:str(),
         PORT:port(),

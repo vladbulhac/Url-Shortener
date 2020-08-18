@@ -3,16 +3,23 @@ import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import { User } from "../../Models/User.model";
 import { UserRepository } from "../../Repositories/UserRepositories/UserRepository";
+import { IUserRepository } from "../../Repositories/UserRepositories/IUserRepository";
 require("dotenv").config();
 
 export class RegisterService {
+  private UserRepository:IUserRepository;
+
+  constructor(UserRepo:IUserRepository)
+  {
+    this.UserRepository=UserRepo;
+  }
   public async Register(data: User): Promise<ILogin> {
-    let ExistsUser: User | null = await UserRepository.GetInstance().ExistsFindByArgument(
+    let ExistsUser: User | null = await this.UserRepository.ExistsFindByArgument(
       data.Email
     );
     if (!ExistsUser) {
       data.Password = await bcrypt.hash(data.Password, 10);
-      UserRepository.GetInstance()
+      this.UserRepository
         .Add(data)
         .then((User) => {
           const JWT_SECRET: string = process.env.JWT_SECRET!;

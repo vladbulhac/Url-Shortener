@@ -1,6 +1,4 @@
 import { Router, Response, Request } from "express";
-import { ICrudRepository } from "../Repositories/ICrudRepository";
-import { IUserRepository } from "../Repositories/UserRepositories/IUserRepository";
 import { HttpStatusResponse } from "../Utils/HttpStatusResponse";
 import { IController } from "./IController";
 import { LoginService } from "../Services/UserServices/LoginService";
@@ -9,13 +7,16 @@ import { UserRepository } from "../Repositories/UserRepositories/UserRepository"
 import { RegisterService } from "../Services/UserServices/RegisterService";
 import { VerifyTokenService } from "../Services/JWTokenServices/VerifyTokenService";
 import { User } from "../Models/User.model";
+import { IUserRepository } from "../Repositories/UserRepositories/IUserRepository";
 
 export class UserController extends HttpStatusResponse implements IController {
   public Path: string = "/users";
   public Router: Router;
+  private UserRepository:IUserRepository;
 
-  constructor() {
+  constructor(UserRepo:IUserRepository) {
     super();
+    this.UserRepository=UserRepo;
     this.Router = Router();
     this.InitializeRoutes();
   }
@@ -47,7 +48,7 @@ export class UserController extends HttpStatusResponse implements IController {
 
   private Login(Request: Request, Response: Response): void {
     const RequestBody = Request.body.Data;
-    let LoginHelper: LoginService = new LoginService();
+    let LoginHelper: LoginService = new LoginService(this.UserRepository);
 
     LoginHelper.Login(RequestBody.Email, RequestBody.Password)
       .then((LoginData) => {
@@ -66,7 +67,7 @@ export class UserController extends HttpStatusResponse implements IController {
   }
 
   private GetAll(Request: Request, Response: Response): void {
-    UserRepository.GetInstance()
+    this.UserRepository
       .GetAll()
       .then((Users) => {
         if (Users.length === 0)
@@ -82,7 +83,7 @@ export class UserController extends HttpStatusResponse implements IController {
 
   private GetUserById(Request: Request, Response: Response): void {
     const Id = Request.params.id;
-    UserRepository.GetInstance()
+    this.UserRepository
       .GetById(Id)
       .then((User) => {
         if (User) Response.status(HttpCodes.Ok).json({ Data: { User } });
@@ -97,7 +98,7 @@ export class UserController extends HttpStatusResponse implements IController {
 
   private Register(Request: Request, Response: Response): void {
     const RequestBody = Request.body.Data;
-    let RegisterHelper: RegisterService = new RegisterService();
+    let RegisterHelper: RegisterService = new RegisterService(this.UserRepository);
 
     RegisterHelper.Register(RequestBody)
       .then((RegisterData) => {
@@ -116,7 +117,7 @@ export class UserController extends HttpStatusResponse implements IController {
       const RequestBody:User=Request.body.Data;
       const RequestId:string=Request.params.id;
 
-      UserRepository.GetInstance().Update(RequestId,RequestBody)
+      this.UserRepository.Update(RequestId,RequestBody)
             .then(UpdatedData=>{
                 if(UpdatedData) Response.status(HttpCodes.Ok)
                                                                     .json({Data:{UpdatedData}});
@@ -131,7 +132,7 @@ export class UserController extends HttpStatusResponse implements IController {
   private DeleteUserById(Request: Request, Response: Response): void {
       const RequestId:string=Request.params.id;
 
-      UserRepository.GetInstance().DeleteById(RequestId)
+      this.UserRepository.DeleteById(RequestId)
                 .then(()=>{
                     Response.status(HttpCodes.NoContent);
                 })
@@ -141,7 +142,7 @@ export class UserController extends HttpStatusResponse implements IController {
   }
 
   private DeleteAll(Request: Request, Response: Response): void {
-      UserRepository.GetInstance().Delete()
+      this.UserRepository.Delete()
             .then(()=>{
                 Response.status(HttpCodes.NoContent);
             })

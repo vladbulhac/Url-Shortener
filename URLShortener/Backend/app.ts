@@ -1,6 +1,6 @@
-import express from 'express';
+import express from "express";
 import mongoose from 'mongoose';
-import bodyParser from 'body-parser';
+import * as bodyParser from 'body-parser';
 import helmet from 'helmet';
 import cors from 'cors';
 import {IController} from './Controllers/IController';
@@ -12,18 +12,18 @@ export class Application{
     constructor(controllers:IController[]){
         this.App=express();
 
-        this.InitializeDBConnection();
+        this.InitializeDataBaseConnection();
         this.InitialzeMiddlewares();
         this.InitializeControllers(controllers);
     }
 
     private InitialzeMiddlewares():void{
-        this.App.use(bodyParser);
-        this.App.use(helmet);
-        this.App.use(cors);
+        this.App.use(bodyParser.json());
+        this.App.use(helmet());
+        this.App.use(cors());
     }
 
-    private InitializeDBConnection():void{
+    private InitializeDataBaseConnection():void{
         const{
                 MONGO_USER,
                 MONGO_PASSWORD,
@@ -31,11 +31,11 @@ export class Application{
         }=process.env;
         try{
             let currentTime=new Date();
-            console.log(`Trying to connect to MongoDB... [TIME:${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()}]`);
+            console.log(`Trying to connect to database... [TIME:${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()}]`);
             mongoose.connect(`mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`,
                     {
-                        useNewUrlParser:true
-                        ,useUnifiedTopology:true,
+                        useNewUrlParser:true,
+                        useUnifiedTopology:true,
                         useFindAndModify:false,
                         useCreateIndex:true
                     });
@@ -43,7 +43,7 @@ export class Application{
                 console.log(error);
         }finally{
             let currentTime=new Date();
-            console.log(`Connected to MongoDB! [TIME: ${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()}]`);
+            console.log(`Initializing connection complete! [TIME: ${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()}]`);
         }
     }
 
@@ -63,3 +63,4 @@ export class Application{
         return this.App;
     }
 }
+
