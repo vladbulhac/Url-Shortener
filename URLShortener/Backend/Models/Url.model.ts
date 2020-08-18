@@ -7,14 +7,15 @@ import { ConvertShortService } from "../Services/UrlServices/ConvertShortService
   if(this._id===undefined || this._id===null)
     this._id=mongoose.Schema.Types.ObjectId;
     let ShortService:ConvertShortService=new ConvertShortService();
-    
+    let ShortUrl:string=ShortService.ToShortTransform(this.TrueUrl);
+    this.ShortUrl=ShortUrl;
 })
 
 export class Url extends Typegoose {
   _id!: mongoose.Schema.Types.ObjectId;
 
   @prop({ index:true,unique:true,required: true, maxlength: 50 })
-  Hash!: string;
+  ShortUrl!: string;
 
   @prop({ unique:true,required: true, maxlength: 350 })
   TrueUrl!: string;
