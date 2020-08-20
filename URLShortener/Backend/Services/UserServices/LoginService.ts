@@ -9,44 +9,44 @@ require("dotenv").config();
 export class LoginService {
   private UserRepository:IUserRepository;
 
-  constructor(UserRepo:IUserRepository)
+  constructor(userRepo:IUserRepository)
   {
-      this.UserRepository=UserRepo;
+      this.UserRepository=userRepo;
   }
   public async Login(email: string, password: string): Promise<ILogin> {
-    let User: User | null = await this.UserRepository.FindByEmailAndPassword(
-      email,
-      password
+    let user: User | null = await this.UserRepository.ExistsFindByArgument(
+      JSON.stringify({email:email})
     );
-    if (User) {
-      let IsCorrectPassword: boolean = await bcrypt.compare(
-        User.Password,
-        password
+
+    if (user) {
+      let isCorrectPassword: boolean = await bcrypt.compare(
+        password,
+        user.password
       );
-      if (IsCorrectPassword) {
+      if (isCorrectPassword) {
         const JWT_SECRET: string = process.env.JWT_SECRET!;
-        const Token: string = jwt.sign({ id: User._id }, JWT_SECRET, {
+        const token: string = jwt.sign({ id: user._id }, JWT_SECRET, {
           expiresIn: "1h",
         });
-        delete User.Password;
-        const LoginDetails: ILogin = {
-          User: User,
-          Token: Token,
-          Message: "Successful",
+        user=JSON.parse(JSON.stringify(user));
+        delete user!.password;
+        const loginDetails: ILogin = {
+          user: user,
+          token: token,
+          message: "Successful",
         };
-
-        return LoginDetails;
+        return loginDetails;
       } else
         return {
-          User: null,
-          Token: "",
-          Message:"Failure",
+          user: null,
+          token: "",
+          message:"Failure",
         };
     } else {
       return {
-        User: null,
-        Token: "",
-        Message: "Failure",
+        user: null,
+        token: "",
+        message: "Failure",
       };
     }
   }

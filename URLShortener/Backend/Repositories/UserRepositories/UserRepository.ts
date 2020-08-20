@@ -5,22 +5,15 @@ import { User, UserModel } from "../../Models/User.model";
 
 export class UserRepository implements IUserRepository {
 
-  public FindByEmailAndPassword(
-    email: string,
-    password: string
-  ): Promise<User | null> {
-    return UserModel.findOne({ email: email, password: password })
-      .populate("UrlHistory")
-      .exec();
-  }
+
   public ExistsFindByArgument(argument: string): Promise<User | null> {
-    const Argument = JSON.parse(argument);
-    return UserModel.findOne(Argument).exec();
+    const arg = JSON.parse(argument);
+    return UserModel.findOne(arg).exec();
   }
 
   public Add(data: User): Promise<User> {
-    const Document = new UserModel(data);
-    return Document.save();
+    const document = new UserModel(data);
+    return document.save();
   }
   public GetById(id: string): Promise<User|null> {
       return UserModel.findById(id).populate('UrlHistory').exec();

@@ -1,8 +1,8 @@
 export interface IError{
-    Error:IErrorBody;
+    error:IErrorBody;
 }
 
 interface IErrorBody{
-    Message:string;
-    ErrorCode:number;
+    message:string;
+    errorCode:number;
 }

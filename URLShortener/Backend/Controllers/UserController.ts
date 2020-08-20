@@ -3,7 +3,6 @@ import { HttpStatusResponse } from "../Utils/HttpStatusResponse";
 import { IController } from "./IController";
 import { LoginService } from "../Services/UserServices/LoginService";
 import { HttpCodes } from "../Utils/HttpCodes.enum";
-import { UserRepository } from "../Repositories/UserRepositories/UserRepository";
 import { RegisterService } from "../Services/UserServices/RegisterService";
 import { VerifyTokenService } from "../Services/JWTokenServices/VerifyTokenService";
 import { User } from "../Models/User.model";
@@ -14,9 +13,9 @@ export class UserController extends HttpStatusResponse implements IController {
   public Router: Router;
   private UserRepository:IUserRepository;
 
-  constructor(UserRepo:IUserRepository) {
+  constructor(userRepo:IUserRepository) {
     super();
-    this.UserRepository=UserRepo;
+    this.UserRepository=userRepo;
     this.Router = Router();
     this.InitializeRoutes();
   }
@@ -46,108 +45,108 @@ export class UserController extends HttpStatusResponse implements IController {
     );
   }
 
-  private Login(Request: Request, Response: Response): void {
-    const RequestBody = Request.body.Data;
-    let LoginHelper: LoginService = new LoginService(this.UserRepository);
-
-    LoginHelper.Login(RequestBody.Email, RequestBody.Password)
-      .then((LoginData) => {
-        if (LoginData.Message === "Successful")
-          Response.status(HttpCodes.Ok).json({ Data: { LoginData } });
+  private Login(request: Request, response: Response): void {
+    const requestBody = request.body.data;
+    let loginHelper: LoginService = new LoginService(this.UserRepository);
+    loginHelper.Login(requestBody.email, requestBody.password)
+      .then((loginData) => {
+        if (loginData.message==="Successful")
+          response.status(HttpCodes.Ok).json({ data: { loginData } });
         else
-          Response.status(HttpCodes.NotFound).json(
-            this.Error_NotFound("Email or Password Incorrect")
+          response.status(HttpCodes.NotFound).json(
+            this.Error_NotFound("Email or Password is incorrect")
           );
       })
-      .catch((Error) => {
-        Response.status(HttpCodes.BadRequest).json(
-          this.Error_BadRequest(Error)
+      .catch((error) => {
+        response.status(HttpCodes.BadRequest).json(
+          this.Error_BadRequest(error)
         );
       });
   }
 
-  private GetAll(Request: Request, Response: Response): void {
+  private GetAll(request: Request, response: Response): void {
     this.UserRepository
       .GetAll()
-      .then((Users) => {
-        if (Users.length === 0)
-          Response.status(HttpCodes.NoContent).json({ Data: { Users } });
-        else Response.status(HttpCodes.Ok).json({ Data: { Users } });
+      .then((users) => {
+        if (users.length === 0)
+          response.status(HttpCodes.NoContent).json({data: { users } });
+        else response.status(HttpCodes.Ok).json({data: { users } });
       })
-      .catch((Error) => {
-        Response.status(HttpCodes.BadRequest).json(
-          this.Error_BadRequest(Error)
+      .catch((error) => {
+        response.status(HttpCodes.BadRequest).json(
+          this.Error_BadRequest(error)
         );
       });
   }
 
-  private GetUserById(Request: Request, Response: Response): void {
-    const Id = Request.params.id;
+  private GetUserById(request: Request, response: Response): void {
+    const id = request.params.id;
     this.UserRepository
-      .GetById(Id)
-      .then((User) => {
-        if (User) Response.status(HttpCodes.Ok).json({ Data: { User } });
-        else Response.status(HttpCodes.NotFound).json(this.Error_NotFound);
+      .GetById(id)
+      .then((user) => {
+        if (user) response.status(HttpCodes.Ok).json({data: { user } });
+        else response.status(HttpCodes.NotFound).json(this.Error_NotFound);
       })
-      .catch((Error) => {
-        Response.status(HttpCodes.BadRequest).json(
-          this.Error_BadRequest(Error)
+      .catch((error) => {
+        response.status(HttpCodes.BadRequest).json(
+          this.Error_BadRequest(error)
         );
       });
   }
 
-  private Register(Request: Request, Response: Response): void {
-    const RequestBody = Request.body.Data;
-    let RegisterHelper: RegisterService = new RegisterService(this.UserRepository);
-
-    RegisterHelper.Register(RequestBody)
-      .then((RegisterData) => {
-        if (RegisterData.Message === "Successful")
-          Response.status(HttpCodes.Ok).json({ Data: { RegisterData } });
-        else Response.status(HttpCodes.BadRequest).json(this.Error_BadRequest);
+  private Register(request: Request, response: Response): void {
+    const requestBody = request.body.data;
+    let registerHelper: RegisterService = new RegisterService(this.UserRepository);
+    registerHelper.Register(requestBody)
+      .then((registerData) => {
+        if (registerData.message === "Successful")
+              response.status(HttpCodes.Ok).json({data: { registerData } });
+        else
+        if(registerData.message==="Conflict")
+            response.status(HttpCodes.Conflict).json(this.Error_Conflict("Email is already used by another user"));
       })
-      .catch((Error) => {
-        Response.status(HttpCodes.BadRequest).json(
-          this.Error_BadRequest(Error)
+      .catch((error) => {
+        response.status(HttpCodes.BadRequest).json(
+          this.Error_BadRequest(String(error))
         );
       });
   }
 
-  private UpdateUser(Request: Request, Response: Response): void {
-      const RequestBody:User=Request.body.Data;
-      const RequestId:string=Request.params.id;
+  private UpdateUser(request: Request, response: Response): void {
+      const requestBody:User=request.body.data;
+      const requestId:string=request.params.id;
 
-      this.UserRepository.Update(RequestId,RequestBody)
-            .then(UpdatedData=>{
-                if(UpdatedData) Response.status(HttpCodes.Ok)
-                                                                    .json({Data:{UpdatedData}});
+      this.UserRepository.Update(requestId,requestBody)
+            .then(updatedData=>{
+                if(updatedData) response.status(HttpCodes.Ok)
+                                                                    .json({data:{updatedData}});
                 else
-                    Response.status(HttpCodes.NotFound).json(this.Error_NotFound);
+                    response.status(HttpCodes.NotFound).json(this.Error_NotFound);
             })
-            .catch(Error=>{
-                Response.status(HttpCodes.BadRequest).json(this.Error_BadRequest(Error));
+            .catch(error=>{
+                response.status(HttpCodes.BadRequest).json(this.Error_BadRequest(error));
             });
   }
 
-  private DeleteUserById(Request: Request, Response: Response): void {
-      const RequestId:string=Request.params.id;
+  private DeleteUserById(request: Request, response: Response): void {
+      const requestId:string=request.params.id;
 
-      this.UserRepository.DeleteById(RequestId)
+      this.UserRepository.DeleteById(requestId)
                 .then(()=>{
-                    Response.status(HttpCodes.NoContent);
+                    response.status(HttpCodes.NoContent);
                 })
-                .catch(Error=>{
-                    Response.status(HttpCodes.BadRequest).json(this.Error_BadRequest(Error));
+                .catch(error=>{
+                    response.status(HttpCodes.BadRequest).json(this.Error_BadRequest(error));
                 });
   }
 
-  private DeleteAll(Request: Request, Response: Response): void {
+  private DeleteAll(request: Request, response: Response): void {
       this.UserRepository.Delete()
             .then(()=>{
-                Response.status(HttpCodes.NoContent);
+                response.status(HttpCodes.NoContent);
             })
-            .catch(Error=>{
-                Response.status(HttpCodes.BadRequest).json(this.Error_BadRequest(Error));
+            .catch(error=>{
+                response.status(HttpCodes.BadRequest).json(this.Error_BadRequest(error));
             });
   }
 }

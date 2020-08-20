@@ -8,17 +8,17 @@ export class VerifyTokenService extends HttpStatusResponse{
     constructor(){
         super();
     }
-    public VerifyToken(Request:Request,Response:Response,Next:NextFunction):void{
-        let HeaderData:string|undefined=Request.headers['authorization'];
-        if(HeaderData)
+    public VerifyToken(request:Request,response:Response,Next:NextFunction):void{
+        let headerData:string|undefined=request.headers['authorization'];
+        if(headerData)
         {
-            let HeaderSplit:string[]=HeaderData.split(' ');
-            let TokenData:string=HeaderSplit[1];
+            let headerSplit:string[]=headerData.split(' ');
+            let tokenData:string=headerSplit[1];
             const JWT_SECRET=process.env.JWT_SECRET!;
-            jwt.verify(TokenData,JWT_SECRET,(err,decoded)=>{
-                    if(err)
-                        {Response.status(HttpCodes.Unauthorized)
-                                                .json(this.Error_Unauthorized(JSON.stringify(err)));
+            jwt.verify(tokenData,JWT_SECRET,(error,decoded)=>{
+                    if(error)
+                        {response.status(HttpCodes.Unauthorized)
+                                                .json(this.Error_Unauthorized(JSON.stringify(error)));
                         return;
                         }
                     else
@@ -27,7 +27,7 @@ export class VerifyTokenService extends HttpStatusResponse{
             });
         }
         else
-            Response.status(HttpCodes.Unauthorized)
+            response.status(HttpCodes.Unauthorized)
                                     .json(this.Error_Unauthorized("Token has not been provided"));
             return;
     }

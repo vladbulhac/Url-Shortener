@@ -8,11 +8,12 @@ require('dotenv').config();
 
 export class Application{
     private App:express.Application;
-
-    constructor(controllers:IController[]){
+    
+    constructor(controllers:IController[],dbUrl?:string)
+    {
         this.App=express();
 
-        this.InitializeDataBaseConnection();
+        this.InitializeDataBaseConnection(dbUrl);
         this.InitialzeMiddlewares();
         this.InitializeControllers(controllers);
     }
@@ -23,27 +24,27 @@ export class Application{
         this.App.use(cors());
     }
 
-    private InitializeDataBaseConnection():void{
+    private InitializeDataBaseConnection(dbUrl?:string):void{
         const{
                 MONGO_USER,
                 MONGO_PASSWORD,
                 MONGO_PATH
         }=process.env;
         try{
+        const mongoUrl:string=dbUrl || `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`;
             let currentTime=new Date();
             console.log(`Trying to connect to database... [TIME:${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()}]`);
-            mongoose.connect(`mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`,
+            mongoose.connect(mongoUrl,
                     {
                         useNewUrlParser:true,
                         useUnifiedTopology:true,
                         useFindAndModify:false,
                         useCreateIndex:true
                     });
+                    currentTime=new Date();
+                    console.log(`Initializing connection complete! [TIME: ${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()}]`);
         }catch(error){
                 console.log(error);
-        }finally{
-            let currentTime=new Date();
-            console.log(`Initializing connection complete! [TIME: ${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()}]`);
         }
     }
 

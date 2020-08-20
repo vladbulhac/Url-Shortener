@@ -6,9 +6,9 @@ export abstract class HttpStatusResponse {
     errorCode: number
   ): IError {
     const error: IError = {
-      Error: {
-        Message: message,
-        ErrorCode: errorCode,
+      error: {
+        message: message,
+        errorCode: errorCode,
       },
     };
     return error;

@@ -5,20 +5,17 @@ import { Url } from "./Url.model";
 export class User extends Typegoose {
   _id!: mongoose.Schema.Types.ObjectId;
 
-  @prop({ index: true,unique:true, required: true, maxlength: 25 })
-  Email!: string;
+  @prop({ unique:true, required: true, maxlength: 25 })
+  email!: string;
 
-  @prop({ index: true, required: true, minlength: 5 })
-  Password!: string;
-
-  @prop({ required: true,default:false })
-  HasOptionalSettings!: boolean;
+  @prop({ required: true, minlength: 5 })
+  password!: string;
 
   @arrayProp({ itemsRef: "Url" })
-  UrlHistory?: Ref<Url>[];
+  urlHistory?: Ref<Url>[];
 }
 
 export const UserModel = new User().getModelForClass(User, {
   existingMongoose: mongoose,
-  schemaOptions: { toJSON: { virtuals: true }, collection: "users" },
+  schemaOptions: { toJSON: { virtuals: false }, collection: "users" },
 });

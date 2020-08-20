@@ -1,0 +1,25 @@
+{
+  "users": [
+    {
+      "_id": "5b83bf3135860c000fab9b6a",
+      "email": "test_user1@testemail.com",
+      "password": "$2y$10$YiuhFowR023tggPzJG.ee.4DeGEL8ekNxh4zqlXn2igY.5UhzgKJ.",
+      "urlHistory": [],
+      "__v": 0
+    },
+    {
+      "_id": "5b83bf3735860c000fab9b6c",
+      "email": "test_user2@testemail.com",
+      "password": "$2y$10$9i78ghYGdxBdWoGuuAfDwe.99SsT/aX7TLDKqvp6ZI/4xiAgVnle2",
+      "urlHistory": [],
+      "__v": 0
+    },
+    {
+      "_id": "5b83bf373a860c007fab9b6c",
+      "email": "test_user3@testemail.com",
+      "password": "$2b$10$VLcY5GiHuiuBIfmVYIsIKupLHmTBHDYSD.oDZkf5NGDzuW/fI/6YG",
+      "urlHistory": [],
+      "__v": 0
+    }
+  ]
+}
