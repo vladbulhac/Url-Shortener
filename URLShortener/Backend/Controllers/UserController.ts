@@ -4,18 +4,21 @@ import { IController } from "./IController";
 import { LoginService } from "../Services/UserServices/LoginService";
 import { HttpCodes } from "../Utils/HttpCodes.enum";
 import { RegisterService } from "../Services/UserServices/RegisterService";
-import { VerifyTokenService } from "../Services/JWTokenServices/VerifyTokenService";
+import { TokenService } from "../Services/JWTokenServices/TokenService";
 import { User } from "../Models/User.model";
 import { IUserRepository } from "../Repositories/UserRepositories/IUserRepository";
+import { ITokenService } from "../Services/JWTokenServices/ITokenService";
 
 export class UserController extends HttpStatusResponse implements IController {
   public Path: string = "/users";
   public Router: Router;
   private UserRepository:IUserRepository;
+  private TokenService:ITokenService;
 
-  constructor(userRepo:IUserRepository) {
+  constructor(userRepo:IUserRepository,tokenService:ITokenService) {
     super();
     this.UserRepository=userRepo;
+    this.TokenService=tokenService;
     this.Router = Router();
     this.InitializeRoutes();
   }
@@ -29,25 +32,25 @@ export class UserController extends HttpStatusResponse implements IController {
 
     this.Router.put(
       `${this.Path}/:id`,
-      [new VerifyTokenService().VerifyToken],
+      [this.TokenService.Verify.bind(this)],
       this.UpdateUser.bind(this)
     );
 
     this.Router.delete(
       `${this.Path}/:id`,
-      [new VerifyTokenService().VerifyToken],
+      [this.TokenService.Verify.bind(this)],
       this.DeleteUserById.bind(this)
     );
     this.Router.delete(
       `${this.Path}`,
-      [new VerifyTokenService().VerifyToken],
+      [this.TokenService.Verify.bind(this)],
       this.DeleteAll.bind(this)
     );
   }
 
   private Login(request: Request, response: Response): void {
     const requestBody = request.body.data;
-    let loginHelper: LoginService = new LoginService(this.UserRepository);
+    let loginHelper: LoginService = new LoginService(this.UserRepository,this.TokenService);
     loginHelper.Login(requestBody.email, requestBody.password)
       .then((loginData) => {
         if (loginData.message==="Successful")
@@ -59,7 +62,7 @@ export class UserController extends HttpStatusResponse implements IController {
       })
       .catch((error) => {
         response.status(HttpCodes.BadRequest).json(
-          this.Error_BadRequest(error)
+          this.Error_BadRequest(String(error))
         );
       });
   }
@@ -74,7 +77,7 @@ export class UserController extends HttpStatusResponse implements IController {
       })
       .catch((error) => {
         response.status(HttpCodes.BadRequest).json(
-          this.Error_BadRequest(error)
+          this.Error_BadRequest(String(error))
         );
       });
   }
@@ -89,18 +92,18 @@ export class UserController extends HttpStatusResponse implements IController {
       })
       .catch((error) => {
         response.status(HttpCodes.BadRequest).json(
-          this.Error_BadRequest(error)
+          this.Error_BadRequest(String(error))
         );
       });
   }
 
   private Register(request: Request, response: Response): void {
     const requestBody = request.body.data;
-    let registerHelper: RegisterService = new RegisterService(this.UserRepository);
+    let registerHelper: RegisterService = new RegisterService(this.UserRepository,this.TokenService);
     registerHelper.Register(requestBody)
       .then((registerData) => {
         if (registerData.message === "Successful")
-              response.status(HttpCodes.Ok).json({data: { registerData } });
+              response.status(HttpCodes.Created).json({data: { registerData } });
         else
         if(registerData.message==="Conflict")
             response.status(HttpCodes.Conflict).json(this.Error_Conflict("Email is already used by another user"));
@@ -124,7 +127,7 @@ export class UserController extends HttpStatusResponse implements IController {
                     response.status(HttpCodes.NotFound).json(this.Error_NotFound);
             })
             .catch(error=>{
-                response.status(HttpCodes.BadRequest).json(this.Error_BadRequest(error));
+                response.status(HttpCodes.BadRequest).json(this.Error_BadRequest(String(error)));
             });
   }
 
@@ -136,7 +139,7 @@ export class UserController extends HttpStatusResponse implements IController {
                     response.status(HttpCodes.NoContent);
                 })
                 .catch(error=>{
-                    response.status(HttpCodes.BadRequest).json(this.Error_BadRequest(error));
+                    response.status(HttpCodes.BadRequest).json(this.Error_BadRequest(String(error)));
                 });
   }
 
@@ -146,7 +149,7 @@ export class UserController extends HttpStatusResponse implements IController {
                 response.status(HttpCodes.NoContent);
             })
             .catch(error=>{
-                response.status(HttpCodes.BadRequest).json(this.Error_BadRequest(error));
+                response.status(HttpCodes.BadRequest).json(this.Error_BadRequest(String(error)));
             });
   }
 }

@@ -4,14 +4,17 @@ import { User } from "../../Models/User.model";
 import { UserRepository } from "../../Repositories/UserRepositories/UserRepository";
 import { ILogin } from "./ILogin";
 import { IUserRepository } from "../../Repositories/UserRepositories/IUserRepository";
+import { ITokenService } from "../JWTokenServices/ITokenService";
 require("dotenv").config();
 
 export class LoginService {
   private UserRepository:IUserRepository;
+  private TokenService:ITokenService;
 
-  constructor(userRepo:IUserRepository)
+  constructor(userRepo:IUserRepository,tokenService:ITokenService)
   {
       this.UserRepository=userRepo;
+      this.TokenService=tokenService;
   }
   public async Login(email: string, password: string): Promise<ILogin> {
     let user: User | null = await this.UserRepository.ExistsFindByArgument(
@@ -24,10 +27,8 @@ export class LoginService {
         user.password
       );
       if (isCorrectPassword) {
-        const JWT_SECRET: string = process.env.JWT_SECRET!;
-        const token: string = jwt.sign({ id: user._id }, JWT_SECRET, {
-          expiresIn: "1h",
-        });
+        const token:string=this.TokenService.Create(String(user._id));
+        
         user=JSON.parse(JSON.stringify(user));
         delete user!.password;
         const loginDetails: ILogin = {

@@ -25,6 +25,9 @@ export class Url extends Typegoose {
 
   @prop({ index:true,required: true })
   lastAccessDate!: Date;
+
+  @prop()
+  extendedLifeTime?:boolean;
 }
 
 export const UrlModel = new Url().getModelForClass(Url, {
