@@ -1,4 +1,4 @@
-import { Router, Response, Request } from "express";
+import { Router, Response, Request,NextFunction } from "express";
 import { HttpStatusResponse } from "../Utils/HttpStatusResponse";
 import { IController } from "./IController";
 import { LoginService } from "../Services/UserServices/LoginService";

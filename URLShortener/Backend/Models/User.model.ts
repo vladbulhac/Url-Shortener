@@ -11,8 +11,8 @@ export class User extends Typegoose {
   @prop({ required: true, minlength: 5 })
   password!: string;
 
-  @arrayProp({ itemsRef: "Url" })
-  urlHistory?: Ref<Url>[];
+  @prop()
+  urlHistory?: string[];
 }
 
 export const UserModel = new User().getModelForClass(User, {

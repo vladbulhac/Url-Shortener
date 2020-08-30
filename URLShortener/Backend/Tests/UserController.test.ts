@@ -10,11 +10,7 @@ import { TokenService } from "../Services/JWTokenServices/TokenService";
 
 const dbData = require("./Resources/UserTestData.json");
 const users = dbData["users"];
-const passwords = [
-  "test_password1234",
-  "test@!_|_password1234",
-  "eatingTestsOnBread",
-];
+const passwords = ["test_password1234", "test@!_|_password1234", "testTestest"];
 let application: express.Application;
 
 before(() =>
@@ -101,28 +97,28 @@ describe("/users", () => {
   });
 
   describe("PUT", () => {
-    it("Should return status 401 because no token has been",async ()=>{
-        const loginData = {
-            data: {
-              email: users[2].email,
-              password: passwords[2],
-            },
-          };
-          const updateData = {
-            data: {
-              email: "updatedEmail@update.com",
-            }
-          };
-          return request(application)
-            .get("/users/login")
-            .send(loginData)
-            .expect(200)
-            .then(async response=>{
-                await request(application)
-                .put(`/users/${response.body.data.loginData.user._id}`)
-                .send(updateData)
-                .expect(401);
-            });
+    it("Should return status 401 because no token has been", async () => {
+      const loginData = {
+        data: {
+          email: users[2].email,
+          password: passwords[2],
+        },
+      };
+      const updateData = {
+        data: {
+          email: "updatedEmail@update.com",
+        },
+      };
+      return request(application)
+        .get("/users/login")
+        .send(loginData)
+        .expect(200)
+        .then(async (response) => {
+          await request(application)
+            .put(`/users/${response.body.data.loginData.user._id}`)
+            .send(updateData)
+            .expect(401);
+        });
     });
 
     it("Should change email of logged in user and return status 200", async () => {
@@ -135,23 +131,21 @@ describe("/users", () => {
       const updateData = {
         data: {
           email: "updatedEmail@update.com",
-        }
+        },
       };
       return request(application)
         .get("/users/login")
         .send(loginData)
         .expect(200)
         .then(async (response) => {
-          const id:string=response.body.data.loginData.user._id;
-          const token:string=response.body.data.loginData.token;
-        console.log(id);
-        console.log(token);
+          const id: string = response.body.data.loginData.user._id;
+          const token: string = response.body.data.loginData.token;
           await request(application)
-            .put(`/users/${response.body.data.loginData.user._id}`)
+            .put("/users" + "/" + response.body.data.loginData.user._id)
             .set(
-                "Authorization",
-                `Bearer ${response.body.data.loginData.token}`
-              )
+              "Authorization",
+              "Bearer " + response.body.data.loginData.token
+            )
             .send(updateData)
             .expect(200)
             .then((response) => {
