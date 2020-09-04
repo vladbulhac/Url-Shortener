@@ -26,4 +26,7 @@ export class UrlRepository implements IUrlRepository{
     public FindByUrl(url:string):Promise<Url|null>{
         return UrlModel.findOne({"trueUrl":url}).exec();
     }
+    public GetExpiredUrls(date:Date):Promise<any>{
+        return UrlModel.deleteMany({lastAccessDate:{$lt:date}}).exec();
+    }
 }

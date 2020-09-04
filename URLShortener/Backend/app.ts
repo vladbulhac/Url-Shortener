@@ -3,11 +3,15 @@ import mongoose from 'mongoose';
 import * as bodyParser from 'body-parser';
 import helmet from 'helmet';
 import cors from 'cors';
+import * as cron from 'node-cron';
 import {IController} from './Controllers/IController';
+import { IUrlRepository } from "./Repositories/UrlRepositories/IUrlRepository";
 require('dotenv').config();
+
 
 export class Application{
     private App:express.Application;
+    private UrlRepository:IUrlRepository;
     
     constructor(controllers:IController[],dbUrl?:string)
     {
@@ -52,6 +56,12 @@ export class Application{
         controllers.forEach(controller=>{
             this.App.use('/',controller.Router);
         });
+    }
+
+    private PeriodicUrlCleanup(UrlRepository:IUrlRepository):void{
+            cron.schedule('*****5',async function(){
+                    UrlRepository.GetExpiredUrls(Date.now);
+            });
     }
 
     public Listen():void{

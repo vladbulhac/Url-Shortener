@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import { IUserRepository } from "./IUserRepository";
 import { User, UserModel } from "../../Models/User.model";
+import { Url } from "../../Models/Url.model";
 
 export class UserRepository implements IUserRepository {
 
@@ -29,5 +30,9 @@ export class UserRepository implements IUserRepository {
   }
   public Update(id: string, data: User): Promise<User|null> {
     return UserModel.findByIdAndUpdate(id,data,{new:true}).populate('UrlHistory').exec();
+  }
+
+  public UpdateHistory(id:string,url:string):Promise<User|null>{
+      return UserModel.findByIdAndUpdate(id,{$push:{"urlHistory":url}},{new:true}).exec();
   }
 }
