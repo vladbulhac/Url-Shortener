@@ -17,7 +17,7 @@ export class LoginService {
       this.TokenService=tokenService;
   }
   public async Login(email: string, password: string): Promise<ILogin> {
-    let user: User | null = await this.UserRepository.ExistsFindByArgument(
+    let user: User | null = await this.UserRepository.FindByArgument(
       JSON.stringify({email:email})
     );
 

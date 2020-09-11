@@ -51,13 +51,16 @@ export class UrlController extends HttpStatusResponse implements IController {
   }
 
   private GetUrl(request: Request, response: Response): void {
-    const reqUrl = request.params.data;
+    const reqUrl = request.params.url;
 
     this.UrlRepository.FindByUrl(reqUrl)
-      .then((url: Url | null) => {
+      .then(async (url: Url | null) => {
         if (url) {
-          const shortUrl: string = url.shortUrl;
-          response.status(HttpCodes.Ok).json({ data: { url:shortUrl } });
+          url.lastAccessDate=new Date(Date.now());
+          url.accessNumber=url.accessNumber!+1;
+          const updatedUrl=await this.UrlRepository.Update(String(url._id),url);
+          const trueUrl:string=url.trueUrl;
+          response.status(HttpCodes.Ok).json({ data: { url:trueUrl } });
         } else
           response
             .status(HttpCodes.NotFound)
@@ -78,6 +81,7 @@ export class UrlController extends HttpStatusResponse implements IController {
       .then(async(url: Url | null) => {
         if (url) {
           const shortUrl: string = url.shortUrl;
+          //todo:update url data here
          await  this.UserRepository.UpdateHistory(userId, url.trueUrl);
           response.status(HttpCodes.Ok).json({ data: { url:shortUrl } });
         } else
@@ -93,7 +97,7 @@ export class UrlController extends HttpStatusResponse implements IController {
   }
 
   private async CreateUrl(request: Request, response: Response): Promise<void> {
-    const reqUrl = request.body.data;
+    const reqUrl = request.body.data.url;
 
     try {
       const existingUrl = await this.UrlRepository.FindByUrl(reqUrl);
@@ -101,8 +105,14 @@ export class UrlController extends HttpStatusResponse implements IController {
         const resUrl = existingUrl.shortUrl;
         response.status(HttpCodes.Ok).json({ data: { url:resUrl } });
       } else {
-        const newUrl:Url = await this.UrlRepository.Add(reqUrl);
-        response.status(HttpCodes.Ok).json({data:{url:newUrl.shortUrl}});
+        const shortUrl:string=this.UrlConvService.ShortUrl(reqUrl);
+        const newUrl:any={
+            trueUrl:reqUrl,
+            shortUrl:shortUrl,
+            accessNumber:1
+        }
+        const savedUrl=await this.UrlRepository.Add(newUrl);
+        response.status(HttpCodes.Ok).json({data:{url:shortUrl}});
       }
     } catch (error) {
       response

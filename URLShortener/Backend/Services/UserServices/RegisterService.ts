@@ -17,7 +17,7 @@ export class RegisterService {
     this.TokenService=tokenService;
   }
   public async Register(data: User): Promise<ILogin> {
-    let existsUser: User | null = await this.UserRepository.ExistsFindByArgument(
+    let existsUser: User | null = await this.UserRepository.FindByArgument(
       JSON.stringify({email:data.email})
     );
     if (!existsUser) {
@@ -25,13 +25,13 @@ export class RegisterService {
       try{
         let user:User= await this.UserRepository.Add(data);
           const token:string=this.TokenService.Create(String(user._id));
-          user=JSON.parse(JSON.stringify(user));
-          delete user.password;
+
           const loginDetails: ILogin = {
             user: user,
             token: token,
             message: "Successful",
           };
+          
           return loginDetails;
       }catch(error) {
         return {

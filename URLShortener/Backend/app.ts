@@ -6,12 +6,12 @@ import cors from 'cors';
 import * as cron from 'node-cron';
 import {IController} from './Controllers/IController';
 import { IUrlRepository } from "./Repositories/UrlRepositories/IUrlRepository";
+import { UrlRepository } from "./Repositories/UrlRepositories/UrlRepository";
 require('dotenv').config();
 
 
 export class Application{
     private App:express.Application;
-    private UrlRepository:IUrlRepository;
     
     constructor(controllers:IController[],dbUrl?:string)
     {
@@ -20,6 +20,7 @@ export class Application{
         this.InitializeDataBaseConnection(dbUrl);
         this.InitialzeMiddlewares();
         this.InitializeControllers(controllers);
+        //this.PeriodicUrlCleanup(new UrlRepository());
     }
 
     private InitialzeMiddlewares():void{
@@ -59,8 +60,8 @@ export class Application{
     }
 
     private PeriodicUrlCleanup(UrlRepository:IUrlRepository):void{
-            cron.schedule('*****5',async function(){
-                    UrlRepository.GetExpiredUrls(Date.now);
+            cron.schedule('* * * * 5',async function(){
+                    await UrlRepository.GetExpiredUrls(Date.now());
             });
     }
 
