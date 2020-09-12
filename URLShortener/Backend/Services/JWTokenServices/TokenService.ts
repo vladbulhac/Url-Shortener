@@ -36,7 +36,7 @@ export class TokenService extends HttpStatusResponse implements ITokenService {
             .status(HttpCodes.Unauthorized)
             .json(this.Error_Unauthorized(String(error)));
           return;
-        } else if (decoded) next();
+        } else if (decoded)next();
       });
     } else
       response

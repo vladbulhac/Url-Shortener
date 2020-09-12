@@ -1,14 +1,11 @@
 import { HttpStatusResponse } from "../Utils/HttpStatusResponse";
 import { Router, Request, Response } from "express";
 import { IController } from "./IController";
-import { UrlConversionService } from "../Services/UrlServices/UrlConversionService";
-import { ICrudRepository } from "../Repositories/ICrudRepository";
 import { Url } from "../Models/Url.model";
 import { IUrlConversionService } from "../Services/UrlServices/IUrlConversionService";
 import { IUrlRepository } from "../Repositories/UrlRepositories/IUrlRepository";
 import { HttpCodes } from "../Utils/HttpCodes.enum";
 import { ITokenService } from "../Services/JWTokenServices/ITokenService";
-import { url } from "envalid";
 import { IUserRepository } from "../Repositories/UserRepositories/IUserRepository";
 
 export class UrlController extends HttpStatusResponse implements IController {
@@ -53,12 +50,10 @@ export class UrlController extends HttpStatusResponse implements IController {
   private GetUrl(request: Request, response: Response): void {
     const reqUrl = request.params.url;
 
-    this.UrlRepository.FindByUrl(reqUrl)
+    this.UrlRepository.GetByIdentifier(reqUrl)
       .then(async (url: Url | null) => {
         if (url) {
-          url.lastAccessDate=new Date(Date.now());
-          url.accessNumber=url.accessNumber!+1;
-          const updatedUrl=await this.UrlRepository.Update(String(url._id),url);
+          await this.UrlRepository.UpdateTTL(reqUrl);
           const trueUrl:string=url.trueUrl;
           response.status(HttpCodes.Ok).json({ data: { url:trueUrl } });
         } else
@@ -77,11 +72,11 @@ export class UrlController extends HttpStatusResponse implements IController {
     const userId = request.params.id;
     const reqUrl = request.params.url;
 
-    this.UrlRepository.FindByUrl(reqUrl)
+    this.UrlRepository.GetByIdentifier(reqUrl)
       .then(async(url: Url | null) => {
         if (url) {
           const shortUrl: string = url.shortUrl;
-          //todo:update url data here
+          await this.UrlRepository.UpdateTTL(reqUrl);
          await  this.UserRepository.UpdateHistory(userId, url.trueUrl);
           response.status(HttpCodes.Ok).json({ data: { url:shortUrl } });
         } else
@@ -100,7 +95,7 @@ export class UrlController extends HttpStatusResponse implements IController {
     const reqUrl = request.body.data.url;
 
     try {
-      const existingUrl = await this.UrlRepository.FindByUrl(reqUrl);
+      const existingUrl = await this.UrlRepository.GetByIdentifier(reqUrl);
       if (existingUrl) {
         const resUrl = existingUrl.shortUrl;
         response.status(HttpCodes.Ok).json({ data: { url:resUrl } });
@@ -112,7 +107,7 @@ export class UrlController extends HttpStatusResponse implements IController {
             accessNumber:1
         }
         const savedUrl=await this.UrlRepository.Add(newUrl);
-        response.status(HttpCodes.Ok).json({data:{url:shortUrl}});
+        response.status(HttpCodes.Created).json({data:{url:shortUrl}});
       }
     } catch (error) {
       response
@@ -125,7 +120,7 @@ export class UrlController extends HttpStatusResponse implements IController {
     const userId=request.params.id;
 
     try {
-      const existingUrl = await this.UrlRepository.FindByUrl(reqUrl);
+      const existingUrl = await this.UrlRepository.GetByIdentifier(reqUrl);
       if (existingUrl) {
         const resUrl = existingUrl.shortUrl;
         await this.UserRepository.UpdateHistory(userId,existingUrl.trueUrl);
@@ -133,7 +128,7 @@ export class UrlController extends HttpStatusResponse implements IController {
       } else {
         reqUrl["extendedLifeTime"]=true;
         const newUrl:Url = await this.UrlRepository.Add(reqUrl);
-        response.status(HttpCodes.Ok).json({data:{url:newUrl.shortUrl}});
+        response.status(HttpCodes.Created).json({data:{url:newUrl.shortUrl}});
       }
     } catch (error) {
       response

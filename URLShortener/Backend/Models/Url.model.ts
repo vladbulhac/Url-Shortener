@@ -2,7 +2,7 @@ import * as mongoose from "mongoose";
 import { Typegoose, prop, pre } from "typegoose";
 
 @pre<Url>("save", function() {
-  this.lastAccessDate = new Date(Date.now());
+  this.TTL = new Date(Date.now()+7 * 24 * 60 * 60 * 1000);
 })
 
 export class Url extends Typegoose {
@@ -14,14 +14,14 @@ export class Url extends Typegoose {
   @prop({ index:true,required: true})
   trueUrl!: string;
 
-  @prop({ min: 0,default:1 })
+  @prop({ min: 1,default:1 })
   accessNumber?: number;
 
   @prop({ index:true})
-  lastAccessDate?: Date;
+  TTL?: Date;
 
   @prop()
-  extendedLifeTime?:boolean;
+  extendedTTL?:boolean;
 }
 
 export const UrlModel = new Url().getModelForClass(Url, {

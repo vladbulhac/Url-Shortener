@@ -25,7 +25,7 @@ export class RegisterService {
       try{
         let user:User= await this.UserRepository.Add(data);
           const token:string=this.TokenService.Create(String(user._id));
-
+          delete user!.password;
           const loginDetails: ILogin = {
             user: user,
             token: token,

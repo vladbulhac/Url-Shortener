@@ -20,7 +20,7 @@ export class Application{
         this.InitializeDataBaseConnection(dbUrl);
         this.InitialzeMiddlewares();
         this.InitializeControllers(controllers);
-        //this.PeriodicUrlCleanup(new UrlRepository());
+        this.PeriodicUrlCleanup(new UrlRepository());
     }
 
     private InitialzeMiddlewares():void{
@@ -60,8 +60,8 @@ export class Application{
     }
 
     private PeriodicUrlCleanup(UrlRepository:IUrlRepository):void{
-            cron.schedule('* * * * 5',async function(){
-                    await UrlRepository.GetExpiredUrls(Date.now());
+            cron.schedule('* * 23 * * *',async function(){
+                    await UrlRepository.RemoveExpiredUrls(Date.now());
             });
     }
 
