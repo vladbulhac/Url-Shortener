@@ -5,7 +5,6 @@ import { User, UserModel } from "../../Models/User.model";
 import { Url } from "../../Models/Url.model";
 
 export class UserRepository implements IUserRepository {
-
   public FindByArgument(argument: string): Promise<User | null> {
     const arg = JSON.parse(argument);
     return UserModel.findOne(arg).exec();
@@ -14,22 +13,27 @@ export class UserRepository implements IUserRepository {
     const document = new UserModel(data);
     return document.save();
   }
-  public GetByIdentifier(id: string): Promise<User|null> {
-      return UserModel.findById(id).exec();
+  public GetByIdentifier(id: string): Promise<User | null> {
+    return UserModel.findById(id).populate('customUrls').exec();
   }
-  public GetAll(): Promise<User[]> {
-      return UserModel.find().populate('UrlHistory').exec();
+  public DeleteByIdentifier(id: string): Promise<any> {
+    return UserModel.findByIdAndDelete(id).populate('customUrls').exec();
   }
-  public Delete(): Promise<any> {
-      return UserModel.deleteMany({}).exec();
+  public Update(id: string, data: User): Promise<User | null> {
+    return UserModel.findByIdAndUpdate(id, data, { new: true }).populate('customUrls').exec();
   }
-  public DeleteById(id: string): Promise<any> {
-      return UserModel.findByIdAndDelete(id).exec();
+  public UpdateHistory(id: string, url: string): Promise<User | null> {
+    return UserModel.findByIdAndUpdate(
+      id,
+      { $push: { urlHistory: url } },
+      { new: true }
+    ).populate('customUrls').exec();
   }
-  public Update(id: string, data: User): Promise<User|null> {
-    return UserModel.findByIdAndUpdate(id,data,{new:true}).exec();
-  }
-  public UpdateHistory(id:string,url:string):Promise<User|null>{
-      return UserModel.findByIdAndUpdate(id,{$push:{"urlHistory":url}},{new:true}).exec();
+  public UpdateCustomUrls(id: string, url: Url): Promise<User | null> {
+    return UserModel.findByIdAndUpdate(
+      id,
+      { $push: { customUrls: url } },
+      { new: true }
+    ).populate('customUrls').exec();
   }
 }

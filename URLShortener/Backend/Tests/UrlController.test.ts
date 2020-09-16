@@ -9,6 +9,7 @@ import { TokenService } from "../Services/JWTokenServices/TokenService";
 import { UrlController } from "../Controllers/UrlController";
 import { UrlRepository } from "../Repositories/UrlRepositories/UrlRepository";
 import { UrlConversionService } from "../Services/UrlServices/UrlConversionService";
+import { CacheRetrieveService } from "../Services/CacheRetrieveServices/CacheRetrieveService";
 
 let application: express.Application;
 const UrlData = require("./Resources/UrlTestData.json");
@@ -21,7 +22,8 @@ before(() =>
           new UrlRepository(),
           new UserRepository(),
           new UrlConversionService(),
-          new TokenService()
+          new TokenService(),
+          new CacheRetrieveService()
         ),
       ],
       url

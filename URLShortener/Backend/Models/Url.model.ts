@@ -14,7 +14,7 @@ export class Url extends Typegoose {
   @prop({ index:true,required: true})
   trueUrl!: string;
 
-  @prop({ min: 1,default:1 })
+  @prop({ min: 0,default:0 })
   accessNumber?: number;
 
   @prop({ index:true})
@@ -22,6 +22,9 @@ export class Url extends Typegoose {
 
   @prop()
   extendedTTL?:boolean;
+
+  @prop({required:true,default:true})
+  isActive!:boolean;
 }
 
 export const UrlModel = new Url().getModelForClass(Url, {

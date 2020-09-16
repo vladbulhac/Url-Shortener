@@ -25,7 +25,6 @@ export class UserController extends HttpStatusResponse implements IController {
 
   private InitializeRoutes(): void {
     this.Router.get(`${this.Path}/login`, this.Login.bind(this));
-    this.Router.get(`${this.Path}`, this.GetAll.bind(this));
     this.Router.get(`${this.Path}/:id`, this.GetUserById.bind(this));
 
     this.Router.post(`${this.Path}/register`, this.Register.bind(this));
@@ -40,11 +39,6 @@ export class UserController extends HttpStatusResponse implements IController {
       `${this.Path}/:id`,
       [this.TokenService.Verify.bind(this)],
       this.DeleteUserById.bind(this)
-    );
-    this.Router.delete(
-      `${this.Path}`,
-      [this.TokenService.Verify.bind(this)],
-      this.DeleteAll.bind(this)
     );
   }
 
@@ -63,20 +57,6 @@ export class UserController extends HttpStatusResponse implements IController {
           response
             .status(HttpCodes.NotFound)
             .json(this.Error_NotFound("Email or Password is incorrect"));
-      })
-      .catch((error) => {
-        response
-          .status(HttpCodes.BadRequest)
-          .json(this.Error_BadRequest(String(error)));
-      });
-  }
-
-  private GetAll(request: Request, response: Response): void {
-    this.UserRepository.GetAll()
-      .then((users) => {
-        if (users.length === 0)
-          response.status(HttpCodes.NoContent).json({ data: { users } });
-        else response.status(HttpCodes.Ok).json({ data: { users } });
       })
       .catch((error) => {
         response
@@ -142,19 +122,7 @@ export class UserController extends HttpStatusResponse implements IController {
   private DeleteUserById(request: Request, response: Response): void {
     const requestId: string = request.params.id;
 
-    this.UserRepository.DeleteById(requestId)
-      .then(() => {
-        response.status(HttpCodes.NoContent);
-      })
-      .catch((error) => {
-        response
-          .status(HttpCodes.BadRequest)
-          .json(this.Error_BadRequest(String(error)));
-      });
-  }
-
-  private DeleteAll(request: Request, response: Response): void {
-    this.UserRepository.Delete()
+    this.UserRepository.DeleteByIdentifier(requestId)
       .then(() => {
         response.status(HttpCodes.NoContent);
       })

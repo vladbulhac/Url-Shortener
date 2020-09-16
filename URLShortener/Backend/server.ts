@@ -10,6 +10,8 @@ import { IUrlRepository } from "./Repositories/UrlRepositories/IUrlRepository";
 import { IUserRepository } from "./Repositories/UserRepositories/IUserRepository";
 import { ITokenService } from "./Services/JWTokenServices/ITokenService";
 import { IUrlConversionService } from "./Services/UrlServices/IUrlConversionService";
+import { ICacheRetrieveService } from "./Services/CacheRetrieveServices/ICacheRetrieveService";
+import { CacheRetrieveService } from "./Services/CacheRetrieveServices/CacheRetrieveService";
 
 ValidateEnv();
 
@@ -17,6 +19,7 @@ let url_repository: IUrlRepository = new UrlRepository();
 let user_repository: IUserRepository = new UserRepository();
 let token_service: ITokenService = new TokenService();
 let url_conversion_service: IUrlConversionService = new UrlConversionService();
+let cache_service:ICacheRetrieveService=new CacheRetrieveService();
 
 let App: Application = new Application([
   new UserController(user_repository, token_service),
@@ -24,7 +27,8 @@ let App: Application = new Application([
     url_repository,
     user_repository,
     url_conversion_service,
-    token_service
+    token_service,
+    cache_service
   ),
 ]);
 

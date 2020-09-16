@@ -1,6 +1,5 @@
 import { Typegoose } from "typegoose";
 
 export interface IDeleteRepository{
-    Delete():Promise<any>;
-    DeleteById(id:string):Promise<any>;
+    DeleteByIdentifier(id:string):Promise<any>;
 }

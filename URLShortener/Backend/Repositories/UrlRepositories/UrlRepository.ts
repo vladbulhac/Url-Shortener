@@ -9,25 +9,26 @@ export class UrlRepository implements IUrlRepository {
   public GetByIdentifier(url: string): Promise<Url | null> {
     return UrlModel.findOne({ shortUrl: url }).exec();
   }
-  public GetAll(): Promise<Url[]> {
-    return UrlModel.find().exec();
-  }
-  public Update(id: string, data: Url): Promise<Url | null> {
-    return UrlModel.findByIdAndUpdate(id, data, { new: true }).exec();
-  }
-  public async UpdateTTL(url: string): Promise<any> {
+  public async UpdateTTL(url: string): Promise<Url|null|void> {
     return UrlModel.findOne({ shortUrl: url }).then(async (data) => {
       if (data) {
         if (data.extendedTTL === true)
           data.TTL = new Date(data.TTL!.getDate() + 4);
         else data.TTL = new Date(data.TTL!.getDate() + 2);
-        await this.Update(data._id,data);
+        data.accessNumber=data.accessNumber!+1;
+        await UrlModel.findByIdAndUpdate(data._id,data).exec();
       }
     });
   }
-  public RemoveExpiredUrls(date: number): Promise<any> {
-    return UrlModel.deleteMany({
-      lastAccessDate: { $lt: new Date(date) },
+  public DeleteByIdentifier(url:string):Promise<any>{
+    return UrlModel.deleteOne({shortUrl:url}).exec();
+  }
+  public DisableExpiredUrls(date: number): Promise<any> {
+    return UrlModel.updateMany(
+      {lastAccessDate: { $lt: new Date(date) }},{$set:{isActive:false}
     }).exec();
+  }
+  public GetMostUsedActiveUrls(offset:number):Promise<Url[]>{
+    return UrlModel.find({isActive:true}).sort({accessNumber:'desc'}).skip(offset).limit(10).exec();
   }
 }

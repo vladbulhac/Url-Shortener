@@ -13,6 +13,9 @@ export class User extends Typegoose {
 
   @prop()
   urlHistory?: string[];
+
+  @prop({ref:'Url'})
+  customUrls?:Ref<Url>[];
 }
 
 export const UserModel = new User().getModelForClass(User, {

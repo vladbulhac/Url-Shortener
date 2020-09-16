@@ -61,7 +61,7 @@ export class Application{
 
     private PeriodicUrlCleanup(UrlRepository:IUrlRepository):void{
             cron.schedule('* * 23 * * *',async function(){
-                    await UrlRepository.RemoveExpiredUrls(Date.now());
+                    await UrlRepository.DisableExpiredUrls(Date.now());
             });
     }
 
