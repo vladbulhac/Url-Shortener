@@ -84,31 +84,6 @@ export class UrlController extends HttpStatusResponse implements IController {
           .status(HttpCodes.BadRequest)
           .json(this.Error_BadRequest(String(error)));
     }
-    /*let cachedUrl = await this.CacheService.QueryCacheForUrl(reqUrl);
-    if (cachedUrl) {
-      response.status(HttpCodes.Ok).json({ data: { url: cachedUrl } });
-      await this.UrlRepository.UpdateTTL(reqUrl);
-    } else {
-      try {
-        const url: Url | null = await this.UrlRepository.GetByIdentifier(
-          reqUrl
-        );
-
-        if (url) {
-          response.status(HttpCodes.Ok).json({ data: { url: url.trueUrl } });
-          await this.UrlRepository.UpdateTTL(reqUrl);
-          this.CacheService.AddUrlToCache(url.shortUrl, url.trueUrl);
-        } else {
-          response
-            .status(HttpCodes.NotFound)
-            .json(this.Error_NotFound("Could not find this url"));
-        }
-      } catch (error) {
-        response
-          .status(HttpCodes.BadRequest)
-          .json(this.Error_BadRequest(String(error)));
-      }
-    }*/
   }
 
   private async GetUrlByUser(
@@ -142,30 +117,6 @@ export class UrlController extends HttpStatusResponse implements IController {
           .status(HttpCodes.BadRequest)
           .json(this.Error_BadRequest(String(error)));
     }
-    /*let cachedUrl = await this.CacheService.QueryCacheForUrl(reqUrl);
-    if (cachedUrl) {
-      response.status(HttpCodes.Ok).json({ data: { url: cachedUrl } });
-      await this.UrlRepository.UpdateTTL(reqUrl);
-      await this.UserRepository.UpdateHistory(userId, cachedUrl);
-    }
-
-    try {
-      const url = await this.UrlRepository.GetByIdentifier(reqUrl);
-
-      if (url) {
-        response.status(HttpCodes.Ok).json({ data: { url: url.trueUrl } });
-        await this.UrlRepository.UpdateTTL(reqUrl);
-        await this.UserRepository.UpdateHistory(userId, url.trueUrl);
-      } else {
-        response
-          .status(HttpCodes.NotFound)
-          .json(this.Error_NotFound("Could not find this url"));
-      }
-    } catch (error) {
-      response
-        .status(HttpCodes.BadRequest)
-        .json(this.Error_BadRequest(String(error)));
-    }*/
   }
 
   private async CreateUrl(request: Request, response: Response): Promise<void> {
@@ -185,27 +136,6 @@ export class UrlController extends HttpStatusResponse implements IController {
         .status(HttpCodes.BadRequest)
         .json(this.Error_BadRequest(String(error)));
     }
-    /*
-    try {
-      const existingUrl = await this.UrlRepository.GetByIdentifier(reqUrl);
-      if (existingUrl) {
-        const resUrl = existingUrl.shortUrl;
-        response.status(HttpCodes.Ok).json({ data: { url: resUrl } });
-      } else {
-        const shortUrl: string = this.UrlConvService.ShortUrl(reqUrl);
-        const newUrl: any = {
-          trueUrl: reqUrl,
-          shortUrl: shortUrl,
-          accessNumber: 1,
-        };
-        await this.UrlRepository.Add(newUrl);
-        response.status(HttpCodes.Created).json({ data: { url: shortUrl } });
-      }
-    } catch (error) {
-      response
-        .status(HttpCodes.BadRequest)
-        .json(this.Error_BadRequest(String(error)));
-    }*/
   }
   private async CreateUrlByUser(
     request: Request,
@@ -233,43 +163,6 @@ export class UrlController extends HttpStatusResponse implements IController {
         .status(HttpCodes.BadRequest)
         .json(this.Error_BadRequest(String(error)));
     }
-    /*
-    try {
-      let existingUrl: Url | null;
-      if (customUrl)
-        existingUrl = await this.UrlRepository.GetByIdentifier(customUrl);
-      else existingUrl = await this.UrlRepository.GetByIdentifier(reqUrl);
-      if (existingUrl) {
-        const resUrl = existingUrl.shortUrl;
-        await this.UserRepository.UpdateHistory(userId, existingUrl.trueUrl);
-        response.status(HttpCodes.Ok).json({ data: { url: resUrl } });
-      } else {
-        let newUrl: any = {
-          trueUrl: reqUrl,
-          accessNumber: 1,
-          extendedTTL: true,
-        };
-        if (customUrl) {
-          newUrl["shortUrl"] = customUrl;
-          const savedUrl = await this.UrlRepository.Add(newUrl);
-          await this.UserRepository.UpdateCustomUrls(userId, savedUrl);
-        } else {
-          const shortUrl: string = this.UrlConvService.ShortUrl(reqUrl);
-          newUrl["shortUrl"] = shortUrl;
-          await this.UrlRepository.Add(newUrl);
-        }
-
-        await this.UserRepository.UpdateHistory(userId, reqUrl);
-
-        response
-          .status(HttpCodes.Created)
-          .json({ data: { url: newUrl.shortUrl } });
-      }
-    } catch (error) {
-      response
-        .status(HttpCodes.BadRequest)
-        .json(this.Error_BadRequest(String(error)));
-    }*/
   }
 
   private async DeleteCustomUrl(
