@@ -24,10 +24,14 @@ export async function CreateUrlByUserHandler(
   else existingUrl = await UrlRepository.GetByIdentifier(url);
 
   if (existingUrl) {
-      if(existingUrl.isActive===true)
+      if(existingUrl.isActive===true && customUrl)
          throw new ConflictError("This url exists already");
     else
-        await UrlRepository.DeleteByIdentifier(existingUrl.shortUrl);
+        if(existingUrl.isActive===false)
+            await UrlRepository.DeleteByIdentifier(existingUrl.shortUrl);
+    else
+        if(existingUrl.isActive===true)
+            return existingUrl.shortUrl;
    }
 
     let newUrl: any = {

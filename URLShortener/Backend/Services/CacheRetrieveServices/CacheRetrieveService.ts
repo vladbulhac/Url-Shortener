@@ -1,6 +1,5 @@
 import redis, { RedisClient } from 'redis';
 import {promisify} from 'util';
-import { Url } from '../../Models/Url.model';
 import { ICacheRetrieveService } from './ICacheRetrieveService';
 
 export class CacheRetrieveService implements ICacheRetrieveService{

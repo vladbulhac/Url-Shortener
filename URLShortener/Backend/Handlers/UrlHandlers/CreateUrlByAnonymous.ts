@@ -10,13 +10,13 @@ export async function CreateUrlHandler(
   CacheService: ICacheRetrieveService
 ): Promise<string> {
   let cachedUrl = await CacheService.QueryCacheForUrl(url);
-  if (cachedUrl) 
-    return cachedUrl;
+  if (cachedUrl) return cachedUrl;
 
   const existingUrl: Url | null = await UrlRepository.GetByIdentifier(url);
   if (existingUrl) {
-    CacheService.AddUrlToCache(existingUrl.shortUrl, existingUrl.trueUrl);
-    return existingUrl.shortUrl;
+    if (existingUrl.isActive === false)
+      await UrlRepository.DeleteByIdentifier(existingUrl.shortUrl);
+    else return existingUrl.shortUrl;
   }
 
   const shortUrl: string = UrlConversionService.ShortUrl(url);

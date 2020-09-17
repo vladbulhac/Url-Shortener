@@ -13,6 +13,7 @@ import { GetUrlByUserHandler } from "../Handlers/UrlHandlers/GetUrlByUser";
 import { NotFoundError } from "../Utils/CustomErrors/NotFound.error";
 import { CreateUrlHandler } from "../Handlers/UrlHandlers/CreateUrlByAnonymous";
 import { CreateUrlByUserHandler } from "../Handlers/UrlHandlers/CreateUrlByUser";
+import { ConflictError } from "../Utils/CustomErrors/Conflict.error";
 
 export class UrlController extends HttpStatusResponse implements IController {
   public Path: string = "";
@@ -132,6 +133,11 @@ export class UrlController extends HttpStatusResponse implements IController {
           .status(HttpCodes.NotFound)
           .json(this.Error_NotFound("Could not find this url"));
       else
+      if(error instanceof ConflictError)
+      response
+      .status(HttpCodes.Conflict)
+      .json(this.Error_Conflict("This short url has already been used"));
+      else
         response
           .status(HttpCodes.BadRequest)
           .json(this.Error_BadRequest(String(error)));
@@ -207,7 +213,7 @@ export class UrlController extends HttpStatusResponse implements IController {
   ): Promise<void> {
     const reqUrl = request.body.data.url;
     const userId = request.params.id;
-    const customUrl = request.body.custom;
+    const customUrl = request.body.data.custom;
 
     try {
       const url = await CreateUrlByUserHandler(
