@@ -5,10 +5,8 @@ import { ICacheRetrieveService } from "../../Services/CacheRetrieveServices/ICac
 import { NotFoundError } from "../../Utils/CustomErrors/NotFound.error";
 
 export async function GetUrlByUserHandler(
-  userId: string,
   url: string,
   UrlRepository: IUrlRepository,
-  UserRepository: IUserRepository,
   CacheService: ICacheRetrieveService
 ): Promise<string> {
   let cachedUrl = await CacheService.QueryCacheForUrl(url);

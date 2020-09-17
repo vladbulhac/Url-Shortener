@@ -3,6 +3,7 @@ import { IUrlRepository } from "../../Repositories/UrlRepositories/IUrlRepositor
 import { IUserRepository } from "../../Repositories/UserRepositories/IUserRepository";
 import { ICacheRetrieveService } from "../../Services/CacheRetrieveServices/ICacheRetrieveService";
 import { IUrlConversionService } from "../../Services/UrlServices/IUrlConversionService";
+import { ConflictError } from "../../Utils/CustomErrors/Conflict.error";
 
 export async function CreateUrlByUserHandler(
   userId: string,
@@ -22,9 +23,13 @@ export async function CreateUrlByUserHandler(
   if (customUrl) existingUrl = await UrlRepository.GetByIdentifier(customUrl);
   else existingUrl = await UrlRepository.GetByIdentifier(url);
 
-  if (existingUrl) 
-    return existingUrl.shortUrl;
-  else {
+  if (existingUrl) {
+      if(existingUrl.isActive===true)
+         throw new ConflictError("This url exists already");
+    else
+        await UrlRepository.DeleteByIdentifier(existingUrl.shortUrl);
+   }
+
     let newUrl: any = {
       trueUrl: url,
       accessNumber: 1,
@@ -43,4 +48,3 @@ export async function CreateUrlByUserHandler(
 
     return newUrl.shortUrl;
   }
-}

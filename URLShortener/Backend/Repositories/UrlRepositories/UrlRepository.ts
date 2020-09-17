@@ -7,7 +7,7 @@ export class UrlRepository implements IUrlRepository {
     return document.save();
   }
   public GetByIdentifier(url: string): Promise<Url | null> {
-    return UrlModel.findOne({ shortUrl: url }).exec();
+    return UrlModel.findOne({ shortUrl: url}).exec();
   }
   public async UpdateTTL(url: string): Promise<Url|null|void> {
     return UrlModel.findOne({ shortUrl: url }).then(async (data) => {

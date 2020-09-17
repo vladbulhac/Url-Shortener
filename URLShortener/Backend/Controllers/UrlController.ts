@@ -119,10 +119,8 @@ export class UrlController extends HttpStatusResponse implements IController {
 
     try {
       const url: string | null = await GetUrlByUserHandler(
-        userId,
         reqUrl,
         this.UrlRepository,
-        this.UserRepository,
         this.CacheService
       );
       response.status(HttpCodes.Ok).json({ data: { url: url } });
