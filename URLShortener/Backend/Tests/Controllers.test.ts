@@ -251,13 +251,62 @@ describe("url controller endpoint /", () => {
             });
         });
     });
-
-    it('should get the original url:https://github.com/remy/nodemon#nodemon after an anonymous request for ur:WutmF',()=>{
-
+  });
+  describe('/GET',()=>{
+    it('should get the original url:https://github.com/remy/nodemon#nodemon after an anonymous request for url:WutmF',()=>{
+      return request(application)
+      .post("")
+      .expect(201)
+      .send({ data: { url: UrlData.data[0] } })
+      .then(async(response) => {
+        expect(response.body.data.url).to.be.equal("WutmF");      
+        const url:string=response.body.data.url;
+        await request(application)
+                    .get('/'+url)
+                    .expect(200)
+                    .then(response=>{
+                      expect(response.body.data.url).to.be.equal(UrlData.data[0]);
+                    });
+      });
     });
 
-    it('should get the original url:https://github.com/remy/nodemon#nodemon after an user requests for url:WutmF',()=>{
-
+    it('should get the original url:https://github.com/remy/nodemon#nodemon after an user requests for custom url:testurl',()=>{
+      const loginData = {
+        data: {
+          email: users[2].email,
+          password: passwords[2],
+        },
+      };
+      return request(application)
+        .get("/users/login")
+        .send(loginData)
+        .expect(200)
+        .then(async (response) => {
+          const id: string = response.body.data.loginData.user._id;
+          const token: string = response.body.data.loginData.token;
+          await request(application)
+            .post("/u/" + id)
+            .set("Content-Type", "application/json")
+            .set("Accept", "application/json")
+            .set({ Authorization: `Bearer ${token}` })
+            .send({
+              data: {
+                url: UrlData.data[0],
+                custom: "testurl",
+              },
+            })
+            .expect(201)
+            .then(async(response) => {
+              expect(response.body.data.url).to.be.equal("testurl");
+              const url:string=response.body.data.url;
+              await request(application)
+                        .get('/'+url)
+                        .expect(200)
+                        .then(response=>{
+                          expect(response.body.data.url).to.be.equal(UrlData.data[0]);
+                        });
+            });
+        });
     });
 
   });
