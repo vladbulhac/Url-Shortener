@@ -20,20 +20,6 @@ export class UrlConversionService implements IUrlConversionService {
     }
     return this.EncodeDigits(baseConversionDigits);
   }
-  /*
-  public GenerateShortUrl(url: string): string {
-    let randIdAsNumber: number = this.ConvertStringIdToNumber(url);
-
-    let toNumberTransformedString: string = "";
-    let totalCharacters: number = this.IndexToCharsMap.size;
-    let baseConversionDigits:number[]=[];
-    while (randIdAsNumber != 0) {
-      baseConversionDigits.push( randIdAsNumber % totalCharacters);
-      randIdAsNumber = Math.floor(randIdAsNumber / totalCharacters);
-    }
-    return this.EncodeDigits(baseConversionDigits);
-  }
-*/
 
   private EncodeDigits(
     baseConversionDigits: number[]
@@ -46,16 +32,6 @@ export class UrlConversionService implements IUrlConversionService {
     return newUrl;
   }
 
-  private ConvertStringIdToNumber(randId: string): number {
-    let randIdAsNumber: number = 0;
-    for (let i = 0; i <8; i++) {
-      let charMapIndex: number = randId[i].charCodeAt(0);
-      if (charMapIndex === 0) randIdAsNumber = randIdAsNumber * 10;
-      else randIdAsNumber = randIdAsNumber * 10 + (charMapIndex % 10);
-    }
-
-    return randIdAsNumber;
-  }
 
   private BuildIndexToCharsMap(): void {
     this.IndexToCharsMap = new Map<number, string>();
@@ -75,20 +51,5 @@ export class UrlConversionService implements IUrlConversionService {
       counter++;
       index++;
     }
-    /*let index = 0;
-    for (let counter= 0; counter <=25; counter++){
-      this.indexToCharsMap.set(counter, String.fromCharCode(65 + index));
-      index++;
-    }
-    index = 0;
-    for (let counter = 26; counter <=51; counter++){
-      this.indexToCharsMap.set(counter, String.fromCharCode(97 + index));
-      index++;
-    }
-    index = 0;
-    for (let counter = 52; counter <=61; counter++){
-      this.indexToCharsMap.set(counter, String.fromCharCode(48 + index));
-      index++;
-    }*/
   }
 }

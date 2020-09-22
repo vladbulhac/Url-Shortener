@@ -1,16 +1,19 @@
 import { Url } from "../../Models/Url.model";
 import { IUrlRepository } from "../../Repositories/UrlRepositories/IUrlRepository";
 import { IUserRepository } from "../../Repositories/UserRepositories/IUserRepository";
-import { ICacheRetrieveService } from "../../Services/CacheRetrieveServices/ICacheRetrieveService";
+import { ICacheService } from "../../Services/CacheRetrieveServices/ICacheService";
 import { NotFoundError } from "../../Utils/CustomErrors/NotFound.error";
 
 export async function GetUrlByUserHandler(
   url: string,
   UrlRepository: IUrlRepository,
-  CacheService: ICacheRetrieveService
+  CacheService: ICacheService
 ): Promise<string> {
+  try{
   let cachedUrl = await CacheService.QueryCacheForUrl(url);
   if (cachedUrl) return cachedUrl;
+  }catch(error)
+  {console.log(error);}
 
   const urlData: Url | null = await UrlRepository.GetByIdentifier(url);
 

@@ -30,6 +30,7 @@ export class TokenService extends HttpStatusResponse implements ITokenService {
       let headerSplit: string[] = headerData.split(" ");
       let tokenData: string = headerSplit[1];
       const secret:string=process.env.JWT_SECRET!;
+      
       jwt.verify(tokenData, secret, (error, decoded) => {
         if (error) {
           response

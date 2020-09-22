@@ -1,8 +1,8 @@
 import redis, { RedisClient } from 'redis';
 import {promisify} from 'util';
-import { ICacheRetrieveService } from './ICacheRetrieveService';
+import { ICacheService } from './ICacheService';
 
-export class CacheRetrieveService implements ICacheRetrieveService{
+export class CacheService implements ICacheService{
     private Client:RedisClient;
 
     constructor()

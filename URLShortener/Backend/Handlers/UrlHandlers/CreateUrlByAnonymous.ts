@@ -1,16 +1,22 @@
 import { Url } from "../../Models/Url.model";
 import { IUrlRepository } from "../../Repositories/UrlRepositories/IUrlRepository";
-import { ICacheRetrieveService } from "../../Services/CacheRetrieveServices/ICacheRetrieveService";
+import { ICacheService } from "../../Services/CacheRetrieveServices/ICacheService";
 import { IUrlConversionService } from "../../Services/UrlServices/IUrlConversionService";
 
 export async function CreateUrlHandler(
   url: string,
   UrlRepository: IUrlRepository,
   UrlConversionService: IUrlConversionService,
-  CacheService: ICacheRetrieveService
+  CacheService: ICacheService
 ): Promise<string> {
+  try{
   let cachedUrl = await CacheService.QueryCacheForUrl(url);
   if (cachedUrl) return cachedUrl;
+  }
+  catch(error)
+  {
+    console.log(error);
+  }
 
   const existingUrl: Url | null = await UrlRepository.GetByIdentifier(url);
   if (existingUrl) {

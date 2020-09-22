@@ -1,7 +1,7 @@
 import { Url } from "../../Models/Url.model";
 import { IUrlRepository } from "../../Repositories/UrlRepositories/IUrlRepository";
 import { IUserRepository } from "../../Repositories/UserRepositories/IUserRepository";
-import { ICacheRetrieveService } from "../../Services/CacheRetrieveServices/ICacheRetrieveService";
+import { ICacheService } from "../../Services/CacheRetrieveServices/ICacheService";
 import { IUrlConversionService } from "../../Services/UrlServices/IUrlConversionService";
 import { ConflictError } from "../../Utils/CustomErrors/Conflict.error";
 
@@ -11,12 +11,18 @@ export async function CreateUrlByUserHandler(
   UrlRepository: IUrlRepository,
   UserRepository: IUserRepository,
   UrlConversionService: IUrlConversionService,
-  CacheService: ICacheRetrieveService,
+  CacheService: ICacheService,
   customUrl: string | undefined | null
 ): Promise<string> {
+
+  try{
   let cachedUrl = await CacheService.QueryCacheForUrl(url);
   if (cachedUrl) 
     return cachedUrl;
+  }catch(error)
+  {
+    console.log(error);
+  }
   
 
   let existingUrl: Url | null;

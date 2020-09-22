@@ -14,11 +14,15 @@ export class UserController extends HttpStatusResponse implements IController {
   public Router: Router;
   private UserRepository: IUserRepository;
   private TokenService: ITokenService;
+  private LoginService:LoginService;
+  private RegisterService:RegisterService;
 
-  constructor(userRepo: IUserRepository, tokenService: ITokenService) {
+  constructor(userRepo: IUserRepository, tokenService: ITokenService,loginService:LoginService,registerService:RegisterService) {
     super();
     this.UserRepository = userRepo;
     this.TokenService = tokenService;
+    this.LoginService=loginService;
+    this.RegisterService=registerService;
     this.Router = Router();
     this.InitializeRoutes();
   }
@@ -44,11 +48,8 @@ export class UserController extends HttpStatusResponse implements IController {
 
   private Login(request: Request, response: Response): void {
     const requestBody = request.body.data;
-    let loginHelper: LoginService = new LoginService(
-      this.UserRepository,
-      this.TokenService
-    );
-    loginHelper
+    
+    this.LoginService
       .Login(requestBody.email, requestBody.password)
       .then((loginData) => {
         if (loginData.message === "Successful")
@@ -81,11 +82,8 @@ export class UserController extends HttpStatusResponse implements IController {
 
   private Register(request: Request, response: Response): void {
     const requestBody = request.body.data;
-    let registerHelper: RegisterService = new RegisterService(
-      this.UserRepository,
-      this.TokenService
-    );
-    registerHelper
+  
+    this.RegisterService
       .Register(requestBody)
       .then((registerData) => {
         if (registerData.message === "Successful")

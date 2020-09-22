@@ -8,14 +8,16 @@ import { UserController } from "../Controllers/UserController";
 import { UserRepository } from "../Repositories/UserRepositories/UserRepository";
 import { TokenService } from "../Services/JWTokenServices/TokenService";
 import { IUrlConversionService } from "../Services/UrlServices/IUrlConversionService";
-import { ICacheRetrieveService } from "../Services/CacheRetrieveServices/ICacheRetrieveService";
+import { ICacheService } from "../Services/CacheRetrieveServices/ICacheService";
 import { ITokenService } from "../Services/JWTokenServices/ITokenService";
 import { IUserRepository } from "../Repositories/UserRepositories/IUserRepository";
 import { IUrlRepository } from "../Repositories/UrlRepositories/IUrlRepository";
 import { UrlController } from "../Controllers/UrlController";
-import { CacheRetrieveService } from "../Services/CacheRetrieveServices/CacheRetrieveService";
+import { CacheService } from "../Services/CacheRetrieveServices/CacheService";
 import { UrlConversionService } from "../Services/UrlServices/UrlConversionService";
 import { UrlRepository } from "../Repositories/UrlRepositories/UrlRepository";
+import { LoginService } from "../Services/UserServices/LoginService";
+import { RegisterService } from "../Services/UserServices/RegisterService";
 
 const dbData = require("./Resources/UserTestData.json");
 const UrlData = require("./Resources/UrlTestData.json");
@@ -25,13 +27,15 @@ let application: express.Application;
 let url_repository: IUrlRepository = new UrlRepository();
 let user_repository: IUserRepository = new UserRepository();
 let token_service: ITokenService = new TokenService();
+let login_service:LoginService=new LoginService(user_repository,token_service);
+let register_service:RegisterService=new RegisterService(user_repository,token_service);
 let url_conversion_service: IUrlConversionService = new UrlConversionService();
-let cache_service: ICacheRetrieveService = new CacheRetrieveService();
+let cache_service: ICacheService = new CacheService();
 
 before(() =>
   mongoUnit.start().then((url) => {
     application = new Application(
-      [new UserController(user_repository, token_service),
+      [new UserController(user_repository, token_service,login_service,register_service),
         new UrlController(
           url_repository,
           user_repository,
