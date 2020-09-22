@@ -15,14 +15,11 @@ export async function CreateUrlByUserHandler(
   customUrl: string | undefined | null
 ): Promise<string> {
 
-  try{
+
   let cachedUrl = await CacheService.QueryCacheForUrl(url);
   if (cachedUrl) 
     return cachedUrl;
-  }catch(error)
-  {
-    console.log(error);
-  }
+
   
 
   let existingUrl: Url | null;

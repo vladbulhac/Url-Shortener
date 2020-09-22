@@ -9,11 +9,9 @@ export async function GetUrlByUserHandler(
   UrlRepository: IUrlRepository,
   CacheService: ICacheService
 ): Promise<string> {
-  try{
+
   let cachedUrl = await CacheService.QueryCacheForUrl(url);
   if (cachedUrl) return cachedUrl;
-  }catch(error)
-  {console.log(error);}
 
   const urlData: Url | null = await UrlRepository.GetByIdentifier(url);
 

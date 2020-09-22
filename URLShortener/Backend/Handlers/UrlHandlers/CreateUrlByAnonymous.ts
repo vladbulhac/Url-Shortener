@@ -9,14 +9,10 @@ export async function CreateUrlHandler(
   UrlConversionService: IUrlConversionService,
   CacheService: ICacheService
 ): Promise<string> {
-  try{
+
   let cachedUrl = await CacheService.QueryCacheForUrl(url);
   if (cachedUrl) return cachedUrl;
-  }
-  catch(error)
-  {
-    console.log(error);
-  }
+
 
   const existingUrl: Url | null = await UrlRepository.GetByIdentifier(url);
   if (existingUrl) {
