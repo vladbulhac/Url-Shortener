@@ -7,7 +7,7 @@ import { IUrlRepository } from "../Repositories/UrlRepositories/IUrlRepository";
 import { HttpCodes } from "../Utils/HttpCodes.enum";
 import { ITokenService } from "../Services/JWTokenServices/ITokenService";
 import { IUserRepository } from "../Repositories/UserRepositories/IUserRepository";
-import { ICacheService } from "../Services/CacheRetrieveServices/ICacheService";
+import { ICacheService } from "../Services/CacheServices/ICacheService";
 import { GetUrlHandler } from "../Handlers/UrlHandlers/GetUrlByAnonymous";
 import { GetUrlByUserHandler } from "../Handlers/UrlHandlers/GetUrlByUser";
 import { NotFoundError } from "../Utils/CustomErrors/NotFound.error";

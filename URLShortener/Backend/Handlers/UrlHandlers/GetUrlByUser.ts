@@ -1,7 +1,7 @@
 import { Url } from "../../Models/Url.model";
 import { IUrlRepository } from "../../Repositories/UrlRepositories/IUrlRepository";
 import { IUserRepository } from "../../Repositories/UserRepositories/IUserRepository";
-import { ICacheService } from "../../Services/CacheRetrieveServices/ICacheService";
+import { ICacheService } from "../../Services/CacheServices/ICacheService";
 import { NotFoundError } from "../../Utils/CustomErrors/NotFound.error";
 
 export async function GetUrlByUserHandler(

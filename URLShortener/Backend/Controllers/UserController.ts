@@ -1,28 +1,32 @@
 import { Router, Response, Request, NextFunction } from "express";
 import { HttpStatusResponse } from "../Utils/HttpStatusResponse";
 import { IController } from "./IController";
-import { LoginService } from "../Services/UserServices/LoginService";
+import { LoginService } from "../Services/UserServices/RegisterService/LoginService/LoginService";
 import { HttpCodes } from "../Utils/HttpCodes.enum";
-import { RegisterService } from "../Services/UserServices/RegisterService";
-import { TokenService } from "../Services/JWTokenServices/TokenService";
+import { RegisterService } from "../Services/UserServices/RegisterService/RegisterService";
 import { User } from "../Models/User.model";
 import { IUserRepository } from "../Repositories/UserRepositories/IUserRepository";
 import { ITokenService } from "../Services/JWTokenServices/ITokenService";
+import { ICacheService } from "../Services/CacheServices/ICacheService";
+import { ILoginService } from "../Services/UserServices/RegisterService/LoginService/ILoginService";
+import { IRegisterService } from "../Services/UserServices/RegisterService/IRegisterService";
 
 export class UserController extends HttpStatusResponse implements IController {
   public Path: string = "/users";
   public Router: Router;
   private UserRepository: IUserRepository;
   private TokenService: ITokenService;
-  private LoginService:LoginService;
-  private RegisterService:RegisterService;
+  private LoginService:ILoginService;
+  private RegisterService:IRegisterService<User>;
+  private CacheService:ICacheService;
 
-  constructor(userRepo: IUserRepository, tokenService: ITokenService,loginService:LoginService,registerService:RegisterService) {
+  constructor(userRepo: IUserRepository, tokenService: ITokenService,loginService:ILoginService,registerService:IRegisterService<User>,cacheService:ICacheService) {
     super();
     this.UserRepository = userRepo;
     this.TokenService = tokenService;
     this.LoginService=loginService;
     this.RegisterService=registerService;
+    this.CacheService=cacheService;
     this.Router = Router();
     this.InitializeRoutes();
   }

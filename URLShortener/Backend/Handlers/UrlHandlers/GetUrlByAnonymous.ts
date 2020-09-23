@@ -1,6 +1,6 @@
 import { Url } from "../../Models/Url.model";
 import { IUrlRepository } from "../../Repositories/UrlRepositories/IUrlRepository";
-import { ICacheService } from "../../Services/CacheRetrieveServices/ICacheService";
+import { ICacheService } from "../../Services/CacheServices/ICacheService";
 import { NotFoundError } from "../../Utils/CustomErrors/NotFound.error";
 
 export async function GetUrlHandler(

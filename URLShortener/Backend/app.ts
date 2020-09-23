@@ -7,6 +7,7 @@ import * as cron from 'node-cron';
 import {IController} from './Controllers/IController';
 import { IUrlRepository } from "./Repositories/UrlRepositories/IUrlRepository";
 import { UrlRepository } from "./Repositories/UrlRepositories/UrlRepository";
+import { ICacheService } from "./Services/CacheServices/ICacheService";
 require('dotenv').config();
 
 
@@ -38,7 +39,7 @@ export class Application{
         try{
         const mongoUrl:string=dbUrl || `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`;
             let currentTime=new Date();
-            console.log(`Trying to connect to database... [TIME:${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()}]`);
+            console.log(`[Database][MongoDB][Processing...]: Trying to connect to database... [TIME:${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()}]`);
             mongoose.connect(mongoUrl,
                     {
                         useNewUrlParser:true,
@@ -47,9 +48,9 @@ export class Application{
                         useCreateIndex:true
                     });
                     currentTime=new Date();
-                    console.log(`Initializing connection complete! [TIME: ${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()}]`);
+                    console.log(`[Database][MongoDB][Success]: Initializing connection complete! [TIME: ${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()}]`);
         }catch(error){
-                console.log(error);
+                console.log(`[Database][MongoDB][Error]: ${error}`);
         }
     }
 
