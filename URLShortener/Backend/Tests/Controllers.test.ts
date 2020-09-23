@@ -16,9 +16,9 @@ import { UrlController } from "../Controllers/UrlController";
 import { CacheService } from "../Services/CacheServices/CacheService";
 import { UrlConversionService } from "../Services/UrlServices/UrlConversionService";
 import { UrlRepository } from "../Repositories/UrlRepositories/UrlRepository";
-import { LoginService } from "../Services/UserServices/RegisterService/LoginService/LoginService";
+import { LoginService } from "../Services/UserServices/LoginService/LoginService";
 import { RegisterService } from "../Services/UserServices/RegisterService/RegisterService";
-import { ILoginService } from "../Services/UserServices/RegisterService/LoginService/ILoginService";
+import { ILoginService } from "../Services/UserServices/LoginService/ILoginService";
 import { IRegisterService } from "../Services/UserServices/RegisterService/IRegisterService";
 import { User } from "../Models/User.model";
 
@@ -29,16 +29,34 @@ const passwords = ["test_password1234", "test@!_|_password1234", "testTestest"];
 let application: express.Application;
 let url_repository: IUrlRepository = new UrlRepository();
 let user_repository: IUserRepository = new UserRepository();
+let cache_service: ICacheService = new CacheService(
+  user_repository,
+  url_repository
+);
 let token_service: ITokenService = new TokenService();
-let login_service:ILoginService=new LoginService(user_repository,token_service);
-let register_service:IRegisterService<User>=new RegisterService(user_repository,token_service);
+let login_service: ILoginService = new LoginService(
+  user_repository,
+  token_service,
+  cache_service
+);
+let register_service: IRegisterService<User> = new RegisterService(
+  user_repository,
+  token_service,
+  cache_service
+);
 let url_conversion_service: IUrlConversionService = new UrlConversionService();
-let cache_service: ICacheService = new CacheService(user_repository,url_repository);
 
 before(() =>
   mongoUnit.start().then((url) => {
     application = new Application(
-      [new UserController(user_repository, token_service,login_service,register_service,cache_service),
+      [
+        new UserController(
+          user_repository,
+          token_service,
+          login_service,
+          register_service,
+          cache_service
+        ),
         new UrlController(
           url_repository,
           user_repository,
@@ -52,7 +70,6 @@ before(() =>
   })
 );
 
-
 beforeEach(() => mongoUnit.load(dbData));
 
 afterEach(() => mongoUnit.drop());
@@ -60,7 +77,6 @@ afterEach(() => mongoUnit.drop());
 after(() => mongoUnit.stop());
 
 describe("user controller endpoint /users", () => {
-
   describe("PUT", () => {
     it("Should return status 401 because no token has been provided", () => {
       const loginData = {
@@ -83,11 +99,10 @@ describe("user controller endpoint /users", () => {
             .put(`/users/${response.body.data.loginData.user._id}`)
             .send(updateData)
             .expect(401);
-          
         });
     });
 
-    it("Should change email of logged in user and return status 200",  () => {
+    it("Should change email of logged in user and return status 200", () => {
       const loginData = {
         data: {
           email: users[2].email,
@@ -107,23 +122,23 @@ describe("user controller endpoint /users", () => {
           const id: string = response.body.data.loginData.user._id;
           const token: string = response.body.data.loginData.token;
           await request(application)
-            .put('/users'+'/'+id)
-            .set('Content-Type', 'application/json')
-            .set('Accept', 'application/json')
+            .put("/users" + "/" + id)
+            .set("Content-Type", "application/json")
+            .set("Accept", "application/json")
             .set({ Authorization: `Bearer ${token}` })
+            .expect(200)
             .send(updateData)
             .then((response) => {
               expect(response.body.data.updatedData.email).to.be.eql(
                 updateData.data.email
               );
-              
             });
         });
     });
   });
 
   describe("GET", () => {
-      it("Should return an user, a token and status 200", () => {
+    it("Should return an user, a token and status 200", () => {
       const loginData = {
         data: {
           email: users[2].email,
@@ -139,13 +154,12 @@ describe("user controller endpoint /users", () => {
             loginData.data.email
           );
           expect(response.body.data.loginData.token).to.not.be.null;
-          
         });
     });
   });
 
   describe("POST", () => {
-    it("Should return an user, a token and status 200", () => {
+    it("Should return a new user, a token and status 201", async () => {
       const registerBody = {
         data: {
           email: "testEmail@test.com",
@@ -164,7 +178,6 @@ describe("user controller endpoint /users", () => {
           expect(response.body.data.registerData.message).to.be.equal(
             "Successful"
           );
-          
         });
     });
 
@@ -179,12 +192,10 @@ describe("user controller endpoint /users", () => {
         .post("/users/register")
         .send(registerBody)
         .expect(409);
-        
     });
   });
 
-
- describe("DELETE", () => {
+  describe("DELETE", () => {
     it("should delete user and return status code 204", async () => {
       const userData = {
         data: {
@@ -199,10 +210,10 @@ describe("user controller endpoint /users", () => {
         .then((response) => {
           const id: string = response.body.data.registerData.user._id;
           const token: string = response.body.data.registerData.token;
-         request(application)
-            .delete('/users/'+id)
-            .set('Content-Type', 'application/json')
-            .set('Accept', 'application/json')
+          request(application)
+            .delete("/users/" + id)
+            .set("Content-Type", "application/json")
+            .set("Accept", "application/json")
             .set({ Authorization: `Bearer ${token}` })
             .expect(204)
             .then((response) => {
@@ -213,7 +224,6 @@ describe("user controller endpoint /users", () => {
   });
 });
 
-
 describe("url controller endpoint /", () => {
   describe("/POST", () => {
     it("should add url:https://github.com/remy/nodemon#nodemon to database and return its short version: WutmF", () => {
@@ -223,11 +233,10 @@ describe("url controller endpoint /", () => {
         .send({ data: { url: UrlData.data[0] } })
         .then((response) => {
           expect(response.body.data.url).to.be.equal("WutmF");
-        
         });
     });
 
-    it("loggied in user should add url:https://github.com/remy/nodemon#nodemon to database and return a custom url: testurl", async() => {
+    it("loggied in user should add url:https://github.com/remy/nodemon#nodemon to database and return a custom url: testurl", async () => {
       const loginData = {
         data: {
           email: users[2].email,
@@ -259,25 +268,25 @@ describe("url controller endpoint /", () => {
         });
     });
   });
-  describe('/GET',()=>{
-    it('should get the original url:https://github.com/remy/nodemon#nodemon after an anonymous request for url:WutmF',()=>{
+  describe("/GET", () => {
+    it("should get the original url:https://github.com/remy/nodemon#nodemon after an anonymous request for url:WutmF", () => {
       return request(application)
-      .post("")
-      .expect(201)
-      .send({ data: { url: UrlData.data[0] } })
-      .then(async(response) => {
-        expect(response.body.data.url).to.be.equal("WutmF");      
-        const url:string=response.body.data.url;
-        await request(application)
-                    .get('/'+url)
-                    .expect(200)
-                    .then(response=>{
-                      expect(response.body.data.url).to.be.equal(UrlData.data[0]);
-                    });
-      });
+        .post("")
+        .expect(201)
+        .send({ data: { url: UrlData.data[0] } })
+        .then(async (response) => {
+          expect(response.body.data.url).to.be.equal("WutmF");
+          const url: string = response.body.data.url;
+          await request(application)
+            .get("/" + url)
+            .expect(200)
+            .then((response) => {
+              expect(response.body.data.url).to.be.equal(UrlData.data[0]);
+            });
+        });
     });
 
-    it('should get the original url:https://github.com/remy/nodemon#nodemon after an user requests for custom url:testurl',()=>{
+    it("should get the original url:https://github.com/remy/nodemon#nodemon after an user requests for custom url:testurl", () => {
       const loginData = {
         data: {
           email: users[2].email,
@@ -303,18 +312,17 @@ describe("url controller endpoint /", () => {
               },
             })
             .expect(201)
-            .then(async(response) => {
+            .then(async (response) => {
               expect(response.body.data.url).to.be.equal("testurl");
-              const url:string=response.body.data.url;
+              const url: string = response.body.data.url;
               await request(application)
-                        .get('/'+url)
-                        .expect(200)
-                        .then(response=>{
-                          expect(response.body.data.url).to.be.equal(UrlData.data[0]);
-                        });
+                .get("/" + url)
+                .expect(200)
+                .then((response) => {
+                  expect(response.body.data.url).to.be.equal(UrlData.data[0]);
+                });
             });
         });
     });
-
   });
 });

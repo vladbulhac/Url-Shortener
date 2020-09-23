@@ -8,11 +8,11 @@ import { HttpCodes } from "../Utils/HttpCodes.enum";
 import { ITokenService } from "../Services/JWTokenServices/ITokenService";
 import { IUserRepository } from "../Repositories/UserRepositories/IUserRepository";
 import { ICacheService } from "../Services/CacheServices/ICacheService";
-import { GetUrlHandler } from "../Handlers/UrlHandlers/GetUrlByAnonymous";
-import { GetUrlByUserHandler } from "../Handlers/UrlHandlers/GetUrlByUser";
+import { GetUrlHandler } from "../Handlers/UrlHandlers/GetUrlHandler";
+import { GetUrlByUserHandler } from "../Handlers/UrlHandlers/GetUrlByUserHandler";
 import { NotFoundError } from "../Utils/CustomErrors/NotFound.error";
-import { CreateUrlHandler } from "../Handlers/UrlHandlers/CreateUrlByAnonymous";
-import { CreateUrlByUserHandler } from "../Handlers/UrlHandlers/CreateUrlByUser";
+import { CreateUrlHandler } from "../Handlers/UrlHandlers/CreateUrlHandler";
+import { CreateUrlByUserHandler } from "../Handlers/UrlHandlers/CreateUrlByUserHandler";
 import { ConflictError } from "../Utils/CustomErrors/Conflict.error";
 
 export class UrlController extends HttpStatusResponse implements IController {
@@ -67,13 +67,14 @@ export class UrlController extends HttpStatusResponse implements IController {
     const reqUrl = request.params.url;
 
     try {
-      const url: string | null = await GetUrlHandler(
+      const url: Url | null = await GetUrlHandler(
         reqUrl,
         this.UrlRepository,
         this.CacheService
       );
-      response.status(HttpCodes.Ok).json({ data: { url: url } });
-      await this.UrlRepository.UpdateTTL(url);
+      
+      response.status(HttpCodes.Ok).json({ data: { url: url.trueUrl } });
+      await this.UrlRepository.UpdateTTL(url.shortUrl);
     } catch (error) {
       if (error instanceof NotFoundError)
         response

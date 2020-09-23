@@ -1,14 +1,14 @@
 import { Router, Response, Request, NextFunction } from "express";
 import { HttpStatusResponse } from "../Utils/HttpStatusResponse";
 import { IController } from "./IController";
-import { LoginService } from "../Services/UserServices/RegisterService/LoginService/LoginService";
+import { LoginService } from "../Services/UserServices/LoginService/LoginService";
 import { HttpCodes } from "../Utils/HttpCodes.enum";
 import { RegisterService } from "../Services/UserServices/RegisterService/RegisterService";
 import { User } from "../Models/User.model";
 import { IUserRepository } from "../Repositories/UserRepositories/IUserRepository";
 import { ITokenService } from "../Services/JWTokenServices/ITokenService";
 import { ICacheService } from "../Services/CacheServices/ICacheService";
-import { ILoginService } from "../Services/UserServices/RegisterService/LoginService/ILoginService";
+import { ILoginService } from "../Services/UserServices/LoginService/ILoginService";
 import { IRegisterService } from "../Services/UserServices/RegisterService/IRegisterService";
 
 export class UserController extends HttpStatusResponse implements IController {
@@ -16,17 +16,23 @@ export class UserController extends HttpStatusResponse implements IController {
   public Router: Router;
   private UserRepository: IUserRepository;
   private TokenService: ITokenService;
-  private LoginService:ILoginService;
-  private RegisterService:IRegisterService<User>;
-  private CacheService:ICacheService;
+  private LoginService: ILoginService;
+  private RegisterService: IRegisterService<User>;
+  private CacheService: ICacheService;
 
-  constructor(userRepo: IUserRepository, tokenService: ITokenService,loginService:ILoginService,registerService:IRegisterService<User>,cacheService:ICacheService) {
+  constructor(
+    userRepo: IUserRepository,
+    tokenService: ITokenService,
+    loginService: ILoginService,
+    registerService: IRegisterService<User>,
+    cacheService: ICacheService
+  ) {
     super();
     this.UserRepository = userRepo;
     this.TokenService = tokenService;
-    this.LoginService=loginService;
-    this.RegisterService=registerService;
-    this.CacheService=cacheService;
+    this.LoginService = loginService;
+    this.RegisterService = registerService;
+    this.CacheService = cacheService;
     this.Router = Router();
     this.InitializeRoutes();
   }
@@ -52,9 +58,8 @@ export class UserController extends HttpStatusResponse implements IController {
 
   private Login(request: Request, response: Response): void {
     const requestBody = request.body.data;
-    
-    this.LoginService
-      .Login(requestBody.email, requestBody.password)
+
+    this.LoginService.Login(requestBody.email, requestBody.password)
       .then((loginData) => {
         if (loginData.message === "Successful")
           response.status(HttpCodes.Ok).json({ data: { loginData } });
@@ -86,9 +91,8 @@ export class UserController extends HttpStatusResponse implements IController {
 
   private Register(request: Request, response: Response): void {
     const requestBody = request.body.data;
-  
-    this.RegisterService
-      .Register(requestBody)
+
+    this.RegisterService.Register(requestBody)
       .then((registerData) => {
         if (registerData.message === "Successful")
           response.status(HttpCodes.Created).json({ data: { registerData } });
@@ -111,7 +115,10 @@ export class UserController extends HttpStatusResponse implements IController {
     this.UserRepository.Update(requestId, requestBody)
       .then((updatedData) => {
         if (updatedData)
-          response.status(HttpCodes.Ok).json({ data: { updatedData } });
+          {
+            response.status(HttpCodes.Ok).json({ data: { updatedData } });
+          this.CacheService.Add(updatedData.email,JSON.stringify(updatedData));
+        }
         else response.status(HttpCodes.NotFound).json(this.Error_NotFound);
       })
       .catch((error) => {

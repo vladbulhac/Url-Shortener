@@ -1,7 +1,11 @@
 import * as mongoose from "mongoose";
-import { Typegoose, prop, arrayProp, Ref } from "typegoose";
+import { Typegoose, prop, arrayProp, Ref, pre } from "typegoose";
 import { Url } from "./Url.model";
 
+@pre<User>("save",function(){
+    this.urlHistory=[] as string[];
+    this.customUrls=[] as Url[];
+})
 export class User extends Typegoose {
   _id!: mongoose.Schema.Types.ObjectId;
 

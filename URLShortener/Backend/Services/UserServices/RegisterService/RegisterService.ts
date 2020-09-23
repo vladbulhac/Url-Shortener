@@ -4,18 +4,29 @@ import { User } from "../../../Models/User.model";
 import { IUserRepository } from "../../../Repositories/UserRepositories/IUserRepository";
 import { ITokenService } from "../../JWTokenServices/ITokenService";
 import { IRegisterService } from "./IRegisterService";
+import { ICacheService } from "../../CacheServices/ICacheService";
 require("dotenv").config();
 
 export class RegisterService implements IRegisterService<User> {
   private UserRepository: IUserRepository;
   private TokenService: ITokenService;
+  private CacheService:ICacheService;
 
-  constructor(userRepo: IUserRepository, tokenService: ITokenService) {
+  constructor(userRepo: IUserRepository, tokenService: ITokenService,cacheService:ICacheService) {
     this.UserRepository = userRepo;
     this.TokenService = tokenService;
+    this.CacheService=cacheService;
   }
 
   public async Register(data: User): Promise<ILogin> {
+    let cachedUser:string|null = await this.CacheService.QueryCache(data.email);
+    if(cachedUser)
+        return {
+          user: null,
+          token: "",
+          message: "Conflict",
+        };
+
     let existsUser: User | null = await this.UserRepository.FindByArgument(
       JSON.stringify({ email: data.email })
     );
@@ -29,13 +40,14 @@ export class RegisterService implements IRegisterService<User> {
 
         const token: string = this.TokenService.Create(String(user._id));
     
-        const loginDetails: ILogin = {
+        const registerDetails: ILogin = {
           user: user,
           token: token,
           message: "Successful",
         };
 
-        return loginDetails;
+        return registerDetails;
+
       } catch (error) {
         return {
           user: null,

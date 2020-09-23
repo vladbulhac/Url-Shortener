@@ -2,6 +2,7 @@ import { Typegoose } from "typegoose";
 
 export interface ICacheService{
     StopRedis():void;
-    AddUrlToCache(key:string,data:string):void;
-    QueryCacheForUrl(url:string):Promise<string|null>;
+    Add(key:string,data:string):void;
+    QueryCache(key:string):Promise<string|null>;
+    Delete(key:string):void;
 }

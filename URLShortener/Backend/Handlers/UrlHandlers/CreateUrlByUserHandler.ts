@@ -14,13 +14,10 @@ export async function CreateUrlByUserHandler(
   CacheService: ICacheService,
   customUrl: string | undefined | null
 ): Promise<string> {
-
-
-  let cachedUrl = await CacheService.QueryCacheForUrl(url);
+  
+  let cachedUrl = await CacheService.QueryCache(url);
   if (cachedUrl) 
     return cachedUrl;
-
-  
 
   let existingUrl: Url | null;
   if (customUrl) existingUrl = await UrlRepository.GetByIdentifier(customUrl);

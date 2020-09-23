@@ -7,18 +7,18 @@ export async function GetUrlHandler(
   url: string,
   UrlRepository: IUrlRepository,
   CacheService: ICacheService
-): Promise<string> {
-  let cachedUrl = await CacheService.QueryCacheForUrl(url);
+): Promise<Url> {
+  let cachedUrl = await CacheService.QueryCache(url);
   if (cachedUrl) {
-    return cachedUrl;
+    const urlObj:Url=JSON.parse(cachedUrl);
+    return urlObj;
   }
 
 
   const urlData: Url | null = await UrlRepository.GetByIdentifier(url);
   if (urlData) {
-    await UrlRepository.UpdateTTL(url);
-    CacheService.AddUrlToCache(url, urlData.trueUrl);
-    return urlData.trueUrl;
+    CacheService.Add(url, JSON.stringify(urlData));
+    return urlData;
   } else {
     throw new NotFoundError("Could not find this url");
   }

@@ -10,7 +10,7 @@ export async function CreateUrlHandler(
   CacheService: ICacheService
 ): Promise<string> {
 
-  let cachedUrl = await CacheService.QueryCacheForUrl(url);
+  let cachedUrl = await CacheService.QueryCache(url);
   if (cachedUrl) return cachedUrl;
 
 

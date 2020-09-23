@@ -10,11 +10,16 @@ export async function GetUrlByUserHandler(
   CacheService: ICacheService
 ): Promise<string> {
 
-  let cachedUrl = await CacheService.QueryCacheForUrl(url);
-  if (cachedUrl) return cachedUrl;
+  let cachedUrl = await CacheService.QueryCache(url);
+  if (cachedUrl) {
+    const urlObj:Url=JSON.parse(cachedUrl);
+    return urlObj.trueUrl;
+  }
 
   const urlData: Url | null = await UrlRepository.GetByIdentifier(url);
 
-  if (urlData) return urlData.trueUrl;
+  if (urlData) {
+    CacheService.Add(url, JSON.stringify(urlData));
+    return urlData.trueUrl;}
   else throw new NotFoundError("Could not find this url");
 }
