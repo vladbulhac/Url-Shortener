@@ -1,8 +1,6 @@
-import mongoose from "mongoose";
-import bcrypt from "bcrypt";
-import { IUserRepository } from "./IUserRepository";
-import { User, UserModel } from "../../Models/User.model";
 import { Url } from "../../Models/Url.model";
+import { User, UserModel } from "../../Models/User.model";
+import { IUserRepository } from "./IUserRepository";
 
 export class UserRepository implements IUserRepository {
   public FindByArgument(argument: string): Promise<User | null> {

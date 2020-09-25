@@ -1,11 +1,8 @@
 import { Url } from "../../Models/Url.model";
-import { IAddRepository } from "../IAddRepository";
-import { IDeleteRepository } from "../IDeleteRepository";
-import { IGetRepository } from "../IGetRepository";
-import { IUpdateRepository } from "../IUpdateRepository";
+import { IAddGetDelRepository } from "../IAddGetDelRepository";
 
-export interface IUrlRepository extends IAddRepository<Url>,IGetRepository<Url>,IDeleteRepository{
-        DisableExpiredUrls(date:number):Promise<any>;
-        UpdateTTL(url:string):Promise<Url|null|void>;
-        GetMostUsedActiveUrls(offset:number):Promise<Url[]>;
+export abstract class IUrlRepository extends IAddGetDelRepository<Url> {
+        abstract DisableExpiredUrls(date:number):Promise<any>;
+        abstract UpdateTTL(url:string):Promise<Url|null|void>;
+        abstract GetMostUsedActiveUrls(offset:number):Promise<Url[]>;
 };

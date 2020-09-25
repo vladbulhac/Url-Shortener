@@ -1,8 +1,7 @@
-import { Typegoose } from "typegoose";
-
-export interface ICacheService{
-    StopRedis():void;
-    Add(key:string,data:string):void;
-    QueryCache(key:string):Promise<string|null>;
-    Delete(key:string):void;
+export abstract class ICacheService{
+     abstract StartCache():void;
+    abstract  StopCache():void;
+     abstract Add(key:string,data:string):void;
+     abstract QueryCache(key:string):Promise<string|null>;
+     abstract Delete(key:string):void;
 }

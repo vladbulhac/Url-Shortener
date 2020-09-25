@@ -5,19 +5,18 @@ import { IUserRepository } from "../../../Repositories/UserRepositories/IUserRep
 import { ITokenService } from "../../JWTokenServices/ITokenService";
 import { ILoginService } from "./ILoginService";
 import { ICacheService } from "../../CacheServices/ICacheService";
+import { Inject } from "typescript-ioc";
+
+
 require("dotenv").config();
 
 export class LoginService implements ILoginService{
-  private UserRepository:IUserRepository;
-  private TokenService:ITokenService;
-  private CacheService:ICacheService;
-
-  constructor(userRepo:IUserRepository,tokenService:ITokenService,cacheService:ICacheService)
-  {
-      this.UserRepository=userRepo;
-      this.TokenService=tokenService;
-      this.CacheService=cacheService;
-  }
+  @Inject
+  private UserRepository!:IUserRepository;
+  @Inject
+  private TokenService!:ITokenService;
+  @Inject
+  private CacheService!:ICacheService;
 
   public async Login(email: string, password: string): Promise<ILogin> {
 
@@ -39,7 +38,6 @@ export class LoginService implements ILoginService{
       if (isCorrectPassword) {
         const token:string=this.TokenService.Create(String(user._id));
         this.CacheService.Add(user.email,JSON.stringify(user));
-        //user=JSON.parse(JSON.stringify(user));
         delete user!.password;
 
         const loginDetails: ILogin = {

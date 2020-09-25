@@ -1,6 +1,6 @@
-import {Router} from 'express';
+import { Router } from "express";
 
-export interface IController{
-        Router:Router;
-        Path:string;
+export abstract class IController {
+  abstract Router: Router;
+  abstract Path: string;
 }

@@ -4,19 +4,22 @@ import { IUrlRepository } from "../../Repositories/UrlRepositories/IUrlRepositor
 import { IUserRepository } from "../../Repositories/UserRepositories/IUserRepository";
 import { ICacheService } from "./ICacheService";
 import * as cron from "node-cron";
+import { Inject, Singleton } from "typescript-ioc";
 
+@Singleton
 export class CacheService implements ICacheService {
   private Client!: RedisClient;
-  private IsClientUp: boolean;
-  private UserRepository: IUserRepository;
-  private UrlRepository: IUrlRepository;
+  private IsClientUp!: boolean;
+  
+  @Inject
+  private UserRepository!: IUserRepository;
+  @Inject
+  private UrlRepository!: IUrlRepository;
 
-  constructor(userRepository: IUserRepository, urlRepository: IUrlRepository) {
+  public StartCache():void{
     this.CreateRedisClient();
     this.IsClientUp = this.Client.connected;
-    this.UserRepository = userRepository;
-    this.UrlRepository = urlRepository;
-    this.PeriodicCacheUpdate(5);
+    this.PeriodicCacheUpdate(13);
   }
 
   private CreateRedisClient(): void {
@@ -31,7 +34,7 @@ export class CacheService implements ICacheService {
     });
   }
 
-  public StopRedis(): void {
+  public StopCache(): void {
     if (this.Client) this.Client.end(true);
   }
 
@@ -62,20 +65,19 @@ export class CacheService implements ICacheService {
   private PeriodicCacheUpdate(
     minutes: number,
   ): void {
-    cron.schedule(`* ${minutes} * * * *`, async () => {
-
+    cron.schedule(`*/${minutes} * * * *`, async () => {
       if (this.IsClientUp === true) {
+        console.log('[Cache][Redis][Processing...] Cleaning and updating entries in cache...')
         this.Client.keys("*", async (error, keys) => {
           if (error) console.log(error);
           else {
             for (let key of keys) {
               this.Client.get(key, async (error, reply) => {
-                  console.log(reply);
                 if (reply !== null && error === null) {
                   const obj = JSON.parse(reply);
                   if (obj["email"]) {
                     const user = await this.UserRepository.FindByArgument(
-                      obj["email"]
+                      JSON.stringify({email:obj["email"]})
                     );
                     if (user) {
                       if (
@@ -98,6 +100,7 @@ export class CacheService implements ICacheService {
             }
           }
         });
+        console.log("[Cache][Redis][Complete] Finished cleaning and updating the entries in cache!")
       }
     });
   }

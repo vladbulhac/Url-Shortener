@@ -1,72 +1,21 @@
-import "mocha";
+import { expect } from "chai";
 import express from "express";
+import "mocha";
 import * as mongoUnit from "mongo-unit";
 import request from "supertest";
-import { expect } from "chai";
 import { Application } from "../app";
-import { UserController } from "../Controllers/UserController";
-import { UserRepository } from "../Repositories/UserRepositories/UserRepository";
-import { TokenService } from "../Services/JWTokenServices/TokenService";
-import { IUrlConversionService } from "../Services/UrlServices/IUrlConversionService";
-import { ICacheService } from "../Services/CacheServices/ICacheService";
-import { ITokenService } from "../Services/JWTokenServices/ITokenService";
-import { IUserRepository } from "../Repositories/UserRepositories/IUserRepository";
-import { IUrlRepository } from "../Repositories/UrlRepositories/IUrlRepository";
-import { UrlController } from "../Controllers/UrlController";
-import { CacheService } from "../Services/CacheServices/CacheService";
-import { UrlConversionService } from "../Services/UrlServices/UrlConversionService";
-import { UrlRepository } from "../Repositories/UrlRepositories/UrlRepository";
-import { LoginService } from "../Services/UserServices/LoginService/LoginService";
-import { RegisterService } from "../Services/UserServices/RegisterService/RegisterService";
-import { ILoginService } from "../Services/UserServices/LoginService/ILoginService";
-import { IRegisterService } from "../Services/UserServices/RegisterService/IRegisterService";
-import { User } from "../Models/User.model";
+
 
 const dbData = require("./Resources/UserTestData.json");
 const UrlData = require("./Resources/UrlTestData.json");
 const users = dbData["users"];
 const passwords = ["test_password1234", "test@!_|_password1234", "testTestest"];
 let application: express.Application;
-let url_repository: IUrlRepository = new UrlRepository();
-let user_repository: IUserRepository = new UserRepository();
-let cache_service: ICacheService = new CacheService(
-  user_repository,
-  url_repository
-);
-let token_service: ITokenService = new TokenService();
-let login_service: ILoginService = new LoginService(
-  user_repository,
-  token_service,
-  cache_service
-);
-let register_service: IRegisterService<User> = new RegisterService(
-  user_repository,
-  token_service,
-  cache_service
-);
-let url_conversion_service: IUrlConversionService = new UrlConversionService();
+
 
 before(() =>
   mongoUnit.start().then((url) => {
-    application = new Application(
-      [
-        new UserController(
-          user_repository,
-          token_service,
-          login_service,
-          register_service,
-          cache_service
-        ),
-        new UrlController(
-          url_repository,
-          user_repository,
-          url_conversion_service,
-          token_service,
-          cache_service
-        ),
-      ],
-      url
-    ).GetApplication();
+    application = new Application(url).GetApplication();
   })
 );
 

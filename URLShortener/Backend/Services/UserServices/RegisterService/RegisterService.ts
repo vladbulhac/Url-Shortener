@@ -5,18 +5,18 @@ import { IUserRepository } from "../../../Repositories/UserRepositories/IUserRep
 import { ITokenService } from "../../JWTokenServices/ITokenService";
 import { IRegisterService } from "./IRegisterService";
 import { ICacheService } from "../../CacheServices/ICacheService";
+import { Inject } from "typescript-ioc";
+
 require("dotenv").config();
 
-export class RegisterService implements IRegisterService<User> {
-  private UserRepository: IUserRepository;
-  private TokenService: ITokenService;
-  private CacheService:ICacheService;
 
-  constructor(userRepo: IUserRepository, tokenService: ITokenService,cacheService:ICacheService) {
-    this.UserRepository = userRepo;
-    this.TokenService = tokenService;
-    this.CacheService=cacheService;
-  }
+export class RegisterService implements IRegisterService{
+  @Inject
+  private UserRepository!: IUserRepository;
+  @Inject
+  private TokenService!: ITokenService;
+  @Inject
+  private CacheService!:ICacheService;
 
   public async Register(data: User): Promise<ILogin> {
     let cachedUser:string|null = await this.CacheService.QueryCache(data.email);

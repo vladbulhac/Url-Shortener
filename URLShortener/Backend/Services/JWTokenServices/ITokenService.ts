@@ -1,6 +1,6 @@
 import { NextFunction } from "express";
 
-export interface ITokenService{
-    Create(id:string):string;
-    Verify(request:Express.Request,response:Express.Response,next:NextFunction):void;
+export abstract class ITokenService{
+     abstract Create(id:string):string;
+     abstract Verify(request:Express.Request,response:Express.Response,next:NextFunction):void;
 }

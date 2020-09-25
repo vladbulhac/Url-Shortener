@@ -1,3 +1,3 @@
-export interface IUrlConversionService{
-    ShortUrl(url:string):string;
+export abstract class IUrlConversionService{
+    abstract ShortUrl(url:string):string;
 }

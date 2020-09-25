@@ -25,7 +25,7 @@ export async function CreateUrlByUserHandler(
 
   if (existingUrl) {
       if(existingUrl.isActive===true && customUrl)
-         throw new ConflictError("This url exists already");
+         throw new ConflictError("This url already exists");
     else
         if(existingUrl.isActive===false)
             await UrlRepository.DeleteByIdentifier(existingUrl.shortUrl);

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import { HttpCodes } from "../../Utils/HttpCodes.enum";
 import { HttpStatusResponse } from "../../Utils/HttpStatusResponse";
@@ -24,7 +24,7 @@ export class TokenService extends HttpStatusResponse implements ITokenService {
     request: Request,
     response: Response,
     next: NextFunction
-  ): void {
+  ): void{
     let headerData: string | undefined = request.headers["authorization"];
     if (headerData !== undefined) {
       let headerSplit: string[] = headerData.split(" ");
