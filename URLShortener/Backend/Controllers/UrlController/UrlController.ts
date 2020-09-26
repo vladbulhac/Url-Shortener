@@ -1,47 +1,45 @@
-import { HttpStatusResponse } from "../Utils/HttpStatusResponse";
-import { Router, Request, Response } from "express";
-import { IController } from "./IController";
-import { Url } from "../Models/Url.model";
-import { IUrlConversionService } from "../Services/UrlServices/IUrlConversionService";
-import { IUrlRepository } from "../Repositories/UrlRepositories/IUrlRepository";
-import { HttpCodes } from "../../Frontend/src/app/utils/HttpCodes.enum";
-import { ITokenService } from "../Services/JWTokenServices/ITokenService";
-import { IUserRepository } from "../Repositories/UserRepositories/IUserRepository";
-import { ICacheService } from "../Services/CacheServices/ICacheService";
-import { GetUrlHandler } from "../Handlers/UrlHandlers/GetUrlHandler";
-import { GetUrlByUserHandler } from "../Handlers/UrlHandlers/GetUrlByUserHandler";
-import { NotFoundError } from "../Utils/CustomErrors/NotFound.error";
-import { CreateUrlHandler } from "../Handlers/UrlHandlers/CreateUrlHandler";
-import { CreateUrlByUserHandler } from "../Handlers/UrlHandlers/CreateUrlByUserHandler";
-import { ConflictError } from "../Utils/CustomErrors/Conflict.error";
 
-export class UrlController extends HttpStatusResponse implements IController {
+import { Request, Response, Router } from "express";
+import { Inject } from "typescript-ioc";
+import { CreateUrlByUserHandler } from "../../Handlers/UrlHandlers/CreateUrlByUserHandler";
+import { CreateUrlHandler } from "../../Handlers/UrlHandlers/CreateUrlHandler";
+import { GetUrlByUserHandler } from "../../Handlers/UrlHandlers/GetUrlByUserHandler";
+import { GetUrlHandler } from "../../Handlers/UrlHandlers/GetUrlHandler";
+import { Url } from "../../Models/Url.model";
+import { IUrlRepository } from "../../Repositories/UrlRepositories/IUrlRepository";
+import { IUserRepository } from "../../Repositories/UserRepositories/IUserRepository";
+import { ICacheService } from "../../Services/CacheServices/ICacheService";
+import { ITokenService } from "../../Services/JWTokenServices/ITokenService";
+import { IUrlConversionService } from "../../Services/UrlServices/IUrlConversionService";
+import { ConflictError } from "../../Utils/CustomErrors/Conflict.error";
+import { NotFoundError } from "../../Utils/CustomErrors/NotFound.error";
+import { HttpCodes } from "../../../Frontend/src/app/utils/HttpCodes.enum";
+import { HttpStatusResponse } from "../../Utils/HttpStatusResponse";
+import { IUrlController } from "./IUrlController";
+
+export class UrlController extends HttpStatusResponse implements IUrlController {
   public Path: string = "";
   public Router: Router;
-  private UserRepository: IUserRepository;
-  private UrlRepository: IUrlRepository;
-  private UrlConvService: IUrlConversionService;
-  private TokenService: ITokenService;
-  private CacheService: ICacheService;
+
+  @Inject
+  private UserRepository!: IUserRepository;
+  @Inject
+  private UrlRepository!: IUrlRepository;
+  @Inject
+  private UrlConvService!: IUrlConversionService;
+  @Inject
+  private TokenService!: ITokenService;
+  @Inject
+  private CacheService!: ICacheService;
 
   constructor(
-    UrlRepository: IUrlRepository,
-    UserRepository: IUserRepository,
-    UrlConversionService: IUrlConversionService,
-    TokenService: ITokenService,
-    CacheService: ICacheService
   ) {
     super();
     this.Router = Router();
-    this.UrlRepository = UrlRepository;
-    this.UserRepository = UserRepository;
-    this.UrlConvService = UrlConversionService;
-    this.TokenService = TokenService;
-    this.CacheService = CacheService;
-    this.InitialzeRoutes();
+    this.InitializeRoutes();
   }
 
-  private InitialzeRoutes(): void {
+  private InitializeRoutes(): void {
     this.Router.get(`${this.Path}/:url`, this.GetUrl.bind(this));
     this.Router.get(
       `${this.Path}/u/:id/:url`,

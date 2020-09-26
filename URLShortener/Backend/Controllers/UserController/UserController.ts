@@ -1,38 +1,35 @@
-import { Router, Response, Request, NextFunction } from "express";
-import { HttpStatusResponse } from "../Utils/HttpStatusResponse";
-import { IController } from "./IController";
-import { LoginService } from "../Services/UserServices/LoginService/LoginService";
-import { HttpCodes } from "../../Frontend/src/app/utils/HttpCodes.enum";
-import { RegisterService } from "../Services/UserServices/RegisterService/RegisterService";
-import { User } from "../Models/User.model";
-import { IUserRepository } from "../Repositories/UserRepositories/IUserRepository";
-import { ITokenService } from "../Services/JWTokenServices/ITokenService";
-import { ICacheService } from "../Services/CacheServices/ICacheService";
-import { ILoginService } from "../Services/UserServices/LoginService/ILoginService";
-import { IRegisterService } from "../Services/UserServices/RegisterService/IRegisterService";
+import { Request, Response, Router } from "express";
+import { Inject } from "typescript-ioc";
+import { User } from "../../Models/User.model";
+import { IUserRepository } from "../../Repositories/UserRepositories/IUserRepository";
+import { ICacheService } from "../../Services/CacheServices/ICacheService";
+import { ITokenService } from "../../Services/JWTokenServices/ITokenService";
+import { ILoginService } from "../../Services/UserServices/LoginService/ILoginService";
+import { IRegisterService } from "../../Services/UserServices/RegisterService/IRegisterService";
+import { HttpCodes } from "../../../Frontend/src/app/utils/HttpCodes.enum";
+import { HttpStatusResponse } from "../../Utils/HttpStatusResponse";
+import { IUserController } from "./IUserController";
 
-export class UserController extends HttpStatusResponse implements IController {
+
+export class UserController extends HttpStatusResponse implements IUserController {
   public Path: string = "/users";
   public Router: Router;
-  private UserRepository: IUserRepository;
-  private TokenService: ITokenService;
-  private LoginService: ILoginService;
-  private RegisterService: IRegisterService<User>;
-  private CacheService: ICacheService;
+
+  @Inject
+  private UserRepository!: IUserRepository;
+  @Inject
+  private TokenService!: ITokenService;
+  @Inject
+  private LoginService!: ILoginService;
+  @Inject
+  private RegisterService!: IRegisterService;
+  @Inject
+  private CacheService!: ICacheService;
 
   constructor(
-    userRepo: IUserRepository,
-    tokenService: ITokenService,
-    loginService: ILoginService,
-    registerService: IRegisterService<User>,
-    cacheService: ICacheService
   ) {
     super();
-    this.UserRepository = userRepo;
-    this.TokenService = tokenService;
-    this.LoginService = loginService;
-    this.RegisterService = registerService;
-    this.CacheService = cacheService;
+
     this.Router = Router();
     this.InitializeRoutes();
   }
