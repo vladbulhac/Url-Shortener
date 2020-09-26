@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
-import { HttpCodes } from "../../../Frontend/src/app/utils/HttpCodes.enum";
+import { HttpCodes } from "../../Utils/HttpCodes.enum";
 import { HttpStatusResponse } from "../../Utils/HttpStatusResponse";
 import { ITokenService } from "./ITokenService";
  require("dotenv").config();
@@ -14,7 +14,7 @@ export class TokenService extends HttpStatusResponse implements ITokenService {
   public Create(userId: string): string {
     const secret:string=process.env.JWT_SECRET!;
     const token: string = jwt.sign({ id: userId }, secret, {
-      expiresIn: 60*10,
+      expiresIn: "1h",
     });
 
     return token;
