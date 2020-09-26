@@ -1,0 +1,27 @@
+.navigation-bar {
+  font-family: "Kumbh Sans", sans-serif;
+  position: absolute;
+  top: 15%;
+  left: 33%;
+  font-size: 25px;
+}
+
+.navigation-list {
+  list-style-type: none;
+}
+.navigation-list li {
+  display: inline;
+}
+.navigation-list li a {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.navigation-list li:active {
+  color: #fffbdb;
+}
+
+.navigation-list li:hover {
+  color: #fffbdb;
+}

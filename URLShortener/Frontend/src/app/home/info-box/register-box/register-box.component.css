@@ -1,0 +1,10 @@
+.registerbox {
+  font-family: "Anton", sans-serif;
+  font-size: 30px;
+  position: fixed;
+  top: 30%;
+  left: 5%;
+  width: 22%;
+  padding: 10px;
+  color: #57479a;
+}
