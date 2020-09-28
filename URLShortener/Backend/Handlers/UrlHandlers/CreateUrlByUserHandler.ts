@@ -40,15 +40,17 @@ export async function CreateUrlByUserHandler(
       extendedTTL: true,
     };
 
+    let savedUrl:Url;
     if (customUrl) {
       newUrl["shortUrl"] = customUrl;
-      const savedUrl = await UrlRepository.Add(newUrl);
+      savedUrl = await UrlRepository.Add(newUrl);
       await UserRepository.UpdateCustomUrls(userId, savedUrl);
     } else {
       const shortUrl: string = UrlConversionService.ShortUrl(url);
       newUrl["shortUrl"] = shortUrl;
-      await UrlRepository.Add(newUrl);
+     savedUrl= await UrlRepository.Add(newUrl);
     }
+    CacheService.Add(savedUrl.shortUrl,JSON.stringify(savedUrl));
 
     return newUrl.shortUrl;
   }

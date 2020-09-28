@@ -27,6 +27,8 @@ export async function CreateUrlHandler(
     shortUrl: shortUrl,
     accessNumber: 1,
   };
-  await UrlRepository.Add(newUrl);
+  const savedUrl:Url=await UrlRepository.Add(newUrl);
+  CacheService.Add(savedUrl.shortUrl,JSON.stringify(savedUrl));
+  
   return shortUrl;
 }
