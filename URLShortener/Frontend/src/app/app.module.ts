@@ -14,6 +14,7 @@ import { WelcomeBoxComponent } from './home/info-box/welcome-box/welcome-box.com
 import { UrlInputComponent } from './home/url-input/url-input.component';
 import { LeaderboardComponent } from './leaderboard/leaderboard.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { UserEditComponent } from './home/info-box/user-box/user-edit/user-edit.component';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
     HomeComponent,
     LeaderboardComponent,
     DropdownDirective,
-    NotFoundComponent
+    NotFoundComponent,
+    UserEditComponent
   ],
   imports: [
     BrowserModule,

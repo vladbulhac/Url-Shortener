@@ -1,4 +1,33 @@
 <div class="userbox">
-  <p>name:wut</p>
+  <div style="display: inline" class="hello">
+    <h3>Hi there,</h3>
+    <h5>{{ user.email }}</h5>
+  </div>
+  <button>Toggle url history</button>
+  <div class="url-history">
+    <ul *ngFor="let url of user.urlHistory">
+      <li>{{ url }}</li>
+    </ul>
+  </div>
+
+  <button>Toggle custom urls</button>
+  <div class="custom-url-table">
+    <table *ngIf="user.customUrls.length > 0">
+      <tr>
+        <th>short url</th>
+        <th>url</th>
+        <th>accessed</th>
+      </tr>
+      <ng-container *ngFor="let customUrl of user.customUrls">
+        <tr>
+          <td>{{ customUrl.shortUrl }}</td>
+          <td>{{ customUrl.trueUrl }}</td>
+          <td>{{ customUrl.accessNumber }}</td>
+        </tr>
+      </ng-container>
+    </table>
+  </div>
+
+  <p></p>
+  <button type="button" (click)="toEditComponent()">Edit</button>
 </div>
-<!-- <app-url-input></app-url-input> -->
