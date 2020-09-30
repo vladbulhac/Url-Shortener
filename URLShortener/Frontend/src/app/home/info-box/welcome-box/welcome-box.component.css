@@ -1,4 +1,4 @@
-.welcomebox {
+/* .welcomebox {
   font-family: "Anton", sans-serif;
   font-size: 30px;
   position: fixed;
@@ -6,35 +6,48 @@
   left: 5%;
   width: 22%;
   padding: 10px;
-  color: #57479a;
+  color: #7d7e75;
+  border-radius: 10px;
+  border: 3px solid #cfd6ea;
 }
 .welcomebox p {
   max-height: 400px;
   overflow: auto;
+  scrollbar-color: dark;
+} */
+
+.welcome {
+  font-family: "Anton", sans-serif;
 }
 
-/* .shadow {
+.shadow {
   box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
     0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
     0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
     0 100px 80px rgba(0, 0, 0, 0.12);
-} */
+}
 
 .button-area {
+  position: relative;
   padding: 0 20px 0 20px;
   display: flex;
   justify-content: space-between;
 }
 
 .button {
+  text-align: center;
   font-size: 20px;
-  background-color: #57479a;
+  background-color: #423629;
+  height: 50px;
+  width: max-content;
   border: 0;
-  font: #fffbdb;
+  color: #b0b2b8;
+  border-radius: 5px;
 }
 
 .button:hover {
-  background-color: #fffbdb;
+  background-color: #b0b2b8;
+  color: #4f5d2f;
 }
 
 .button svg {

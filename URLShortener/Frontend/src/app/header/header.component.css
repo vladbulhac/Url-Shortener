@@ -2,15 +2,15 @@
   font-family: "Kumbh Sans", sans-serif;
   position: absolute;
   top: 15%;
-  left: 33%;
+  left: 5.5%;
   font-size: 25px;
+  color: #7d7e75;
 }
-
 .navigation-list {
   list-style-type: none;
 }
 .navigation-list li {
-  display: inline;
+  display: inline-block;
 }
 .navigation-list li a {
   color: inherit;
@@ -19,9 +19,9 @@
 }
 
 .navigation-list li:active {
-  color: #fffbdb;
+  color: #4f5d2f;
 }
 
 .navigation-list li:hover {
-  color: #fffbdb;
+  color: #4f5d2f;
 }

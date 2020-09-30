@@ -1,19 +1,36 @@
 /* You can add global styles to this file, and also import other style files */
 html {
-  background-color: #292852;
+  background-color: #cfd6ea;
 }
 
-.parallelogram {
+.parallelogram-left {
   position: fixed;
   top: 0;
   height: 100%;
   left: 10%;
 }
-.parallelogram path {
+.parallelogram-right {
+  position: fixed;
+  top: 0;
+  height: 100%;
+  left: 20%;
+}
+.parallelogram-left path {
   animation-name: pulse;
   animation-duration: 3s;
   animation-timing-function: ease-out;
   animation-delay: 0s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-fill-mode: none;
+  animation-play-state: running;
+}
+
+.parallelogram-right path {
+  animation-name: pulse;
+  animation-duration: 3s;
+  animation-timing-function: linear;
+  animation-delay: 3s;
   animation-direction: alternate;
   animation-iteration-count: infinite;
   animation-fill-mode: none;
@@ -70,23 +87,11 @@ html {
 
 @keyframes pulse {
   0% {
-    fill: #fffbdb;
-  }
-
-  25% {
-    fill: #fff185;
-  }
-
-  50% {
-    fill: #ffee70;
-  }
-
-  75% {
-    fill: #ffec5c;
+    fill: #b0b2b8;
   }
 
   100% {
-    fill: #ffe733;
+    fill: #423629;
   }
 }
 

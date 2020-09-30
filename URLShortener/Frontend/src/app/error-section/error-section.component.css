@@ -1,0 +1,40 @@
+div {
+  position: fixed;
+  left: 45%;
+  bottom: 36%;
+  border-top: 2px solid #423629;
+  border-radius: 10px;
+  width: 21.5em;
+  margin: 0;
+  padding: 0;
+  border-bottom: 2px solid #423629;
+  color: #715d47;
+}
+a {
+  cursor: pointer;
+  top: 1%;
+  left: 85%;
+  position: absolute;
+  font-size: 18px;
+}
+a :hover {
+  color: #4f5d2f;
+  font-size: 20px;
+}
+.button {
+  font-size: 15px;
+  background-color: #423629;
+  height: 40px;
+  width: max-content;
+  border: 0;
+  color: #b0b2b8;
+  border-radius: 5px;
+  cursor: pointer;
+  top: 1%;
+  left: 85%;
+  position: absolute;
+}
+.button:hover {
+  background-color: #b0b2b8;
+  color: #4f5d2f;
+}
