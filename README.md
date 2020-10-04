@@ -4,8 +4,9 @@
 * REST API using NodeJs, Typescript, ExpressJs
 * NoSql Database: MongoDB
 * Object Document Mapper: Mongoose with Typegoose library
-* Authentication: JsonWebTokens
+* Task scheduler: Node Cron
 * Cache: Redis 
+* Authentication: JsonWebTokens
 * Tests:
    - Mocha
    - Chai
