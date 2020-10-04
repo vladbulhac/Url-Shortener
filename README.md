@@ -1,7 +1,7 @@
 # Url Shortener
 
 #### Backend
-* REST API using Nodejs, Typescript, ExpressJs
+* REST API using NodeJs, Typescript, ExpressJs
 * NoSql Database: MongoDB
 * Authentication: JsonWebTokens
 * Cache: Redis 
