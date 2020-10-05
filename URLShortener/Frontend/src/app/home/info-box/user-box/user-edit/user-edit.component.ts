@@ -4,7 +4,6 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ErrorService } from 'src/app/error.service';
 import { User } from 'src/app/models/User.model';
-import { UrlService } from 'src/app/url-service.service';
 import { UserService } from 'src/app/user-service.service';
 
 @Component({

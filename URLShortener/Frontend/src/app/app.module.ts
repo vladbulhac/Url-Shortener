@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { DropdownDirective } from './dropdown.directive';
 import { ErrorSectionComponent } from './error-section/error-section.component';
 import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
@@ -35,7 +34,6 @@ import {SplitnShort} from './utils/SplitnShort.pipe';
     InfoBoxComponent,
     HomeComponent,
     LeaderboardComponent,
-    DropdownDirective,
     NotFoundComponent,
     UserEditComponent,
     SplitnShort

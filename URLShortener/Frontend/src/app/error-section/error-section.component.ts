@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { Error } from '../models/Error.model';
 import { ErrorService } from '../error.service';
+import { Error } from '../models/Error.model';
 
 @Component({
   selector: 'app-error-section',

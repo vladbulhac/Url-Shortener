@@ -1,9 +1,9 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ErrorService } from 'src/app/error.service';
-import { UrlService } from 'src/app/url-service.service';
-import { UserService } from 'src/app/user-service.service';
+import { ErrorService } from '../../../error.service';
+import { UrlService } from '../../../url-service.service';
+import { UserService } from '../../../user-service.service';
 import { User } from '../../../models/User.model';
 @Component({
   selector: 'app-user-box',
