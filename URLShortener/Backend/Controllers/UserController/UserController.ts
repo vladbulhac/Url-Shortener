@@ -129,8 +129,9 @@ export class UserController extends HttpStatusResponse implements IUserControlle
     const requestId: string = request.params.id;
 
     this.UserRepository.DeleteByIdentifier(requestId)
-      .then(() => {
+      .then((data:User) => {
         response.status(HttpCodes.NoContent);
+        this.CacheService.Delete(data.email);
       })
       .catch((error) => {
         response

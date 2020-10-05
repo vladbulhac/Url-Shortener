@@ -15,10 +15,7 @@ export async function CreateUrlByUserHandler(
   customUrl: string | undefined | null
 ): Promise<string> {
   
-  let cachedUrl = await CacheService.QueryCache(url);
-  if (cachedUrl) 
-    return cachedUrl;
-
+  
   let existingUrl: Url | null;
   if (customUrl) existingUrl = await UrlRepository.GetByIdentifier(customUrl);
   else existingUrl = await UrlRepository.GetByIdentifier(url);
@@ -28,7 +25,10 @@ export async function CreateUrlByUserHandler(
          throw new ConflictError("This url already exists");
     else
         if(existingUrl.isActive===false)
-            await UrlRepository.DeleteByIdentifier(existingUrl.shortUrl);
+            {
+              await UrlRepository.SetActive(String(existingUrl._id));
+     return existingUrl.shortUrl;
+            }
     else
         if(existingUrl.isActive===true)
             return existingUrl.shortUrl;

@@ -29,7 +29,7 @@ export class Application {
     this.App = express();
 
     IocContainerConfig.configure();
-    this.InitializeDataBaseConnection(dbUrl);
+    this.InitializeDatabaseConnection(dbUrl);
     this.CacheService.StartCache();
     this.InitialzeMiddlewares();
     this.InitializeControllers();
@@ -42,7 +42,7 @@ export class Application {
     this.App.use(cors());
   }
 
-  private InitializeDataBaseConnection(dbUrl?: string): void {
+  private InitializeDatabaseConnection(dbUrl?: string): void {
     const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH } = process.env;
     try {
       const mongoUrl: string =
@@ -71,10 +71,11 @@ export class Application {
                     .use("/",this.UserController.Router);
   }
 
-  private PeriodicUrlCleanup(): void {
+  public PeriodicUrlCleanup(): void {
     cron.schedule("0 0 * * *", async () => {
       console.log("[Database][MongoDB][Processing...] Clearing expired urls from database..." );
       await this.UrlRepository.DisableExpiredUrls(Date.now());
+      await this.CacheService.CleanOrUpdateTTL();
       console.log("[Database][MongoDB][Complete] Cleared expired urls from database..." );
     });
   }
@@ -83,6 +84,10 @@ export class Application {
     this.App.listen(process.env.PORT, () => {
       console.log(`Application is listening at port ${process.env.PORT}`);
     });
+  }
+
+  public GetCacheInstance():ICacheService{
+    return this.CacheService;
   }
 
   public GetApplication(): express.Application {

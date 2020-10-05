@@ -17,7 +17,7 @@ export async function GetUrlByUserHandler(
 
   const urlData: Url | null = await UrlRepository.GetByIdentifier(url);
 
-  if (urlData) {
+  if (urlData && urlData.isActive===true) {
     CacheService.Add(url, JSON.stringify(urlData));
     return urlData.trueUrl;}
   else throw new NotFoundError("Could not find this url");

@@ -21,6 +21,9 @@ export class UrlRepository implements IUrlRepository {
       }
     });
   }
+  public async SetActive(identifier:string):Promise<Url|null>{
+    return UrlModel.findByIdAndUpdate(identifier,{isActive:true},{new:true}).exec();
+  }
   public DeleteByIdentifier(url:string):Promise<any>{
     return UrlModel.deleteOne({shortUrl:url}).exec();
   }

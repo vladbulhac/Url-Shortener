@@ -16,7 +16,7 @@ export async function GetUrlHandler(
 
 
   const urlData: Url | null = await UrlRepository.GetByIdentifier(url);
-  if (urlData) {
+  if (urlData && urlData.isActive===true) {
     CacheService.Add(url, JSON.stringify(urlData));
     return urlData;
   } else {

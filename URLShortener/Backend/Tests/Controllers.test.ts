@@ -4,6 +4,8 @@ import "mocha";
 import * as mongoUnit from "mongo-unit";
 import request from "supertest";
 import { Application } from "../app";
+import { CacheService } from "../Services/CacheServices/CacheService";
+import { ICacheService } from "../Services/CacheServices/ICacheService";
 
 
 const dbData = require("./Resources/UserTestData.json");
@@ -11,17 +13,21 @@ const UrlData = require("./Resources/UrlTestData.json");
 const users = dbData["users"];
 const passwords = ["test_password1234", "test@!_|_password1234", "testTestest"];
 let application: express.Application;
+let appHelper:Application;
+let cache:ICacheService;
 
 
 before(() =>
   mongoUnit.start().then((url) => {
-    application = new Application(url).GetApplication();
+    appHelper=new Application(url);
+    application = appHelper.GetApplication();
+    cache=appHelper.GetCacheInstance();
   })
 );
 
 beforeEach(() => mongoUnit.load(dbData));
 
-afterEach(() => mongoUnit.drop());
+afterEach(() => {mongoUnit.drop();cache.DeleteAll()});
 
 after(() => mongoUnit.stop());
 

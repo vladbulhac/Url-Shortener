@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcrypt"
 import { User } from "../../../Models/User.model";
 import { ILogin } from "../ILogin";
 import { IUserRepository } from "../../../Repositories/UserRepositories/IUserRepository";
