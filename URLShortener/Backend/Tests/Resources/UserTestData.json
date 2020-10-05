@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "email": "test_user1@testemail.com",
+      "password": "$2b$10$KGE854vbS5JGP4SWdnuD8OKXQn1nwK4vf2PKUiH/9JYoNM1UeexKS",
+      "urlHistory": [],
+      "__v": 0
+    },
+    {
+      "email": "test_user2@testemail.com",
+      "password": "$2b$10$M9c41WMHQVpOYT2NsNd62.6VKlgRY5t.bmszhCq/h0bZArUCAE4ly",
+      "urlHistory": [],
+      "__v": 0
+    },
+    {
+      "email": "test_user3@testemail.com",
+      "password": "$2b$10$j3NQw.GZIMP34f.9NCMcF.7wSnVFO2YYC/Z1FAeEkpCLw4wcRmIyy",
+      "urlHistory": [],
+      "__v": 0
+    }
+  ]
+}
