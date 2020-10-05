@@ -1,7 +1,9 @@
 <div>
   <div style="display: inline" class="hello">
-    <h3>Hi there,</h3>
-    <h5>{{ user.email }}</h5>
+    <h3>
+      Hello, <i>{{ user.email | splitnshort: "@":0:10 }}</i>
+    </h3>
+    <!-- <h5>{{ user.email.split("@")[0] }}</h5> -->
   </div>
   <button
     type="button"

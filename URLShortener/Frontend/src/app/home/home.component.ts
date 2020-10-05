@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ErrorService } from '../error.service';
+import { UrlService } from '../url-service.service';
+import { UserService } from '../user-service.service';
 
 @Component({
   selector: 'app-home',

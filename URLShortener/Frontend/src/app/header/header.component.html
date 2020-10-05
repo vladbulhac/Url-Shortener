@@ -1,7 +1,7 @@
 <header>
   <nav class="navigation-bar">
     <ul class="navigation-list">
-      <li routerLinkActive="active">
+      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
         <a routerLink="/">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -21,7 +21,7 @@
           Home
         </a>
       </li>
-      <li>
+      <!-- <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="36"
@@ -36,7 +36,7 @@
         >
           <polyline points="9 18 15 12 9 6"></polyline>
         </svg>
-      </li>
+      </li> -->
       <li routerLinkActive="active">
         <a routerLink="/leaderboard">
           <svg

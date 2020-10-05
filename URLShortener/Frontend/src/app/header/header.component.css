@@ -25,3 +25,7 @@
 .navigation-list li:hover {
   color: #4f5d2f;
 }
+
+.active {
+  color: #4f5d2f;
+}

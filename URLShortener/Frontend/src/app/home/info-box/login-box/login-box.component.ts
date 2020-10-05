@@ -1,43 +1,63 @@
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ErrorService } from 'src/app/error.service';
+import { Error } from 'src/app/models/Error.model';
+import { User } from 'src/app/models/User.model';
+import { UserService } from 'src/app/user-service.service';
 
 @Component({
   selector: 'app-login-box',
   templateUrl: './login-box.component.html',
   styleUrls: ['./login-box.component.css'],
 })
-export class LoginBoxComponent implements OnInit {
-  @ViewChild('emailInput') emailInput: ElementRef;
-  @ViewChild('passwordInput') passwordInput: ElementRef;
-  public errorService:ErrorService;
+export class LoginBoxComponent implements OnInit,OnDestroy {
+  private errorService:ErrorService;
+  private userService:UserService;
+  private userSubscription:Subscription;
+  private errorSubscription:Subscription;
   private router: Router;
+  private user:User;
+  private error:Error;
+  public loginForm:FormGroup;
 
-  constructor(router:Router,errorService:ErrorService) {
+  constructor(router:Router,errorService:ErrorService,userService:UserService) {
     this.router=router;
     this.errorService=errorService;
+    this.userService=userService;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.userSubscription=this.userService.userSubject.subscribe((user:User)=>{
+      this.user=user;
+    });
+    this.errorSubscription=this.errorService.errorSubject.subscribe((error:Error)=>{
+      this.error=error;
+    });
+    this.loginForm=new FormGroup({
+        'email':new FormControl(null,[Validators.required,Validators.email]),
+        'password':new FormControl(null,[Validators.required,Validators.minLength(7)])
+    });
+  }
 
-  onLogin(): void {
-    const email=this.emailInput.nativeElement.value;
-    const password=this.passwordInput.nativeElement.value;
+  ngOnDestroy():void{
+    this.userSubscription.unsubscribe();
+    this.errorSubscription.unsubscribe();
+  }
 
-    //login request to server
+  onSubmit(): void {
+    const email=this.loginForm.value['email'];
+    const password=this.loginForm.value['password'];
+    const getUser={
+      'email':email,
+      'password':password
+    };
 
-    
-  /*   if(successfulLogin)
-    {
-      //id must be number??
-      const id:string='id1251';
-      this.router.navigate(['/u',id]);
-    }
+    this.userService.setUser(getUser);
+    if(this.error)
+      alert('Could not login you right now, check the error message!');
     else
-    {
-      const error:Error={};
-      this.errorService.setError(error);
-    } */
-
+      this.router.navigate(['/u',+this.user._id]); //remove + id must be string in parameter
   }
 }

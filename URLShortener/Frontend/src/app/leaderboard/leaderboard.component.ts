@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ErrorService } from '../error.service';
+import { Url } from '../models/Url.model';
 
 @Component({
   selector: 'app-leaderboard',
@@ -6,10 +8,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./leaderboard.component.css']
 })
 export class LeaderboardComponent implements OnInit {
+  private errorService:ErrorService;
+  private urls:Url[];
 
-  constructor() { }
+  constructor(errorService:ErrorService) {
+    this.errorService=errorService;
+    this.urls=[];
+   }
 
   ngOnInit(): void {
+    //request from backend api top 10 error if not possible
   }
-
 }

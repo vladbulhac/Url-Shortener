@@ -15,6 +15,11 @@ import { UrlInputComponent } from './home/url-input/url-input.component';
 import { LeaderboardComponent } from './leaderboard/leaderboard.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { UserEditComponent } from './home/info-box/user-box/user-edit/user-edit.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { UserService } from './user-service.service';
+import { UrlService } from './url-service.service';
+import { ErrorService } from './error.service';
+import {SplitnShort} from './utils/SplitnShort.pipe';
 
 
 @NgModule({
@@ -32,13 +37,15 @@ import { UserEditComponent } from './home/info-box/user-box/user-edit/user-edit.
     LeaderboardComponent,
     DropdownDirective,
     NotFoundComponent,
-    UserEditComponent
+    UserEditComponent,
+    SplitnShort
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule
   ],
-  providers: [],
+  providers: [UserService,UrlService,ErrorService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
