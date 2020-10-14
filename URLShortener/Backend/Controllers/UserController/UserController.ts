@@ -35,9 +35,9 @@ export class UserController extends HttpStatusResponse implements IUserControlle
   }
 
   private InitializeRoutes(): void {
-    this.Router.get(`${this.Path}/login`, this.Login.bind(this));
     this.Router.get(`${this.Path}/:id`, this.GetUserById.bind(this));
 
+    this.Router.post(`${this.Path}/login`, this.Login.bind(this));
     this.Router.post(`${this.Path}/register`, this.Register.bind(this));
 
     this.Router.put(

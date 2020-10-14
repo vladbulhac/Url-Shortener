@@ -3,8 +3,8 @@ import { Typegoose, prop, arrayProp, Ref, pre } from "typegoose";
 import { Url } from "./Url.model";
 
 @pre<User>("save",function(){
-    this.urlHistory=[] as string[];
-    this.customUrls=[] as Url[];
+    this.urlHistory=[];
+    this.customUrls=[];
 })
 export class User extends Typegoose {
   _id!: mongoose.Schema.Types.ObjectId;
@@ -13,13 +13,13 @@ export class User extends Typegoose {
   email!: string;
 
   @prop({ required: true, minlength: 5 })
-  password!: string;
+  password?: string;
 
   @prop()
   urlHistory?: string[];
 
   @prop({ref:'Url'})
-  customUrls?:Ref<Url>[];
+  customUrls!:Ref<Url>[];
 }
 
 export const UserModel = new User().getModelForClass(User, {

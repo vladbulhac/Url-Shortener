@@ -52,7 +52,6 @@ export class UrlInputComponent implements OnInit, OnDestroy, AfterViewInit {
     this.userSubscription = this.userService.userSubject.subscribe((user) => {
       this.user = user;
     });
-    console.log(this.route.snapshot.params['id']);
   }
 
   ngAfterViewInit(): void {
