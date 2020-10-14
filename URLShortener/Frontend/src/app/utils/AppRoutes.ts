@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { AuthenticationGuard } from 'src/app/utils/guards/authentication.guard';
+import { DenyaccessGuard } from 'src/app/utils/guards/denyaccess.guard';
 import { HomeComponent } from '../home/home.component';
 import { InfoBoxComponent } from '../home/info-box/info-box.component';
 import { LoginBoxComponent } from '../home/info-box/login-box/login-box.component';
@@ -14,23 +16,40 @@ export const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
+    canActivate: [DenyaccessGuard],
     children: [
       {
         path: '',
         component: InfoBoxComponent,
+        canActivate: [DenyaccessGuard],
         children: [
-          { path: '', component: WelcomeBoxComponent },
-          { path: 'login', component: LoginBoxComponent },
-          { path: 'register', component: RegisterBoxComponent },
-          { path: ':url', component: WelcomeBoxComponent },
-          {path:'u/:id/edit',component:UserEditComponent},
+          {
+            path: '',
+            component: WelcomeBoxComponent,
+            canActivate: [DenyaccessGuard],
+          },
+          {
+            path: 'login',
+            component: LoginBoxComponent,
+            canActivate: [DenyaccessGuard],
+          },
+          {
+            path: 'register',
+            component: RegisterBoxComponent,
+            canActivate: [DenyaccessGuard],
+          },
+          {
+            path: ':url',
+            component: WelcomeBoxComponent,
+            canActivate: [DenyaccessGuard],
+          },
+          { path: 'u/:id/edit', component: UserEditComponent, canActivate: [AuthenticationGuard] },
+          { path: 'u/:id/to/:url', component: UserBoxComponent ,canActivate: [AuthenticationGuard]},
           {
             path: 'u/:id',
             component: UserBoxComponent,
-            children: [
-              { path: 'to/:url', component: UserBoxComponent },
-            ],
-          }
+            canActivate: [AuthenticationGuard]
+          },
         ],
       },
     ],

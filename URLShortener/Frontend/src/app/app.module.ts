@@ -15,11 +15,12 @@ import { LeaderboardComponent } from './leaderboard/leaderboard.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { UserEditComponent } from './home/info-box/user-box/user-edit/user-edit.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { UserService } from './user-service.service';
-import { UrlService } from './url-service.service';
-import { ErrorService } from './error.service';
-import {SplitnShort} from './utils/SplitnShort.pipe';
-
+import { UserService } from './services/user-service.service';
+import { UrlService } from './services/url-service.service';
+import { ErrorService } from './services/error.service';
+import { SplitnShort } from './utils/SplitnShort.pipe';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthenticationInterceptorService } from 'src/app/services/authentication-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -36,14 +37,24 @@ import {SplitnShort} from './utils/SplitnShort.pipe';
     LeaderboardComponent,
     NotFoundComponent,
     UserEditComponent,
-    SplitnShort
+    SplitnShort,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule,
   ],
-  providers: [UserService,UrlService,ErrorService],
-  bootstrap: [AppComponent]
+  providers: [
+    UserService,
+    UrlService,
+    ErrorService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationInterceptorService,
+      multi: true,
+    },
+  ],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

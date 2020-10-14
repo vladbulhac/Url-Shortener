@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ErrorService } from 'src/app/error.service';
+import { ErrorService } from 'src/app/services/error.service';
 import { User } from 'src/app/models/User.model';
-import { UserService } from 'src/app/user-service.service';
+import { UserService } from 'src/app/services/user-service.service';
 
 @Component({
   selector: 'app-user-edit',

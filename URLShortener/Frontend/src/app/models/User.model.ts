@@ -7,4 +7,5 @@ export interface User{
     urlHistory?: string[];
    customUrls?:Url[];
    token?:string;
+   tokenExpiresIn?:Date;
 }

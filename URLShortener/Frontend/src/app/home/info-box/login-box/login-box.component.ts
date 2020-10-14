@@ -2,10 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ErrorService } from 'src/app/error.service';
+import { ErrorService } from 'src/app/services/error.service';
 import { Error } from 'src/app/models/Error.model';
 import { User } from 'src/app/models/User.model';
-import { UserService } from 'src/app/user-service.service';
+import {loginDTO} from 'src/app/DTOs/login.dto';
+import { UserService } from 'src/app/services/user-service.service';
+import { Url } from 'src/app/models/Url.model';
 
 @Component({
   selector: 'app-login-box',
@@ -54,10 +56,35 @@ export class LoginBoxComponent implements OnInit,OnDestroy {
       'password':password
     };
 
-    this.userService.setUser(getUser);
-    if(this.error)
+    this.userService.loginUser(getUser).subscribe((data:loginDTO)=>{
+      this.user = {
+        _id: data['data'].loginData.user._id,
+        email: data['data'].loginData.user.email,
+        urlHistory: data['data'].loginData.user.urlHistory,
+        customUrls:[],
+        token: data['data'].loginData.token,
+        tokenExpiresIn:new Date(new Date().getTime()+600000)
+      };
+      console.log(data.data.loginData.user.customUrls);
+      if(data.data.loginData.user.customUrls)
+      for(let url of data.data.loginData.user.customUrls)
+      {
+        let customUrl:Url={
+          shortUrl:url.shortUrl,
+          trueUrl:url.trueUrl,
+          accessNumber:url.accessNumber
+        }
+          this.user.customUrls.push(customUrl);
+      }
+      this.userService.setUser(this.user);
+      //this.userService.autoLogout(this.user.tokenExpiresIn.getTime()*1000);
+      this.router.navigate(['/u',this.user._id]);
+    },(error)=>{
+      this.errorService.setError({
+        errorCode: error.error.error.errorCode,
+        message: error.error.error.message,
+      });
       alert('Could not login you right now, check the error message!');
-    else
-      this.router.navigate(['/u',+this.user._id]); //remove + id must be string in parameter
+    });
   }
 }

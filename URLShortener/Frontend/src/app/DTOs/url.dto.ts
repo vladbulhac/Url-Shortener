@@ -1,4 +1,5 @@
-export interface UrlDTO{
-    url:string;
+export interface urlDTO {
+  data: {
+    url: string;
+  };
 }
-

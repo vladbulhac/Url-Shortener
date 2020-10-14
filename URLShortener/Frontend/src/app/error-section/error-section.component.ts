@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ErrorService } from '../error.service';
+import { ErrorService } from '../services/error.service';
 import { Error } from '../models/Error.model';
 
 @Component({
@@ -8,11 +8,10 @@ import { Error } from '../models/Error.model';
   styleUrls: ['./error-section.component.css'],
 })
 export class ErrorSectionComponent implements OnInit {
-  public error: Error;
+  public error: Error=null;
   public errorService: ErrorService;
 
   constructor(errorService: ErrorService) {
-    this.error = { statusCode: 404, message: 'Could not find this url!' };
     this.errorService=errorService;
   }
 
@@ -24,6 +23,5 @@ export class ErrorSectionComponent implements OnInit {
 
   clearError(): void {
     this.error = null;
-    console.log(this.error);
   }
 }
