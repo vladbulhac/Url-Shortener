@@ -55,6 +55,8 @@ export class UserBoxComponent implements OnInit,OnDestroy,OnChanges {
         });
     });}
   });
+
+  console.log(this.user);
   }
 
   ngOnChanges():void{

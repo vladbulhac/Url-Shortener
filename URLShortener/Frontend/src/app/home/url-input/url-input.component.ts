@@ -87,7 +87,7 @@ export class UrlInputComponent implements OnInit, OnDestroy, AfterViewInit {
         .getUrlAuthenticated(`${this.user._id}/${requestUrl}`)
         .subscribe(
           (data: urlDTO) => {
-            this.user.urlHistory.push(data.data.url);
+            this.user.urlHistory.unshift(data.data.url);
             this.userService.setUser(this.user);
             document.location.href = data.data.url;
           },
@@ -134,7 +134,7 @@ export class UrlInputComponent implements OnInit, OnDestroy, AfterViewInit {
                 trueUrl:data.data.url,
                 accessNumber:1,
               };
-              this.user.customUrls.push(urlData);
+              this.user.customUrls.unshift(urlData);
               this.userService.setUser(this.user);
             }
             this.url_input.nativeElement.value = data.data.url;

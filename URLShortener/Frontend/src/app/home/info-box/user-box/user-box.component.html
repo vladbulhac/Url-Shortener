@@ -3,6 +3,7 @@
     <h3>
       Hello, <i>{{ user.email | splitnshort: "@":0:10 }}</i>
     </h3>
+    <hr>
     <!-- <h5>{{ user.email.split("@")[0] }}</h5> -->
   </div>
   <button
@@ -61,8 +62,8 @@
       </tr>
       <ng-container *ngFor="let customUrl of user.customUrls">
         <tr>
-          <td>{{ customUrl.shortUrl }}</td>
-          <td>{{ customUrl.trueUrl }}</td>
+          <td (click)="setUrlInput(customUrl.shortUrl)" style="cursor: pointer;">{{ customUrl.shortUrl }}</td>
+          <td (click)="setUrlInput(customUrl.trueUrl)" style="cursor:pointer;">{{ customUrl.trueUrl }}</td>
           <td>{{ customUrl.accessNumber }}</td>
         </tr>
       </ng-container>

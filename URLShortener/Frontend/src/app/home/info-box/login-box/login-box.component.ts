@@ -65,7 +65,7 @@ export class LoginBoxComponent implements OnInit,OnDestroy {
         token: data['data'].loginData.token,
         tokenExpiresIn:new Date(new Date().getTime()+600000)
       };
-      console.log(data.data.loginData.user.customUrls);
+
       if(data.data.loginData.user.customUrls)
       for(let url of data.data.loginData.user.customUrls)
       {

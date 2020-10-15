@@ -28,7 +28,6 @@ export class LoginService implements ILoginService{
       user= await this.UserRepository.FindByArgument(
         JSON.stringify({email:email})
       );
-
     if (user) {
       let isCorrectPassword: boolean = await bcrypt.compare(
         password,
@@ -38,7 +37,7 @@ export class LoginService implements ILoginService{
       if (isCorrectPassword) {
         const token:string=this.TokenService.Create(String(user._id));
         this.CacheService.Add(user.email,JSON.stringify(user));
-        delete user!.password;
+        delete user.password;
 
         const loginDetails: ILogin = {
           user: user,
