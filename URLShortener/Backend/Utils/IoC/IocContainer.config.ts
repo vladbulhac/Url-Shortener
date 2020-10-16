@@ -17,6 +17,8 @@ import { ILoginService } from "../../Services/UserServices/LoginService/ILoginSe
 import { LoginService } from "../../Services/UserServices/LoginService/LoginService";
 import { IRegisterService } from "../../Services/UserServices/RegisterService/IRegisterService";
 import { RegisterService } from "../../Services/UserServices/RegisterService/RegisterService";
+import { IUpdateService } from "../../Services/UserServices/UpdateService/IUpdateService";
+import { UpdateService } from "../../Services/UserServices/UpdateService/UpdateService";
 
 export class IocContainerConfig {
   static configure() {
@@ -29,5 +31,6 @@ export class IocContainerConfig {
     Container.bind(IUrlConversionService).to(UrlConversionService);
     Container.bind(IUrlController).to(UrlController);
     Container.bind(IUserController).to(UserController);
+    Container.bind(IUpdateService).to(UpdateService);
   }
 }

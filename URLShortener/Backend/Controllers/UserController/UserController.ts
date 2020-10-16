@@ -6,12 +6,14 @@ import { ICacheService } from "../../Services/CacheServices/ICacheService";
 import { ITokenService } from "../../Services/JWTokenServices/ITokenService";
 import { ILoginService } from "../../Services/UserServices/LoginService/ILoginService";
 import { IRegisterService } from "../../Services/UserServices/RegisterService/IRegisterService";
+import { IUpdateService } from "../../Services/UserServices/UpdateService/IUpdateService";
 import { HttpCodes } from "../../Utils/HttpCodes.enum";
 import { HttpStatusResponse } from "../../Utils/HttpStatusResponse";
 import { IUserController } from "./IUserController";
 
-
-export class UserController extends HttpStatusResponse implements IUserController {
+export class UserController
+  extends HttpStatusResponse
+  implements IUserController {
   public Path: string = "/users";
   public Router: Router;
 
@@ -24,10 +26,11 @@ export class UserController extends HttpStatusResponse implements IUserControlle
   @Inject
   private RegisterService!: IRegisterService;
   @Inject
+  private UpdateService!: IUpdateService;
+  @Inject
   private CacheService!: ICacheService;
 
-  constructor(
-  ) {
+  constructor() {
     super();
 
     this.Router = Router();
@@ -109,14 +112,16 @@ export class UserController extends HttpStatusResponse implements IUserControlle
     const requestBody: User = request.body.data;
     const requestId: string = request.params.id;
 
-    this.UserRepository.Update(requestId, requestBody)
+    this.UpdateService.Update(
+      requestId,
+      requestBody.email,
+      requestBody.password
+    )
       .then((updatedData) => {
-        if (updatedData)
-          {
-            response.status(HttpCodes.Ok).json({ data: { updatedData } });
-          this.CacheService.Add(updatedData.email,JSON.stringify(updatedData));
-        }
-        else response.status(HttpCodes.NotFound).json(this.Error_NotFound);
+        if (updatedData) {
+          response.status(HttpCodes.Ok).json({ data: { updatedData } });
+          this.CacheService.Add(updatedData.email, JSON.stringify(updatedData));
+        } else response.status(HttpCodes.NotFound).json(this.Error_NotFound);
       })
       .catch((error) => {
         response
@@ -129,7 +134,7 @@ export class UserController extends HttpStatusResponse implements IUserControlle
     const requestId: string = request.params.id;
 
     this.UserRepository.DeleteByIdentifier(requestId)
-      .then((data:User) => {
+      .then((data: User) => {
         response.status(HttpCodes.NoContent);
         this.CacheService.Delete(data.email);
       })

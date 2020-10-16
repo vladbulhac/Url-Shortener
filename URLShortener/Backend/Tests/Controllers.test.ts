@@ -7,27 +7,28 @@ import { Application } from "../app";
 import { CacheService } from "../Services/CacheServices/CacheService";
 import { ICacheService } from "../Services/CacheServices/ICacheService";
 
-
 const dbData = require("./Resources/UserTestData.json");
 const UrlData = require("./Resources/UrlTestData.json");
 const users = dbData["users"];
 const passwords = ["test_password1234", "test@!_|_password1234", "testTestest"];
 let application: express.Application;
-let appHelper:Application;
-let cache:ICacheService;
-
+let appHelper: Application;
+let cache: ICacheService;
 
 before(() =>
   mongoUnit.start().then((url) => {
-    appHelper=new Application(url);
+    appHelper = new Application(url);
     application = appHelper.GetApplication();
-    cache=appHelper.GetCacheInstance();
+    cache = appHelper.GetCacheInstance();
   })
 );
 
 beforeEach(() => mongoUnit.load(dbData));
 
-afterEach(() => {mongoUnit.drop();cache.DeleteAll()});
+afterEach(() => {
+  mongoUnit.drop();
+  cache.DeleteAll();
+});
 
 after(() => mongoUnit.stop());
 
@@ -46,7 +47,7 @@ describe("user controller endpoint /users", () => {
         },
       };
       return request(application)
-        .get("/users/login")
+        .post("/users/login")
         .send(loginData)
         .expect(200)
         .then(async (response) => {
@@ -70,7 +71,7 @@ describe("user controller endpoint /users", () => {
         },
       };
       return request(application)
-        .get("/users/login")
+        .post("/users/login")
         .send(loginData)
         .expect(200)
         .then(async (response) => {
@@ -92,8 +93,8 @@ describe("user controller endpoint /users", () => {
     });
   });
 
-  describe("GET", () => {
-    it("Should return an user, a token and status 200", () => {
+  describe("POST", () => {
+    it("Should return an user, a token and status 200", async () => {
       const loginData = {
         data: {
           email: users[2].email,
@@ -101,7 +102,7 @@ describe("user controller endpoint /users", () => {
         },
       };
       return request(application)
-        .get("/users/login")
+        .post("/users/login")
         .send(loginData)
         .expect(200)
         .then((response) => {
@@ -111,9 +112,7 @@ describe("user controller endpoint /users", () => {
           expect(response.body.data.loginData.token).to.not.be.null;
         });
     });
-  });
 
-  describe("POST", () => {
     it("Should return a new user, a token and status 201", async () => {
       const registerBody = {
         data: {
@@ -199,7 +198,7 @@ describe("url controller endpoint /", () => {
         },
       };
       return request(application)
-        .get("/users/login")
+        .post("/users/login")
         .send(loginData)
         .expect(200)
         .then(async (response) => {
@@ -249,7 +248,7 @@ describe("url controller endpoint /", () => {
         },
       };
       return request(application)
-        .get("/users/login")
+        .post("/users/login")
         .send(loginData)
         .expect(200)
         .then(async (response) => {
