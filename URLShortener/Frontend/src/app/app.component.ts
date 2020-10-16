@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
   constructor(userService:UserService){
     this.userService=userService;
   }
-  ngOnInit(){console.log('entered app compontent');
+  ngOnInit(){
       this.userService.autoLogin();
   }
 }

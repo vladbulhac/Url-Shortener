@@ -93,7 +93,8 @@ export class RegisterBoxComponent implements OnInit, OnDestroy {
           tokenExpiresIn:new Date(new Date().getTime()+600000)
         };
         this.userService.setUser(this.user);
-        this.userService.autoLogout(this.user.tokenExpiresIn.getTime()*1000);
+        //this.userService.autoLogout(this.user.tokenExpiresIn.getTime()*10000);
+        this.userService.autoLogout(new Date(this.user.tokenExpiresIn).getTime() - new Date().getTime());
         this.router.navigate(['/u', this.user._id]);
       },
       (error) => {

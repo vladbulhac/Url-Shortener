@@ -33,8 +33,9 @@ export class DenyaccessGuard implements CanActivate {
     return this.userService.userSubject.pipe(
       take(1),
       map((user) => {
-        if (user) this.router.createUrlTree([`/u/${user._id}`]);
-        return true;
+        if (user) {
+          return this.router.createUrlTree(['/u', user._id]);
+        } else return true;
       })
     );
   }

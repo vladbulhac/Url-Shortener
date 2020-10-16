@@ -16,12 +16,10 @@ export const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    canActivate: [DenyaccessGuard],
     children: [
       {
         path: '',
         component: InfoBoxComponent,
-        canActivate: [DenyaccessGuard],
         children: [
           {
             path: '',
@@ -43,12 +41,20 @@ export const routes: Routes = [
             component: WelcomeBoxComponent,
             canActivate: [DenyaccessGuard],
           },
-          { path: 'u/:id/edit', component: UserEditComponent, canActivate: [AuthenticationGuard] },
-          { path: 'u/:id/to/:url', component: UserBoxComponent ,canActivate: [AuthenticationGuard]},
           {
             path: 'u/:id',
             component: UserBoxComponent,
-            canActivate: [AuthenticationGuard]
+            canActivate: [AuthenticationGuard],
+          },
+          {
+            path: 'u/:id/edit',
+            component: UserEditComponent,
+            canActivate: [AuthenticationGuard],
+          },
+          {
+            path: 'u/:id/to/:url',
+            component: UserBoxComponent,
+            canActivate: [AuthenticationGuard],
           },
         ],
       },

@@ -17,8 +17,8 @@ export class UserService {
   private httpClient: HttpClient;
   private router: Router;
   private user: User = null;
-  private tokenExpirationTimer: number;
-  
+  private tokenExpirationTimer: any;
+
   constructor(
     httpClient: HttpClient,
     errorService: ErrorService,
@@ -73,14 +73,20 @@ export class UserService {
     }
   }
 
-  public updateUser(){
+  public updateUser(user: {email?:string,password?:string}) {
+    const requestBody={
+      data:user
+    }
 
+    return this.httpClient.put(`http://localhost:55123/users/${this.user._id}`, 
+      requestBody,
+    );
   }
 
   public autoLogin() {
     const userData: User = JSON.parse(localStorage.getItem('userData'));
     if (userData) {
-      if (this.checkIfTokenExpired(userData.tokenExpiresIn)===false) {
+      if (this.checkIfTokenExpired(userData.tokenExpiresIn) === false) {
         this.setUser(userData);
         const expirationDuration =
           new Date(userData.tokenExpiresIn).getTime() - new Date().getTime();
@@ -93,6 +99,7 @@ export class UserService {
   public autoLogout(expirationDuration: number) {
     this.tokenExpirationTimer = setTimeout(() => {
       this.logoutUser();
+      console.log('logout has been called');
     }, expirationDuration);
   }
 
@@ -118,7 +125,7 @@ export class UserService {
     this.setUser(null);
     if (this.tokenExpirationTimer) clearTimeout(this.tokenExpirationTimer);
     this.tokenExpirationTimer = null;
-    this.router.navigate(['/']);
+    this.router.navigate(['/login']);
   }
 
   public setUser(user: User): void {
