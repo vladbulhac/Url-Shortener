@@ -3,7 +3,11 @@ import express from "express";
 import "mocha";
 import * as mongoUnit from "mongo-unit";
 import request from "supertest";
+import { Ref } from "typegoose";
 import { Application } from "../app";
+import { Url } from "../Models/Url.model";
+import { User } from "../Models/User.model";
+import { UserRepository } from "../Repositories/UserRepositories/UserRepository";
 import { CacheService } from "../Services/CacheServices/CacheService";
 import { ICacheService } from "../Services/CacheServices/ICacheService";
 
@@ -190,7 +194,7 @@ describe("url controller endpoint /", () => {
         });
     });
 
-    it("loggied in user should add url:https://github.com/remy/nodemon#nodemon to database and return a custom url: testurl", async () => {
+    it("logged in user should add url:https://github.com/remy/nodemon#nodemon to database and return a custom url: testurl with status code 201", async () => {
       const loginData = {
         data: {
           email: users[2].email,
@@ -221,26 +225,8 @@ describe("url controller endpoint /", () => {
             });
         });
     });
-  });
-  describe("/GET", () => {
-    it("should get the original url:https://github.com/remy/nodemon#nodemon after an anonymous request for url:WutmF", () => {
-      return request(application)
-        .post("")
-        .expect(201)
-        .send({ data: { url: UrlData.data[0] } })
-        .then(async (response) => {
-          expect(response.body.data.url).to.be.equal("WutmF");
-          const url: string = response.body.data.url;
-          await request(application)
-            .get("/" + url)
-            .expect(200)
-            .then((response) => {
-              expect(response.body.data.url).to.be.equal(UrlData.data[0]);
-            });
-        });
-    });
 
-    it("should get the original url:https://github.com/remy/nodemon#nodemon after an user requests for custom url:testurl", () => {
+    it("logged in user should add url:https://stackoverflow.com/ to database and add the custom url: stackO to the user's customUrls array", async () => {
       const loginData = {
         data: {
           email: users[2].email,
@@ -261,22 +247,133 @@ describe("url controller endpoint /", () => {
             .set({ Authorization: `Bearer ${token}` })
             .send({
               data: {
-                url: UrlData.data[0],
-                custom: "testurl",
+                url: "https://stackoverflow.com/",
+                custom: "stackO",
               },
             })
             .expect(201)
-            .then(async (response) => {
-              expect(response.body.data.url).to.be.equal("testurl");
-              const url: string = response.body.data.url;
+            .then(async () => {
               await request(application)
-                .get("/" + url)
+                .get("/users/" + id)
+                .set("Content-Type", "application/json")
+                .set("Accept", "application/json")
+                .set({ Authorization: `Bearer ${token}` })
                 .expect(200)
                 .then((response) => {
-                  expect(response.body.data.url).to.be.equal(UrlData.data[0]);
+                  const user: User = response.body.data.user;
+                  expect(
+                    user.customUrls![user.customUrls!.length - 1]
+                  ).to.have.property("shortUrl", "stackO");
                 });
             });
         });
+    });
+
+    it("logged in user should have url:https://stackoverflow.com/ in his urlHistory array after accessing the shortUrl:stackO", async () => {
+      const loginData = {
+        data: {
+          email: users[2].email,
+          password: passwords[2],
+        },
+      };
+      return request(application)
+        .post("/users/login")
+        .send(loginData)
+        .expect(200)
+        .then(async (response) => {
+          const id: string = response.body.data.loginData.user._id;
+          const token: string = response.body.data.loginData.token;
+          await request(application)
+          .post("/u/" + id)
+          .set("Content-Type", "application/json")
+          .set("Accept", "application/json")
+          .set({ Authorization: `Bearer ${token}` })
+          .send({
+            data: {
+              url: "https://stackoverflow.com/",
+              custom: "stackO",
+            },
+          })
+          .expect(201)
+          .then(async () => {
+          await request(application)
+            .get("/u/" + id + "/stackO")
+            .set("Content-Type", "application/json")
+            .set("Accept", "application/json")
+            .set({ Authorization: `Bearer ${token}` })
+            .expect(200)
+            .then(async () => {
+              await request(application)
+                .get("/users/" + id)
+                .set("Content-Type", "application/json")
+                .set("Accept", "application/json")
+                .set({ Authorization: `Bearer ${token}` })
+                .expect(200)
+                .then((response) => {
+                  const user: User = response.body.data.user;
+                  expect(
+                    user.urlHistory![user.urlHistory!.length - 1]
+                  ).to.contain("https://stackoverflow.com/");
+                });
+            });
+        });
+    });
+  });
+    describe("/GET", () => {
+      it("should return status code 200 and the original url:https://github.com/remy/nodemon#nodemon after an anonymous request for url:WutmF", () => {
+        return request(application)
+          .post("")
+          .expect(201)
+          .send({ data: { url: UrlData.data[0] } })
+          .then(async (response) => {
+            expect(response.body.data.url).to.be.equal("WutmF");
+            const url: string = response.body.data.url;
+            await request(application)
+              .get("/" + url)
+              .expect(200)
+              .then((response) => {
+                expect(response.body.data.url).to.be.equal(UrlData.data[0]);
+              });
+          });
+      });
+
+      it("should return status code 200 and the original url:https://github.com/remy/nodemon#nodemon after an user requests for custom url:testurl", () => {
+        const loginData = {
+          data: {
+            email: users[2].email,
+            password: passwords[2],
+          },
+        };
+        return request(application)
+          .post("/users/login")
+          .send(loginData)
+          .expect(200)
+          .then(async (response) => {
+            const id: string = response.body.data.loginData.user._id;
+            const token: string = response.body.data.loginData.token;
+            await request(application)
+              .post("/u/" + id)
+              .set("Content-Type", "application/json")
+              .set("Accept", "application/json")
+              .set({ Authorization: `Bearer ${token}` })
+              .send({
+                data: {
+                  url: UrlData.data[0],
+                  custom: "testurl",
+                },
+              })
+              .expect(201)
+              .then(async (response) => {
+                const url: string = response.body.data.url;
+                await request(application)
+                  .get("/" + url)
+                  .expect(200)
+                  .then((response) => {
+                    expect(response.body.data.url).to.be.equal(UrlData.data[0]);
+                  });
+              });
+          });
+      });
     });
   });
 });
