@@ -1,9 +1,9 @@
 import * as mongoose from "mongoose";
-import { Typegoose, prop, pre } from "typegoose";
+import { pre, prop, Typegoose } from "typegoose";
 
 @pre<Url>("save", function() {
   let today:Date=new Date();
-  this.TTL = new Date(today.getFullYear(),today.getMonth(),today.getDay()+7);
+  this.TTL = new Date(today.getDate()+7);
 })
 
 export class Url extends Typegoose {

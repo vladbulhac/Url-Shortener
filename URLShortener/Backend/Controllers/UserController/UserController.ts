@@ -14,7 +14,7 @@ import { IUserController } from "./IUserController";
 export class UserController
   extends HttpStatusResponse
   implements IUserController {
-  public Path: string = "/users";
+  public Path: string = "/v1/users";
   public Router: Router;
 
   @Inject

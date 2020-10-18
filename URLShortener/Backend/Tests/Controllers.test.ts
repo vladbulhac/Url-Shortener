@@ -3,15 +3,12 @@ import express from "express";
 import "mocha";
 import * as mongoUnit from "mongo-unit";
 import request from "supertest";
-import { Ref } from "typegoose";
+import { Url } from "url";
 import { Application } from "../app";
-import { Url } from "../Models/Url.model";
 import { User } from "../Models/User.model";
-import { UserRepository } from "../Repositories/UserRepositories/UserRepository";
-import { CacheService } from "../Services/CacheServices/CacheService";
 import { ICacheService } from "../Services/CacheServices/ICacheService";
 
-const dbData = require("./Resources/UserTestData.json");
+const dbData = require("./Resources/DatabaseData.json");
 const UrlData = require("./Resources/UrlTestData.json");
 const users = dbData["users"];
 const passwords = ["test_password1234", "test@!_|_password1234", "testTestest"];
@@ -51,12 +48,12 @@ describe("user controller endpoint /users", () => {
         },
       };
       return request(application)
-        .post("/users/login")
+        .post("/v1/users/login")
         .send(loginData)
         .expect(200)
         .then(async (response) => {
           await request(application)
-            .put(`/users/${response.body.data.loginData.user._id}`)
+            .put(`/v1/users/${response.body.data.loginData.user._id}`)
             .send(updateData)
             .expect(401);
         });
@@ -75,14 +72,14 @@ describe("user controller endpoint /users", () => {
         },
       };
       return request(application)
-        .post("/users/login")
+        .post("/v1/users/login")
         .send(loginData)
         .expect(200)
         .then(async (response) => {
           const id: string = response.body.data.loginData.user._id;
           const token: string = response.body.data.loginData.token;
           await request(application)
-            .put("/users" + "/" + id)
+            .put("/v1/users" + "/" + id)
             .set("Content-Type", "application/json")
             .set("Accept", "application/json")
             .set({ Authorization: `Bearer ${token}` })
@@ -106,7 +103,7 @@ describe("user controller endpoint /users", () => {
         },
       };
       return request(application)
-        .post("/users/login")
+        .post("/v1/users/login")
         .send(loginData)
         .expect(200)
         .then((response) => {
@@ -125,7 +122,7 @@ describe("user controller endpoint /users", () => {
         },
       };
       return request(application)
-        .post("/users/register")
+        .post("/v1/users/register")
         .send(registerBody)
         .expect(201)
         .then((response) => {
@@ -147,7 +144,7 @@ describe("user controller endpoint /users", () => {
         },
       };
       return request(application)
-        .post("/users/register")
+        .post("/v1/users/register")
         .send(registerBody)
         .expect(409);
     });
@@ -162,14 +159,14 @@ describe("user controller endpoint /users", () => {
         },
       };
       return request(application)
-        .post("/users/register")
+        .post("/v1/users/register")
         .send(userData)
         .expect(201)
         .then((response) => {
           const id: string = response.body.data.registerData.user._id;
           const token: string = response.body.data.registerData.token;
           request(application)
-            .delete("/users/" + id)
+            .delete("/v1/users/" + id)
             .set("Content-Type", "application/json")
             .set("Accept", "application/json")
             .set({ Authorization: `Bearer ${token}` })
@@ -186,7 +183,7 @@ describe("url controller endpoint /", () => {
   describe("/POST", () => {
     it("should add url:https://github.com/remy/nodemon#nodemon to database and return its short version: WutmF", () => {
       return request(application)
-        .post("")
+        .post("/v1/urls")
         .expect(201)
         .send({ data: { url: UrlData.data[0] } })
         .then((response) => {
@@ -202,14 +199,14 @@ describe("url controller endpoint /", () => {
         },
       };
       return request(application)
-        .post("/users/login")
+        .post("/v1/users/login")
         .send(loginData)
         .expect(200)
         .then(async (response) => {
           const id: string = response.body.data.loginData.user._id;
           const token: string = response.body.data.loginData.token;
           await request(application)
-            .post("/u/" + id)
+            .post("/v1/urls/u/" + id)
             .set("Content-Type", "application/json")
             .set("Accept", "application/json")
             .set({ Authorization: `Bearer ${token}` })
@@ -234,14 +231,14 @@ describe("url controller endpoint /", () => {
         },
       };
       return request(application)
-        .post("/users/login")
+        .post("/v1/users/login")
         .send(loginData)
         .expect(200)
         .then(async (response) => {
           const id: string = response.body.data.loginData.user._id;
           const token: string = response.body.data.loginData.token;
           await request(application)
-            .post("/u/" + id)
+            .post("/v1/urls/u/" + id)
             .set("Content-Type", "application/json")
             .set("Accept", "application/json")
             .set({ Authorization: `Bearer ${token}` })
@@ -254,7 +251,7 @@ describe("url controller endpoint /", () => {
             .expect(201)
             .then(async () => {
               await request(application)
-                .get("/users/" + id)
+                .get("/v1/users/" + id)
                 .set("Content-Type", "application/json")
                 .set("Accept", "application/json")
                 .set({ Authorization: `Bearer ${token}` })
@@ -277,59 +274,59 @@ describe("url controller endpoint /", () => {
         },
       };
       return request(application)
-        .post("/users/login")
+        .post("/v1/users/login")
         .send(loginData)
         .expect(200)
         .then(async (response) => {
           const id: string = response.body.data.loginData.user._id;
           const token: string = response.body.data.loginData.token;
           await request(application)
-          .post("/u/" + id)
-          .set("Content-Type", "application/json")
-          .set("Accept", "application/json")
-          .set({ Authorization: `Bearer ${token}` })
-          .send({
-            data: {
-              url: "https://stackoverflow.com/",
-              custom: "stackO",
-            },
-          })
-          .expect(201)
-          .then(async () => {
-          await request(application)
-            .get("/u/" + id + "/stackO")
+            .post("/v1/urls/u/" + id)
             .set("Content-Type", "application/json")
             .set("Accept", "application/json")
             .set({ Authorization: `Bearer ${token}` })
-            .expect(200)
+            .send({
+              data: {
+                url: "https://stackoverflow.com/",
+                custom: "stackO",
+              },
+            })
+            .expect(201)
             .then(async () => {
               await request(application)
-                .get("/users/" + id)
+                .get("/v1/urls/stackO/u/" + id)
                 .set("Content-Type", "application/json")
                 .set("Accept", "application/json")
                 .set({ Authorization: `Bearer ${token}` })
                 .expect(200)
-                .then((response) => {
-                  const user: User = response.body.data.user;
-                  expect(
-                    user.urlHistory![user.urlHistory!.length - 1]
-                  ).to.contain("https://stackoverflow.com/");
+                .then(async () => {
+                  await request(application)
+                    .get("/v1/users/" + id)
+                    .set("Content-Type", "application/json")
+                    .set("Accept", "application/json")
+                    .set({ Authorization: `Bearer ${token}` })
+                    .expect(200)
+                    .then((response) => {
+                      const user: User = response.body.data.user;
+                      expect(
+                        user.urlHistory![user.urlHistory!.length - 1]
+                      ).to.contain("https://stackoverflow.com/");
+                    });
                 });
             });
         });
     });
-  });
     describe("/GET", () => {
       it("should return status code 200 and the original url:https://github.com/remy/nodemon#nodemon after an anonymous request for url:WutmF", () => {
         return request(application)
-          .post("")
+          .post("/v1/urls")
           .expect(201)
           .send({ data: { url: UrlData.data[0] } })
           .then(async (response) => {
             expect(response.body.data.url).to.be.equal("WutmF");
             const url: string = response.body.data.url;
             await request(application)
-              .get("/" + url)
+              .get("/v1/urls/" + url)
               .expect(200)
               .then((response) => {
                 expect(response.body.data.url).to.be.equal(UrlData.data[0]);
@@ -345,14 +342,14 @@ describe("url controller endpoint /", () => {
           },
         };
         return request(application)
-          .post("/users/login")
+          .post("/v1/users/login")
           .send(loginData)
           .expect(200)
           .then(async (response) => {
             const id: string = response.body.data.loginData.user._id;
             const token: string = response.body.data.loginData.token;
             await request(application)
-              .post("/u/" + id)
+              .post("/v1/urls/u/" + id)
               .set("Content-Type", "application/json")
               .set("Accept", "application/json")
               .set({ Authorization: `Bearer ${token}` })
@@ -366,12 +363,126 @@ describe("url controller endpoint /", () => {
               .then(async (response) => {
                 const url: string = response.body.data.url;
                 await request(application)
-                  .get("/" + url)
+                  .get("/v1/urls/" + url)
                   .expect(200)
                   .then((response) => {
                     expect(response.body.data.url).to.be.equal(UrlData.data[0]);
                   });
               });
+          });
+      });
+      it("should return top 10 most accessed active urls and status code 200", async () => {
+        const expectedTop= [
+          {
+              "accessNumber": 34,
+              "isActive": true,
+              "_id": "5f6b44e4bfbf660e0447f0a4",
+              "trueUrl": "https://testy.org",
+              "shortUrl": "stfJ",
+              "TTL": "1970-01-01T00:00:00.002Z",
+              "__v": 0,
+              "id": "5f6b44e4bfbf660e0447f0a4"
+          },
+          {
+              "accessNumber": 23,
+              "isActive": true,
+              "_id": "5f6290cdd7eea23f90ba98fb",
+              "trueUrl": "https://gbambu.com/r1251fsaga@@135xfa_12512z",
+              "extendedTTL": true,
+              "shortUrl": "HpnGK",
+              "TTL": "1970-01-01T00:00:00.003Z",
+              "__v": 0,
+              "id": "5f6290cdd7eea23f90ba98fb"
+          },
+          {
+              "accessNumber": 10,
+              "isActive": true,
+              "_id": "5f7c758aa6b09a1b444aecfd",
+              "trueUrl": "https://emag.ro",
+              "shortUrl": "EdtiB",
+              "TTL": "1970-01-01T00:00:00.002Z",
+              "__v": 0,
+              "id": "5f7c758aa6b09a1b444aecfd"
+          },
+          {
+              "accessNumber": 10,
+              "isActive": true,
+              "_id": "5f84918bcac70b5954586b9b",
+              "trueUrl": "https://www.glassdoor.com/Job/ia%C5%9Fi-jobs-SRCH_IL.0,4_IC3235082.htm?sortBy=date_desc",
+              "extendedTTL": true,
+              "shortUrl": "glassD",
+              "TTL": "1970-01-01T00:00:00.003Z",
+              "__v": 0,
+              "id": "5f84918bcac70b5954586b9b"
+          },
+          {
+              "accessNumber": 3,
+              "isActive": true,
+              "_id": "5f7c8091a6b09a1b444aecfe",
+              "trueUrl": "https://medium.com/swlh/angular-9-candeactivate-route-guard-example-1329fd0b4653",
+              "shortUrl": "6pQPL",
+              "TTL": "1970-01-01T00:00:00.002Z",
+              "__v": 0,
+              "id": "5f7c8091a6b09a1b444aecfe"
+          },
+          {
+              "accessNumber": 3,
+              "isActive": true,
+              "_id": "5f7c80b1a6b09a1b444aecff",
+              "trueUrl": "https://typegoose.github.io/typegoose/docs/api/decorators/prop",
+              "shortUrl": "pH6VR",
+              "TTL": "1970-01-01T00:00:00.002Z",
+              "__v": 0,
+              "id": "5f7c80b1a6b09a1b444aecff"
+          },
+          {
+              "accessNumber": 2,
+              "isActive": true,
+              "_id": "5f6b476584b43c4ffc3d5854",
+              "trueUrl": "https://testosten.org",
+              "shortUrl": "OJiyC",
+              "TTL": "1970-01-01T00:00:00.031Z",
+              "__v": 0,
+              "id": "5f6b476584b43c4ffc3d5854"
+          },
+          {
+              "accessNumber": 2,
+              "isActive": true,
+              "_id": "5f6b47b44e4088371ccc82d0",
+              "trueUrl": "https://testoisten.org",
+              "shortUrl": "6BNiL",
+              "TTL": "1970-01-01T00:00:00.031Z",
+              "__v": 0,
+              "id": "5f6b47b44e4088371ccc82d0"
+          },
+          {
+              "accessNumber": 2,
+              "isActive": true,
+              "_id": "5f6b48323338fd27bca93cb5",
+              "trueUrl": "https://etestoisten.org",
+              "shortUrl": "pwgZG",
+              "TTL": "1970-01-01T00:00:00.031Z",
+              "__v": 0,
+              "id": "5f6b48323338fd27bca93cb5"
+          },
+          {
+              "accessNumber": 2,
+              "isActive": true,
+              "_id": "5f6b4890f837a5439c2dfc49",
+              "trueUrl": "https://etessagagstoisten.org",
+              "shortUrl": "u7OFI",
+              "TTL": "1970-01-01T00:00:00.031Z",
+              "__v": 0,
+              "id": "5f6b4890f837a5439c2dfc49"
+          }
+      ]
+        return request(application)
+          .get("/v1/urls/leaderboard")
+          .expect(200)
+          .then((response) => {
+            const top: Url[] = response.body.data.urls;
+            expect(top).to.be.length(10);
+            //expect(top).to.eql(expectedTop);
           });
       });
     });

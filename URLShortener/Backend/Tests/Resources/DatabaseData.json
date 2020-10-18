@@ -1,0 +1,194 @@
+{
+  "users": [
+    {
+      "email": "test_user1@testemail.com",
+      "password": "$2b$10$KGE854vbS5JGP4SWdnuD8OKXQn1nwK4vf2PKUiH/9JYoNM1UeexKS",
+      "urlHistory": [],
+      "__v": 0
+    },
+    {
+      "email": "test_user2@testemail.com",
+      "password": "$2b$10$M9c41WMHQVpOYT2NsNd62.6VKlgRY5t.bmszhCq/h0bZArUCAE4ly",
+      "urlHistory": [],
+      "__v": 0
+    },
+    {
+      "email": "test_user3@testemail.com",
+      "password": "$2b$10$j3NQw.GZIMP34f.9NCMcF.7wSnVFO2YYC/Z1FAeEkpCLw4wcRmIyy",
+      "urlHistory": [],
+      "__v": 0
+    }
+  ],
+  "urls": [
+    {
+      "accessNumber": 23,
+      "isActive": true,
+      "trueUrl": "https://gbambu.com/r1251fsaga@@135xfa_12512z",
+      "extendedTTL": true,
+      "shortUrl": "HpnGK",
+      "TTL": "1970-01-01T00:00:00.003Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 34,
+      "isActive": true,
+      "trueUrl": "https://testy.org",
+      "shortUrl": "stfJ",
+      "TTL": "1970-01-01T00:00:00.002Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 2,
+      "isActive": true,
+      "trueUrl": "https://testosten.org",
+      "shortUrl": "OJiyC",
+      "TTL": "1970-01-01T00:00:00.031Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 2,
+      "isActive": true,
+      "trueUrl": "https://testoisten.org",
+      "shortUrl": "6BNiL",
+      "TTL": "1970-01-01T00:00:00.031Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 2,
+      "isActive": true,
+      "trueUrl": "https://etestoisten.org",
+      "shortUrl": "pwgZG",
+      "TTL": "1970-01-01T00:00:00.031Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 2,
+      "isActive": true,
+      "trueUrl": "https://etessagagstoisten.org",
+      "shortUrl": "u7OFI",
+      "TTL": "1970-01-01T00:00:00.031Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 2,
+      "isActive": true,
+      "trueUrl": "https://ethaien.org",
+      "shortUrl": "olcnG",
+      "TTL": "1970-01-01T00:00:00.011Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 12,
+      "isActive": false,
+      "trueUrl": "https://ethn.org",
+      "shortUrl": "Hn4oN",
+      "TTL": "1970-01-01T00:00:00.002Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 2,
+      "isActive": true,
+      "trueUrl": "https://gbambu.com/r1251",
+      "extendedTTL": true,
+      "shortUrl": "Gb4tJ",
+      "TTL": "1970-01-01T00:00:00.010Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 2,
+      "isActive": true,
+      "trueUrl": "https://gbambu.com/r1251",
+      "extendedTTL": true,
+      "shortUrl": "custom",
+      "TTL": "1970-01-01T00:00:00.010Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 10,
+      "isActive": true,
+      "trueUrl": "https://emag.ro",
+      "shortUrl": "EdtiB",
+      "TTL": "1970-01-01T00:00:00.002Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 3,
+      "isActive": true,
+      "trueUrl": "https://medium.com/swlh/angular-9-candeactivate-route-guard-example-1329fd0b4653",
+      "shortUrl": "6pQPL",
+      "TTL": "1970-01-01T00:00:00.002Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 3,
+      "isActive": true,
+      "trueUrl": "https://typegoose.github.io/typegoose/docs/api/decorators/prop",
+      "shortUrl": "pH6VR",
+      "TTL": "1970-01-01T00:00:00.002Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 10,
+      "isActive": true,
+      "trueUrl": "https://www.glassdoor.com/Job/ia%C5%9Fi-jobs-SRCH_IL.0,4_IC3235082.htm?sortBy=date_desc",
+      "extendedTTL": true,
+      "shortUrl": "glassD",
+      "TTL": "1970-01-01T00:00:00.003Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 2,
+      "isActive": true,
+      "trueUrl": "https://www.illucit.com/angular/en-angular-5-httpinterceptor-add-bearer-token-to-httpclient-requests/",
+      "extendedTTL": true,
+      "shortUrl": "angularInterceptor",
+      "TTL": "1970-01-01T00:00:00.010Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 2,
+      "isActive": true,
+      "trueUrl": "https://ro.linkedin.com/",
+      "extendedTTL": true,
+      "shortUrl": "linchedin",
+      "TTL": "1970-01-01T00:00:00.011Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 2,
+      "isActive": true,
+      "trueUrl": "https://stackoverflow.com/questions/8159524/javascript-pushing-element-at-the-beginning-of-an-array",
+      "extendedTTL": true,
+      "shortUrl": "enqueue",
+      "TTL": "1970-01-01T00:00:00.012Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 2,
+      "isActive": true,
+      "trueUrl": "https://codepen.io/AndrewHyte/pen/DcExu",
+      "extendedTTL": true,
+      "shortUrl": "textDance",
+      "TTL": "1970-01-01T00:00:00.012Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 2,
+      "isActive": true,
+      "trueUrl": "https://stackoverflow.com/questions/58925677/property-json-does-not-exist-on-type-typescript",
+      "extendedTTL": true,
+      "shortUrl": "json",
+      "TTL": "1970-01-01T00:00:00.014Z",
+      "__v": 0
+    },
+    {
+      "accessNumber": 2,
+      "isActive": true,
+      "trueUrl": "emag.ro",
+      "extendedTTL": true,
+      "shortUrl": "ZLQ6B",
+      "TTL": "1970-01-01T00:00:00.014Z",
+      "__v": 0
+    }
+  ]
+}

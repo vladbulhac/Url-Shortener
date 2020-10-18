@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import { Request, response, Response, Router } from "express";
 import { Inject } from "typescript-ioc";
 import { CreateUrlByUserHandler } from "../../Handlers/UrlHandlers/CreateUrlByUserHandler";
 import { CreateUrlHandler } from "../../Handlers/UrlHandlers/CreateUrlHandler";
@@ -17,7 +17,7 @@ import { HttpStatusResponse } from "../../Utils/HttpStatusResponse";
 import { IUrlController } from "./IUrlController";
 
 export class UrlController extends HttpStatusResponse implements IUrlController {
-  public Path: string = "";
+  public Path: string = "/v1/urls";
   public Router: Router;
 
   @Inject
@@ -39,9 +39,10 @@ export class UrlController extends HttpStatusResponse implements IUrlController 
   }
 
   private InitializeRoutes(): void {
+    this.Router.get(`${this.Path}/leaderboard`,this.GetLeaderboard.bind(this));
     this.Router.get(`${this.Path}/:url`, this.GetUrl.bind(this));
     this.Router.get(
-      `${this.Path}/u/:id/:url`,
+      `${this.Path}/:url/u/:id`,
       [this.TokenService.Verify.bind(this)],
       this.GetUrlByUser.bind(this)
     );
@@ -54,7 +55,7 @@ export class UrlController extends HttpStatusResponse implements IUrlController 
     );
 
     this.Router.delete(
-      `${this.Path}/u/d/:url`,
+      `${this.Path}/:url/u/:id`,
       this.TokenService.Verify.bind(this),
       this.DeleteCustomUrl.bind(this)
     );
@@ -157,10 +158,26 @@ export class UrlController extends HttpStatusResponse implements IUrlController 
       await this.UserRepository.UpdateHistory(userId, url);
       await this.UrlRepository.UpdateTTL(url);
     } catch (error) {
+      console.log(error);
       response
         .status(HttpCodes.BadRequest)
-        .json(this.Error_BadRequest(String(error)));
+        .json(this.Error_BadRequest);
     }
+  }
+
+  private async GetLeaderboard(request:Request,response:Response):Promise<void>{
+     this.UrlRepository.GetMostUsedActiveUrls(0).then(urls=>{
+      response.status(HttpCodes.Ok).json({data:{urls}});
+      if(urls)
+      {
+        urls.forEach(url=>{
+          this.CacheService.Add(url.shortUrl,JSON.stringify(url));
+        });
+      }
+    }).catch(error=>{
+      console.log(error);
+      response.status(HttpCodes.BadRequest).json(this.Error_BadRequest);
+    });
   }
 
   private async DeleteCustomUrl(
