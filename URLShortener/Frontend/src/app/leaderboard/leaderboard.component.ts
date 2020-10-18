@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ErrorService } from '../services/error.service';
 import { Url } from '../models/Url.model';
+import { UrlService } from '../services/url-service.service';
+import {leaderboardDTO} from '../DTOs/leaderboard.dto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-leaderboard',
@@ -9,14 +12,29 @@ import { Url } from '../models/Url.model';
 })
 export class LeaderboardComponent implements OnInit {
   private errorService:ErrorService;
-  private urls:Url[];
+  private urlService:UrlService;
+  private router:Router;
+  public urls:Url[];
 
-  constructor(errorService:ErrorService) {
+  constructor(errorService:ErrorService,urlService:UrlService,router:Router) {
     this.errorService=errorService;
-    this.urls=[];
+    this.urlService=urlService;
+    this.router=router;
+    this.urls=[] as Url[];
    }
 
   ngOnInit(): void {
-    //request from backend api top 10 error if not possible
+    this.urlService.getLeaderboard().subscribe((response:leaderboardDTO)=>{
+      this.urls=response.data.urls;
+    },error=>{
+      this.errorService.setError({
+        errorCode: error.error.error.errorCode,
+        message: error.error.error.message,
+      });
+    });
+  }
+  setUrlInput(url:string){
+    this.urlService.setUrl(url);
+      this.router.navigate([`${url}`]);
   }
 }

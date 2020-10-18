@@ -1,1 +1,17 @@
-<p>leaderboard works!</p>
+<div class="leaderboard">
+    <table *ngIf="urls.length>0;else noleaderboard" style="border-spacing:0;">
+        <tr class="tableheader">
+            <th style="border-top-left-radius:10px">Short</th>
+            <th>Url</th>
+            <th style="border-top-right-radius:10px">Access count</th>
+          </tr>
+          <ng-container *ngFor="let url of urls">
+            <tr>
+              <td (click)="setUrlInput(url.shortUrl)" style="cursor: pointer;border-bottom-left-radius: 10px; border-right:1px solid #4f5d2f;">{{ url.shortUrl }}</td>
+              <td (click)="setUrlInput(url.trueUrl)" style="cursor:pointer;border-right: 1px solid #4f5d2f;">{{ url.trueUrl }}</td>
+              <td style="border-bottom-right-radius: 10px;">{{ url.accessNumber }}</td>
+            </tr>
+          </ng-container>
+    </table>
+    <ng-template #noleaderboard> Leaderboard is empty! :(</ng-template>
+</div>

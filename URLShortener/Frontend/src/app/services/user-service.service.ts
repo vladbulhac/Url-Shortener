@@ -99,7 +99,6 @@ export class UserService {
   public autoLogout(expirationDuration: number) {
     this.tokenExpirationTimer = setTimeout(() => {
       this.logoutUser();
-      console.log('logout has been called');
     }, expirationDuration);
   }
 

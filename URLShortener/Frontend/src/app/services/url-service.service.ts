@@ -38,6 +38,10 @@ export class UrlService{
     return this.httpClient.get(`http://localhost:55123/v1/urls/${url}/u/${id}`);
   }
 
+  public getLeaderboard(){
+    return this.httpClient.get("http://localhost:55123/v1/urls/leaderboard");
+  }
+
   public AddHttpIfAbsent(url:string):string
   {
     let pattern=/^((https:\/\/)|(http:\/\/))/i;
