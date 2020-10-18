@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
+import { stringify } from '@angular/compiler/src/util';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
-import { UserService } from './user-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,23 +19,31 @@ export class UrlService{
   }
 
   public createUrl(url:string){
-    return this.httpClient.post('http://localhost:55123/',{data:{url:url}});
+    return this.httpClient.post('http://localhost:55123/v1/urls',{data:{url:url}});
   }
 
   public getUrl(url:string){
-      return this.httpClient.get(`http://localhost:55123/${url}`);
+      return this.httpClient.get(`http://localhost:55123/v1/urls/${url}`);
   }
 
   public createUrlAuthenticated(id:string,request:{url:string,custom?:string}){
     const requestBody={
       data:request
     };
-    return this.httpClient.post(`http://localhost:55123/u/${id}`,requestBody);
+    return this.httpClient.post(`http://localhost:55123/v1/urls/u/${id}`,requestBody);
   }
 
-  public getUrlAuthenticated(codedIdAndUrl:string)
+  public getUrlAuthenticated(url:string,id:string)
   {
-    return this.httpClient.get(`http://localhost:55123/u/${codedIdAndUrl}`);
+    return this.httpClient.get(`http://localhost:55123/v1/urls/${url}/u/${id}`);
+  }
+
+  public AddHttpIfAbsent(url:string):string
+  {
+    let pattern=/^((https:\/\/)|(http:\/\/))/i;
+    if(url.match(pattern))
+      return url;
+    return 'https://'+url;
   }
 
 }

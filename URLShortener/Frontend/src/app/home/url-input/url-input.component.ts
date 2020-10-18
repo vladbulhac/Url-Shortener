@@ -69,7 +69,7 @@ export class UrlInputComponent implements OnInit, OnDestroy, AfterViewInit {
     this.toggleStatus = !this.toggleStatus;
   }
 
-  public urlRequest(url?: string): void {
+  public urlRequest(url?: string):void{
     let requestUrl: string;
     if (url) requestUrl = url;
     else requestUrl = this.url_input.nativeElement.value;
@@ -84,7 +84,7 @@ export class UrlInputComponent implements OnInit, OnDestroy, AfterViewInit {
       this.userService.redirectIfTokenExpired();
 
       this.urlService
-        .getUrlAuthenticated(`${this.user._id}/${requestUrl}`)
+        .getUrlAuthenticated(requestUrl,this.user._id)
         .subscribe(
           (data: urlDTO) => {
             this.user.urlHistory.unshift(data.data.url);
@@ -102,7 +102,7 @@ export class UrlInputComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       this.urlService.getUrl(requestUrl).subscribe(
         (data: urlDTO) => {
-          document.location.href = data.data.url;
+         document.location.href=data.data.url;
         },
         (error) => {
           this.errorService.setError({
@@ -115,6 +115,7 @@ export class UrlInputComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public createUrl(requestUrl: string): void {
+    requestUrl=this.urlService.AddHttpIfAbsent(requestUrl);
     if (this.user !== undefined && this.user !== null) {
       this.userService.redirectIfTokenExpired();
 

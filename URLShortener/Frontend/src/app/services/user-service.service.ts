@@ -33,7 +33,7 @@ export class UserService {
   public deleteUser() {
     localStorage.removeItem('userData');
     return this.httpClient.delete(
-      `http://localhost:55123/users/${this.user._id}`
+      `http://localhost:55123/v1/users/${this.user._id}`
     );
   }
 
@@ -60,7 +60,7 @@ export class UserService {
       };
 
       return this.httpClient.post(
-        'http://localhost:55123/users/register',
+        'http://localhost:55123/v1/users/register',
         requestBody
       );
     }
@@ -78,7 +78,7 @@ export class UserService {
       data:user
     }
 
-    return this.httpClient.put(`http://localhost:55123/users/${this.user._id}`, 
+    return this.httpClient.put(`http://localhost:55123/v1/users/${this.user._id}`, 
       requestBody,
     );
   }
@@ -113,7 +113,7 @@ export class UserService {
       };
 
       return this.httpClient.post(
-        'http://localhost:55123/users/login',
+        'http://localhost:55123/v1/users/login',
         requestBody
       );
     }

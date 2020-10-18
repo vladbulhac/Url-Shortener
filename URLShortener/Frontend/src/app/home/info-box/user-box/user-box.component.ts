@@ -52,7 +52,7 @@ export class UserBoxComponent implements OnInit, OnDestroy, OnChanges {
         this.router.navigate(['']);
 
       if (url) {
-        this.urlService.getUrlAuthenticated(url).subscribe(
+        this.urlService.getUrlAuthenticated(url,this.user._id).subscribe(
           (data: urlDTO) => {
             document.location.href = data.data.url;
           },
