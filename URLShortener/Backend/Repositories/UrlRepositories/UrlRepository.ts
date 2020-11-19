@@ -7,32 +7,43 @@ export class UrlRepository implements IUrlRepository {
     return document.save();
   }
   public GetByIdentifier(url: string): Promise<Url | null> {
-    return UrlModel.findOne({$or:[{ shortUrl: url},{trueUrl:url}]}).exec();
+    return UrlModel.findOne({
+      $or: [{ shortUrl: url }, { trueUrl: url }],
+    }).exec();
   }
-  public async UpdateTTL(url: string): Promise<Url|null|void> {
+  public async UpdateTTL(url: string): Promise<Url | null | void> {
     return UrlModel.findOne({ shortUrl: url }).then(async (data) => {
       if (data) {
         if (data.extendedTTL === true)
           data.TTL = new Date(data.TTL!.getDate() + 2);
         else data.TTL = new Date(data.TTL!.getDate() + 1);
-        data.accessNumber=data.accessNumber!+1;
+        data.accessNumber = data.accessNumber! + 1;
 
-        await UrlModel.findByIdAndUpdate(data._id,data).exec();
+        await UrlModel.findByIdAndUpdate(data._id, data).exec();
       }
     });
   }
-  public async SetActive(identifier:string):Promise<Url|null>{
-    return UrlModel.findByIdAndUpdate(identifier,{isActive:true},{new:true}).exec();
+  public async SetActive(identifier: string): Promise<Url | null> {
+    return UrlModel.findByIdAndUpdate(
+      identifier,
+      { isActive: true },
+      { new: true }
+    ).exec();
   }
-  public DeleteByIdentifier(url:string):Promise<any>{
-    return UrlModel.findOneAndDelete({shortUrl:url}).exec();
+  public DeleteByIdentifier(url: string): Promise<any> {
+    return UrlModel.findOneAndDelete({ shortUrl: url }).exec();
   }
   public DisableExpiredUrls(date: number): Promise<any> {
     return UrlModel.updateMany(
-      {lastAccessDate: { $lt: new Date(date) }},{$set:{isActive:false}
-    }).exec();
+      { lastAccessDate: { $lt: new Date(date) } },
+      { $set: { isActive: false } }
+    ).exec();
   }
-  public GetMostUsedActiveUrls(offset:number):Promise<Url[]>{
-    return UrlModel.find({isActive:true}).sort({accessNumber:'desc'}).skip(offset).limit(10).exec();
+  public GetMostUsedActiveUrls(offset: number): Promise<Url[]> {
+    return UrlModel.find({ isActive: true })
+      .sort({ accessNumber: "desc" })
+      .skip(offset)
+      .limit(10)
+      .exec();
   }
 }
