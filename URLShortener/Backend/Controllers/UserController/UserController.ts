@@ -112,7 +112,7 @@ export class UserController
     const requestBody: User = request.body.data;
     const requestId: string = request.params.id;
 
-    this.UpdateService.Update(
+    this.UpdateService.UpdateCredentials(
       requestId,
       requestBody.email,
       requestBody.password

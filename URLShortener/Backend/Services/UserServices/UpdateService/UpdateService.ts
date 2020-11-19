@@ -12,7 +12,7 @@ export class UpdateService implements IUpdateService {
   @Inject
   private CacheService!: ICacheService;
 
-  public async Update(
+  public async UpdateCredentials(
     id: string,
     email: string,
     password?: string
@@ -21,7 +21,7 @@ export class UpdateService implements IUpdateService {
       email: email,
     };
     if (password) requestBody["password"] = await bcrypt.hash(password, 10);
-    try {
+
       const updatedUser: User | null = await this.UserRepository.Update(
         id,
         <User>requestBody
@@ -30,21 +30,5 @@ export class UpdateService implements IUpdateService {
       
       this.CacheService.Add(updatedUser.email,JSON.stringify(updatedUser));
       return updatedUser;
-    } catch (error) {
-      throw error;
     }
-
-/*     this.UserRepository.Update(id, <User>requestBody)
-      .then((updatedData) => {
-        if (updatedData) {
-          response.status(HttpCodes.Ok).json({ data: { updatedData } });
-          this.CacheService.Add(updatedData.email, JSON.stringify(updatedData));
-        } else response.status(HttpCodes.NotFound).json(this.Error_NotFound);
-      })
-      .catch((error) => {
-        response
-          .status(HttpCodes.BadRequest)
-          .json(this.Error_BadRequest(String(error)));
-      }); */
   }
-}
