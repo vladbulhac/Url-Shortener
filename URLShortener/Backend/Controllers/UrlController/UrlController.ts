@@ -159,6 +159,9 @@ export class UrlController extends HttpStatusResponse implements IUrlController 
       await this.UrlRepository.UpdateTTL(url);
     } catch (error) {
       console.log(error);
+      if(error instanceof ConflictError)
+        response.status(HttpCodes.Conflict).json(this.Error_Conflict(String(error)));
+      else
       response
         .status(HttpCodes.BadRequest)
         .json(this.Error_BadRequest);
