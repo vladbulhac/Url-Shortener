@@ -132,7 +132,7 @@ export class UrlInputComponent implements OnInit, OnDestroy, AfterViewInit {
             if(customUrl)
               {const urlData:Url={
                 shortUrl:customUrl,
-                trueUrl:data.data.url,
+                trueUrl:requestUrl,
                 accessNumber:1,
               };
               this.user.customUrls.unshift(urlData);

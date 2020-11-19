@@ -73,13 +73,14 @@ export class UserService {
     }
   }
 
-  public updateUser(user: {email?:string,password?:string}) {
-    const requestBody={
-      data:user
-    }
+  public updateUser(user: { email?: string; password?: string }) {
+    const requestBody = {
+      data: user,
+    };
 
-    return this.httpClient.put(`http://localhost:55123/v1/users/${this.user._id}`, 
-      requestBody,
+    return this.httpClient.put(
+      `http://localhost:55123/v1/users/${this.user._id}`,
+      requestBody
     );
   }
 

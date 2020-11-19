@@ -85,7 +85,7 @@ export class LoginBoxComponent implements OnInit,OnDestroy {
         errorCode: error.error.error.errorCode,
         message: error.error.error.message,
       });
-      alert('Could not login you right now, check the error message!');
+      alert('Could not log in you right now, check the error message!');
     });
   }
 }
