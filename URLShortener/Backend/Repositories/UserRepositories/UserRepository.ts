@@ -3,9 +3,9 @@ import { User, UserModel } from "../../Models/User.model";
 import { IUserRepository } from "./IUserRepository";
 
 export class UserRepository implements IUserRepository {
-  public FindByArgument(argument: string): Promise<User | null> {
+  public async FindByArgument(argument: string): Promise<User | null> {
     const arg = JSON.parse(argument);
-    return UserModel.findOne(arg).populate("customUrls").exec();
+    return await UserModel.findOne(arg).populate("customUrls").exec();
   }
   public async Add(data: User): Promise<User> {
     const document = new UserModel(data);
