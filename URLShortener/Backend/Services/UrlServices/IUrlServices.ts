@@ -6,7 +6,7 @@ export abstract class IUrlServices {
     url: string,
     customUrl: string | undefined | null
   ): Promise<string>;
-  abstract GetUrlByUser(url: string): Promise<string>;
+  //abstract GetUrlByUser(url: string): Promise<string>;
   abstract CreateUrl(url: string): Promise<string>;
-  abstract GetUrl(url: string): Promise<Url>;
+  abstract GetUrl(url: string): Promise<string>;
 }

@@ -62,10 +62,10 @@ export class UrlController
     const reqUrl = request.params.url;
 
     try {
-      const url: Url | null = await this.UrlServices.GetUrl(reqUrl);
+      const url: string | null = await this.UrlServices.GetUrl(reqUrl);
 
-      response.status(HttpCodes.Ok).json({ data: { url: url.trueUrl } });
-      await this.UrlRepository.UpdateTTL(url.shortUrl);
+      response.status(HttpCodes.Ok).json({ data: { url: url} });
+      await this.UrlRepository.UpdateTTL(url);
     } catch (error) {
       if (error instanceof NotFoundError)
         response
@@ -86,7 +86,7 @@ export class UrlController
     const reqUrl = request.params.url;
 
     try {
-      const url: string | null = await this.UrlServices.GetUrlByUser(reqUrl);
+      const url: string | null = await this.UrlServices.GetUrl(reqUrl);
       response.status(HttpCodes.Ok).json({ data: { url: url } });
 
       await this.UrlRepository.UpdateTTL(url);

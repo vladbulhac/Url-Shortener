@@ -80,7 +80,7 @@ export class UrlServices extends IUrlServices {
     return shortUrl;
   }
 
-  public async GetUrlByUser(url: string): Promise<string> {
+  public async GetUrl(url: string): Promise<string> {
     let cachedUrl = await this.CacheService.QueryCache(url);
     if (cachedUrl) {
       const urlObj: Url = JSON.parse(cachedUrl);
@@ -88,24 +88,9 @@ export class UrlServices extends IUrlServices {
     }
 
     const urlData: Url | null = await this.UrlRepository.GetByIdentifier(url);
-
     if (urlData && urlData.isActive === true) {
       this.CacheService.Add(url, JSON.stringify(urlData));
       return urlData.trueUrl;
-    } else throw new NotFoundError("Could not find this url");
-  }
-
-  public async GetUrl(url: string): Promise<Url> {
-    let cachedUrl = await this.CacheService.QueryCache(url);
-    if (cachedUrl) {
-      const urlObj: Url = JSON.parse(cachedUrl);
-      return urlObj;
-    }
-
-    const urlData: Url | null = await this.UrlRepository.GetByIdentifier(url);
-    if (urlData && urlData.isActive === true) {
-      this.CacheService.Add(url, JSON.stringify(urlData));
-      return urlData;
     } else {
       throw new NotFoundError("Could not find this url");
     }
