@@ -19,7 +19,7 @@ export class CacheService implements ICacheService {
   public StartCache(): void {
     this.CreateRedisClient();
     this.IsClientUp = this.Client.connected;
-    this.PeriodicCacheUpdate(13);
+    this.PeriodicCacheUpdate(15);
   }
 
   private CreateRedisClient(): void {
@@ -35,7 +35,10 @@ export class CacheService implements ICacheService {
   }
 
   public StopCache(): void {
-    if (this.Client) this.Client.end(true);
+    if (this.Client) {
+      this.Client.end(true);
+      this.IsClientUp = this.Client.connected;
+    }
   }
 
   public async QueryCache(key: string): Promise<string | null> {

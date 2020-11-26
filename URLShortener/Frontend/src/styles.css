@@ -1,0 +1,104 @@
+/* You can add global styles to this file, and also import other style files */
+html {
+  background-color: #cfd6ea;
+}
+
+.parallelogram-left {
+  position: fixed;
+  top: 0;
+  height: 100%;
+  left: 10%;
+}
+.parallelogram-right {
+  position: fixed;
+  top: 0;
+  height: 100%;
+  left: 20%;
+}
+.parallelogram-left path {
+  animation-name: pulse;
+  animation-duration: 3s;
+  animation-timing-function: ease-out;
+  animation-delay: 0s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-fill-mode: none;
+  animation-play-state: running;
+}
+
+.parallelogram-right path {
+  animation-name: pulse;
+  animation-duration: 3s;
+  animation-timing-function: linear;
+  animation-delay: 3s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-fill-mode: none;
+  animation-play-state: running;
+}
+/* 
+.parallelogram-right {
+  background-color: #fffbdb;
+  top: 0;
+  width: 5%;
+  height: 45%;
+  margin: 0;
+  right: 29%;
+  position: fixed;
+  overflow: hidden;
+  margin-bottom: -1px;
+  margin-left: -1px;
+  transform: skew(12deg, 26deg) rotate(-30deg);
+  animation-name: pulse;
+  animation-duration: 5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-fill-mode: none;
+  animation-play-state: running;
+
+  /*  box-shadow: inset 5px 0 5px -2px #292852; 
+}
+
+.parallelogram-left {
+  background-color: #fffbdb;
+  bottom: 0;
+  width: 5%;
+  height: 50%;
+  margin: 0;
+  right: 29%;
+  overflow: hidden;
+  position: fixed;
+  margin-top: -1px;
+  margin-left: -1px;
+  transform: skew(-12deg, -26deg) rotate(30deg);
+  animation-name: pulse;
+  animation-duration: 5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-fill-mode: none;
+  animation-play-state: running;
+
+  box-shadow: inset 5px 0 5px -2px #292852; 
+} */
+
+@keyframes pulse {
+  0% {
+    fill: #b0b2b8;
+  }
+
+  100% {
+    fill: #423629;
+  }
+}
+
+.left-background {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+}

@@ -1,0 +1,82 @@
+div {
+  font-size: 20px;
+}
+
+.button {
+  font-size: 15px;
+  background-color: #423629;
+  height: 40px;
+  width: max-content;
+  border: 0;
+  color: #b0b2b8;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #b0b2b8;
+  color: #4f5d2f;
+  -moz-box-shadow: inset 0 0 10px #000000;
+  -webkit-box-shadow: inset 0 0 10px #000000;
+  box-shadow: inset 0 0 10px #000000;
+}
+.active {
+  background-color: #b0b2b8;
+  color: #4f5d2f;
+}
+table {
+  margin-top: 5px;
+  border-collapse: collapse;
+  overflow: auto;
+  height: 50px;
+}
+td,
+th {
+  max-width: 125px;
+  border: 1px solid #4f5d2f;
+  padding: 0.5rem;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.tableheader {
+  background-color: #423629;
+  color: #b0b2b8;
+}
+
+.url-history {
+  border-left: 1px solid #423629;
+  overflow: scroll;
+  max-height: 200px;
+  text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.url-history ul {
+  list-style-type: none;
+  cursor: pointer;
+}
+
+.url-history ul,
+li {
+  -webkit-transition: 3.3s;
+  -moz-transition: 3.3s;
+  transition: 3.3s;
+
+  -webkit-transition-timing-function: linear;
+  -moz-transition-timing-function: linear;
+  transition-timing-function: linear;
+}
+
+ul li:hover {
+  color: #4f5d2f;
+  /* font-size: 30px; */
+  margin-left: -300px;
+}
+
+.icon {
+  padding: 0;
+  margin: 0;
+}

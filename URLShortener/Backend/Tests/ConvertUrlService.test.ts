@@ -1,11 +1,12 @@
 import {expect} from "chai";
 import "mocha";
-import { UrlConversionService } from "../Services/UrlServices/UrlConversionService";
-import { IUrlConversionService } from "../Services/UrlServices/IUrlConversionService";
+import { IUrlConversionService } from "../Services/UrlServices/UrlConversionService/IUrlConversionService";
+import { UrlConversionService } from "../Services/UrlServices/UrlConversionService/UrlConversionService";
+
 
 const UrlData=require('./Resources/UrlTestData.json');
 
-describe("Long URL transform to Short URL",()=>{
+describe("Long URL convert to Short URL",()=>{
 
     it("Should take url: https://github.com/remy/nodemon#nodemon and return WutmF",(done)=>{
         //Arrange

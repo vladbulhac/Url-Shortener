@@ -37,7 +37,7 @@ export class RegisterService implements IRegisterService{
       try {
         let user: User = await this.UserRepository.Add(data);
         this.CacheService.Add(user.email,JSON.stringify(user));
-        delete user!.password;
+        delete user.password;
 
         const token: string = this.TokenService.Create(String(user._id));
     

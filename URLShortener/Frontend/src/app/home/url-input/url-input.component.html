@@ -1,0 +1,41 @@
+<div class="effect slide-in-right">
+  <button type="button" (click)="toggleMode()">
+    {{ toggleStatus ? "Create" : "Get" }}
+  </button>
+  <input type="text" #urlinput (keyup.enter)="urlRequest()" />
+
+  <!-- <label
+    for="customInput"
+    *ngIf="
+      toggleStatus === true && this.user !== undefined && this.user !== null
+    "
+    style="width: 100%; height: 100%"
+  >
+    You can enter a custom url
+  </label>
+  <input
+    type="text"
+    #customInput
+    (keyup.enter)="setCustomUrl()"
+    *ngIf="
+      toggleStatus === true && this.user !== undefined && this.user !== null
+    "
+  /> -->
+  <input
+    type="text"
+    style="background-color: #7d7e75; color: #cfd6ea"
+    *ngIf="
+      toggleStatus === true && this.user !== undefined && this.user !== null
+    "
+    #customInput
+  />
+  <label
+    for="customInput"
+    style="text-align: center; color: #423629"
+    *ngIf="
+      toggleStatus === true && this.user !== undefined && this.user !== null
+    "
+  >
+    You can enter a custom url
+  </label>
+</div>

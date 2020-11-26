@@ -11,12 +11,16 @@ import { CacheService } from "../../Services/CacheServices/CacheService";
 import { ICacheService } from "../../Services/CacheServices/ICacheService";
 import { ITokenService } from "../../Services/JWTokenServices/ITokenService";
 import { TokenService } from "../../Services/JWTokenServices/TokenService";
-import { IUrlConversionService } from "../../Services/UrlServices/IUrlConversionService";
-import { UrlConversionService } from "../../Services/UrlServices/UrlConversionService";
+import { UrlConversionService } from "../../Services/UrlServices/UrlConversionService/UrlConversionService";
 import { ILoginService } from "../../Services/UserServices/LoginService/ILoginService";
 import { LoginService } from "../../Services/UserServices/LoginService/LoginService";
 import { IRegisterService } from "../../Services/UserServices/RegisterService/IRegisterService";
 import { RegisterService } from "../../Services/UserServices/RegisterService/RegisterService";
+import { IUpdateService } from "../../Services/UserServices/UpdateService/IUpdateService";
+import { UpdateService } from "../../Services/UserServices/UpdateService/UpdateService";
+import { IUrlConversionService } from "../../Services/UrlServices/UrlConversionService/IUrlConversionService";
+import { IUrlServices } from "../../Services/UrlServices/IUrlServices";
+import { UrlServices } from "../../Services/UrlServices/UrlServices";
 
 export class IocContainerConfig {
   static configure() {
@@ -27,7 +31,9 @@ export class IocContainerConfig {
     Container.bind(IRegisterService).to(RegisterService);
     Container.bind(ITokenService).to(TokenService);
     Container.bind(IUrlConversionService).to(UrlConversionService);
+    Container.bind(IUrlServices).to(UrlServices);
     Container.bind(IUrlController).to(UrlController);
     Container.bind(IUserController).to(UserController);
+    Container.bind(IUpdateService).to(UpdateService);
   }
 }

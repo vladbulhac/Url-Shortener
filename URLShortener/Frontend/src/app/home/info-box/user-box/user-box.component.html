@@ -1,0 +1,104 @@
+<div>
+  <div style="display: inline" class="hello">
+    <h3>
+      Hello, <i>{{ user.email | splitnshort: "@":0:15 }}</i>
+    </h3>
+    <hr>
+    <!-- <h5>{{ user.email.split("@")[0] }}</h5> -->
+  </div>
+  <button
+    type="button"
+    class="button"
+    (click)="toggleHistory()"
+    [ngClass]="{ active: toggle_history === true }"
+  >
+    Toggle url history
+  </button>
+  <div
+    class="url-history"
+    [hidden]="!toggle_history"
+    *ngIf="user.urlHistory.length > 0; else nohistory"
+  >
+    <ul *ngFor="let url of user.urlHistory">
+      <li (click)="setUrlInput(url)">
+        {{ url }}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="feather feather-chevron-right"
+        >
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </li>
+    </ul>
+  </div>
+  <ng-template #nohistory>
+    <p style="color: #423629; font-style: italic">
+      Your history list is empty!
+    </p>
+  </ng-template>
+
+  <button
+    type="button"
+    class="button"
+    (click)="toggleCustoms()"
+    [ngClass]="{ active: toggle_customs === true }"
+  >
+    Toggle custom urls
+  </button>
+  <div class="custom-url-table" [hidden]="!toggle_customs">
+    <table *ngIf="user.customUrls.length > 0; else nocustomurls">
+      <tr class="tableheader">
+        <th>Short</th>
+        <th>Url</th>
+        <th>Access count</th>
+      </tr>
+      <ng-container *ngFor="let customUrl of user.customUrls">
+        <tr>
+          <td (click)="setUrlInput(customUrl.shortUrl)" style="cursor: pointer;">{{ customUrl.shortUrl }}</td>
+          <td (click)="setUrlInput(customUrl.trueUrl)" style="cursor:pointer;">{{ customUrl.trueUrl }}</td>
+          <td>{{ customUrl.accessNumber }}</td>
+        </tr>
+      </ng-container>
+    </table>
+
+    <ng-template #nocustomurls>
+      <p style="color: #423629; font-style: italic">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="feather feather-alert-triangle"
+        >
+          <path
+            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+          ></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        Your custom urls were deleted or you did not create any!
+      </p>
+    </ng-template>
+  </div>
+
+  <button type="button" (click)="toEditComponent()" class="button">
+    Edit my account
+  </button>
+  <button type="button" (click)="logout()" class="button">Logout</button>
+  <button type="button" (click)="toDeleteAccount()" class="button">
+    Delete my account
+  </button>
+</div>
