@@ -43,6 +43,6 @@ export class WelcomeBoxComponent implements OnInit {
 
   toRegisterComponent()
   {
-    this.router.navigate(['register']);
+    this.router.navigate(['/register']);
   }
 }
