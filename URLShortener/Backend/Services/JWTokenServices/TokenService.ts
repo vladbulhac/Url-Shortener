@@ -14,7 +14,7 @@ export class TokenService extends HttpStatusResponse implements ITokenService {
   public Create(userId: string): string {
     const secret:string=process.env.JWT_SECRET!;
     const token: string = jwt.sign({ id: userId }, secret, {
-      expiresIn: 60*10,
+      expiresIn: +process.env.JWT_DURATION_SECONDS!,
     });
 
     return token;

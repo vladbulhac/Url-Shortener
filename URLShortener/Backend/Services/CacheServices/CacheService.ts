@@ -19,7 +19,7 @@ export class CacheService implements ICacheService {
   public StartCache(): void {
     this.CreateRedisClient();
     this.IsClientUp = this.Client.connected;
-    this.PeriodicCacheUpdate(15);
+    this.PeriodicCacheUpdate();
   }
 
   private CreateRedisClient(): void {
@@ -56,7 +56,7 @@ export class CacheService implements ICacheService {
 
   public Add(key: string, data: string): void {
     if (this.IsClientUp === true) {
-      this.Client.setex(key, 900, data);
+      this.Client.setex(key, +process.env.CACHE_ENTRY_TTL_SECONDS!, data);
     }
   }
 
@@ -73,8 +73,8 @@ export class CacheService implements ICacheService {
     }
   }
 
-  private PeriodicCacheUpdate(minutes: number): void {
-    cron.schedule(`*/${minutes} * * * *`, async () => {
+  private PeriodicCacheUpdate(): void {
+    cron.schedule(`*/${+process.env.CACHE_PERIODIC_UPDATE_MINUTES!} * * * *`, async () => {
       await this.CleanOrUpdateTTL();
     });
   }
@@ -116,7 +116,7 @@ export class CacheService implements ICacheService {
         if (url["isActive"] === false) this.Client.del(key);
         else {
           if (cachedUrl["accessNumber"] != url["accessNumber"])
-            this.Client.setex(key, 900, JSON.stringify(url));
+            this.Client.setex(key, +process.env.CACHE_ENTRY_TTL_SECONDS!, JSON.stringify(url));
         }
       } else this.Delete(key);
     }
@@ -129,7 +129,7 @@ export class CacheService implements ICacheService {
       );
       if (user) {
         if (cachedUser["urlHistory"].length !== user["urlHistory"]!.length)
-          this.Client.setex(key, 900, JSON.stringify(user));
+          this.Client.setex(key, +process.env.CACHE_ENTRY_TTL_SECONDS!, JSON.stringify(user));
       } else this.Delete(key);
     }
   }
