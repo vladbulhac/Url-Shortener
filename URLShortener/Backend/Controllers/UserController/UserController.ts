@@ -4,9 +4,7 @@ import { User } from "../../Models/User.model";
 import { IUserRepository } from "../../Repositories/UserRepositories/IUserRepository";
 import { ICacheService } from "../../Services/CacheServices/ICacheService";
 import { ITokenService } from "../../Services/JWTokenServices/ITokenService";
-import { ILoginService } from "../../Services/UserServices/LoginService/ILoginService";
-import { IRegisterService } from "../../Services/UserServices/RegisterService/IRegisterService";
-import { IUpdateService } from "../../Services/UserServices/UpdateService/IUpdateService";
+import { IUserServices } from "../../Services/UserServices/IUserServices";
 import { HttpCodes } from "../../Utils/HttpCodes.enum";
 import { HttpStatusResponse } from "../../Utils/HttpStatusResponse";
 import { IUserController } from "./IUserController";
@@ -22,13 +20,9 @@ export class UserController
   @Inject
   private TokenService!: ITokenService;
   @Inject
-  private LoginService!: ILoginService;
-  @Inject
-  private RegisterService!: IRegisterService;
-  @Inject
-  private UpdateService!: IUpdateService;
-  @Inject
   private CacheService!: ICacheService;
+  @Inject
+  private UserServices!:IUserServices;
 
   constructor() {
     super();
@@ -59,7 +53,7 @@ export class UserController
   private Login(request: Request, response: Response): void {
     const requestBody = request.body.data;
 
-    this.LoginService.Login(requestBody.email, requestBody.password)
+    this.UserServices.Login(requestBody.email, requestBody.password)
       .then((loginData) => {
         if (loginData.message === "Successful")
           response.status(HttpCodes.Ok).json({ data: { loginData } });
@@ -77,6 +71,7 @@ export class UserController
 
   private GetUserById(request: Request, response: Response): void {
     const id = request.params.id;
+
     this.UserRepository.GetByIdentifier(id)
       .then((user) => {
         if (user) response.status(HttpCodes.Ok).json({ data: { user } });
@@ -92,7 +87,7 @@ export class UserController
   private Register(request: Request, response: Response): void {
     const requestBody = request.body.data;
 
-    this.RegisterService.Register(requestBody)
+    this.UserServices.Register(requestBody)
       .then((registerData) => {
         if (registerData.message === "Successful")
           response.status(HttpCodes.Created).json({ data: { registerData } });
@@ -112,7 +107,7 @@ export class UserController
     const requestBody: User = request.body.data;
     const requestId: string = request.params.id;
 
-    this.UpdateService.UpdateCredentials(
+    this.UserServices.UpdateCredentials(
       requestId,
       requestBody.email,
       requestBody.password
