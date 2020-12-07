@@ -33,7 +33,7 @@ export class Application {
     this.CacheService.StartCache();
     this.InitialzeMiddlewares();
     this.InitializeControllers();
-    this.PeriodicUrlCleanup();
+    this.PeriodicDatabaseAndCacheCleanup();
   }
 
   private InitialzeMiddlewares(): void {
@@ -71,7 +71,7 @@ export class Application {
                     .use("/",this.UserController.Router);
   }
 
-  public PeriodicUrlCleanup(): void {
+  private PeriodicDatabaseAndCacheCleanup(): void {
     cron.schedule("0 0 * * *", async () => {
       console.log("[Database][MongoDB][Processing...] Clearing expired urls from database..." );
       await this.UrlRepository.DisableExpiredUrls(Date.now());
