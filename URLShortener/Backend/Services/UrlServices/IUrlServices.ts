@@ -1,9 +1,8 @@
 export abstract class IUrlServices {
-  abstract CreateUrlByUser(
-    userId: string,
+  abstract CreateUrl(
     url: string,
-    customUrl: string | undefined | null
+    userId?: string | undefined | null,
+    customUrl?: string | undefined | null
   ): Promise<string>;
-  abstract CreateUrl(url: string): Promise<string>;
   abstract GetUrl(url: string): Promise<string>;
 }

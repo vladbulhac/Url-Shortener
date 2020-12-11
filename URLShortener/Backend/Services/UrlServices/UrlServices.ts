@@ -18,66 +18,31 @@ export class UrlServices extends IUrlServices {
   @Inject
   private UrlConversionService!: IUrlConversionService;
 
-  public async CreateUrlByUser(
-    userId: string,
+  public async CreateUrl(
     url: string,
-    customUrl: string | undefined | null
+    userId?: string | undefined | null,
+    customUrl?: string | undefined | null
   ): Promise<string> {
-    let existingUrl: Url | null;
-    if (customUrl)
-      existingUrl = await this.UrlRepository.GetByIdentifier(customUrl);
-    else existingUrl = await this.UrlRepository.GetByIdentifier(url);
+    let createdUrl: Url;
+    if (customUrl && userId)
+      createdUrl = await this.AddToDatabaseCacheAndUser_UrlWithCustomName(
+        userId!,
+        url,
+        customUrl!,
+        true
+      );
+    else if (userId)
+      createdUrl = await this.ConvertAndAddUrlToDatabaseCache_OrReturnExistingOne(
+        url,
+        true
+      );
+    else
+      createdUrl = await this.ConvertAndAddUrlToDatabaseCache_OrReturnExistingOne(
+        url,
+        false
+      );
 
-    if (existingUrl) {
-      if (existingUrl.isActive === true && customUrl)
-        throw new ConflictError("This url already exists");
-      else if (existingUrl.isActive === false) {
-        await this.UrlRepository.SetActive(String(existingUrl._id));
-        return existingUrl.shortUrl;
-      } else if (existingUrl.isActive === true) return existingUrl.shortUrl;
-    }
-
-    let newUrl: any = {
-      trueUrl: url,
-      accessNumber: 1,
-      extendedTTL: true,
-    };
-
-    let savedUrl: Url;
-    if (customUrl) {
-      newUrl["shortUrl"] = customUrl;
-      savedUrl = await this.UrlRepository.Add(newUrl);
-      await this.UserRepository.UpdateCustomUrls(userId, savedUrl);
-    } else {
-      const shortUrl: string = this.UrlConversionService.ShortUrl(url);
-      newUrl["shortUrl"] = shortUrl;
-      savedUrl = await this.UrlRepository.Add(newUrl);
-    }
-    this.CacheService.Add(savedUrl.shortUrl, JSON.stringify(savedUrl));
-
-    return newUrl.shortUrl;
-  }
-
-  public async CreateUrl(url: string): Promise<string> {
-    const existingUrl: Url | null = await this.UrlRepository.GetByIdentifier(
-      url
-    );
-    if (existingUrl) {
-      if (existingUrl.isActive === false)
-        await this.UrlRepository.SetActive(String(existingUrl._id));
-      return existingUrl.shortUrl;
-    }
-
-    const shortUrl: string = this.UrlConversionService.ShortUrl(url);
-    const newUrl: any = {
-      trueUrl: url,
-      shortUrl: shortUrl,
-      accessNumber: 1,
-    };
-    const savedUrl: Url = await this.UrlRepository.Add(newUrl);
-    this.CacheService.Add(savedUrl.shortUrl, JSON.stringify(savedUrl));
-
-    return shortUrl;
+    return createdUrl.shortUrl;
   }
 
   public async GetUrl(url: string): Promise<string> {
@@ -94,5 +59,61 @@ export class UrlServices extends IUrlServices {
     } else {
       throw new NotFoundError("Could not find this url");
     }
+  }
+
+  private async AddToDatabaseCacheAndUser_UrlWithCustomName(
+    userId: string,
+    url: string,
+    customUrl: string,
+    extendedTTL: boolean
+  ) {
+    let existingUrl: Url | null = await this.UrlRepository.GetByIdentifier(
+      customUrl
+    );
+    if (existingUrl !== null && existingUrl.isActive === true)
+      throw new ConflictError("This url already exists");
+
+    const savedUrl: Url = await this.AddUrlToDatabaseAndCache(
+      customUrl,
+      url,
+      extendedTTL
+    );
+    await this.UserRepository.UpdateCustomUrls(userId, savedUrl);
+
+    return savedUrl;
+  }
+
+  private async ConvertAndAddUrlToDatabaseCache_OrReturnExistingOne(
+    url: string,
+    extendedTTL: boolean
+  ) {
+    let existingUrl: Url | null = await this.UrlRepository.GetByIdentifier(url);
+    if (existingUrl) {
+      if (existingUrl.isActive === false)
+        await this.UrlRepository.SetActive(String(existingUrl._id));
+      return existingUrl;
+    }
+
+    const shortUrl: string = this.UrlConversionService.ShortUrl(url);
+    return await this.AddUrlToDatabaseAndCache(shortUrl, url, extendedTTL);
+  }
+
+  private async AddUrlToDatabaseAndCache(
+    shortUrl: string,
+    url: string,
+    extendedTTL: boolean
+  ): Promise<Url> {
+    let newUrl: any = {
+      trueUrl: url,
+      accessNumber: 1,
+      extendedTTL: extendedTTL,
+    };
+
+    newUrl["shortUrl"] = shortUrl;
+    let savedUrl: Url = await this.UrlRepository.Add(newUrl);
+
+    this.CacheService.Add(savedUrl.shortUrl, JSON.stringify(savedUrl));
+
+    return savedUrl;
   }
 }
