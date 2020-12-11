@@ -9,7 +9,6 @@ import { Inject, Singleton } from "typescript-ioc";
 @Singleton
 export class CacheService implements ICacheService {
   private Client!: RedisClient;
-  private IsClientUp!: boolean;
 
   @Inject
   private UserRepository!: IUserRepository;
@@ -18,7 +17,6 @@ export class CacheService implements ICacheService {
 
   public StartCache(): void {
     this.CreateRedisClient();
-    this.IsClientUp = this.Client.connected;
     this.PeriodicCacheUpdate();
   }
 
@@ -26,23 +24,20 @@ export class CacheService implements ICacheService {
     this.Client = redis.createClient();
     this.Client.on("connect", () => {
       console.log("[Cache][Redis][Success]: Connected to redis server!");
-      this.IsClientUp = true;
     });
     this.Client.on("error", (error) => {
       console.log(`[Cache][Redis][Error]: ${error}`);
-      this.IsClientUp = false;
     });
   }
 
   public StopCache(): void {
-    if (this.Client) {
+    if (this.Client && this.Client.connected === true) {
       this.Client.end(true);
-      this.IsClientUp = this.Client.connected;
     }
   }
 
   public async QueryCache(key: string): Promise<string | null> {
-    if (this.IsClientUp === false) return null;
+    if (this.Client.connected === false) return null;
 
     const getValue = promisify(this.Client.get).bind(this.Client);
 
@@ -55,17 +50,17 @@ export class CacheService implements ICacheService {
   }
 
   public Add(key: string, data: string): void {
-    if (this.IsClientUp === true) {
+    if (this.Client.connected === true) {
       this.Client.setex(key, +process.env.CACHE_ENTRY_TTL_SECONDS!, data);
     }
   }
 
   public Delete(key: string): void {
-    if (this.IsClientUp === true) this.Client.del(key);
+    if (this.Client.connected === true) this.Client.del(key);
   }
 
   public DeleteAll(): void {
-    if (this.IsClientUp === true) {
+    if (this.Client.connected === true) {
       this.Client.keys("*", (error, keys) => {
         if (error) console.log(error);
         else for (let key of keys) this.Client.del(key);
@@ -74,13 +69,16 @@ export class CacheService implements ICacheService {
   }
 
   private PeriodicCacheUpdate(): void {
-    cron.schedule(`*/${+process.env.CACHE_PERIODIC_UPDATE_MINUTES!} * * * *`, async () => {
-      await this.CleanOrUpdateTTL();
-    });
+    cron.schedule(
+      `*/${+process.env.CACHE_PERIODIC_UPDATE_MINUTES!} * * * *`,
+      async () => {
+        await this.CleanOrUpdateTTL();
+      }
+    );
   }
 
   public async CleanOrUpdateTTL(): Promise<void> {
-    if (this.IsClientUp === true) {
+    if (this.Client.connected === true) {
       console.log(
         "[Cache][Redis][Processing...] Cleaning and updating entries in cache..."
       );
@@ -108,7 +106,7 @@ export class CacheService implements ICacheService {
   }
 
   private async CleanOrUpdateUrlTTL(key: any, cachedUrl: any): Promise<void> {
-    if (this.IsClientUp === true) {
+    if (this.Client.connected === true) {
       const url = await this.UrlRepository.GetByIdentifier(
         cachedUrl["shortUrl"]
       );
@@ -116,20 +114,28 @@ export class CacheService implements ICacheService {
         if (url["isActive"] === false) this.Client.del(key);
         else {
           if (cachedUrl["accessNumber"] != url["accessNumber"])
-            this.Client.setex(key, +process.env.CACHE_ENTRY_TTL_SECONDS!, JSON.stringify(url));
+            this.Client.setex(
+              key,
+              +process.env.CACHE_ENTRY_TTL_SECONDS!,
+              JSON.stringify(url)
+            );
         }
       } else this.Delete(key);
     }
   }
 
   private async CleanOrUpdateUserTTL(key: any, cachedUser: any): Promise<void> {
-    if (this.IsClientUp === true) {
+    if (this.Client.connected === true) {
       const user = await this.UserRepository.FindByArgument(
         JSON.stringify({ email: cachedUser.email })
       );
       if (user) {
         if (cachedUser["urlHistory"].length !== user["urlHistory"]!.length)
-          this.Client.setex(key, +process.env.CACHE_ENTRY_TTL_SECONDS!, JSON.stringify(user));
+          this.Client.setex(
+            key,
+            +process.env.CACHE_ENTRY_TTL_SECONDS!,
+            JSON.stringify(user)
+          );
       } else this.Delete(key);
     }
   }
