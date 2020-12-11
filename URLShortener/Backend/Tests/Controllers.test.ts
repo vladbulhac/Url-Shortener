@@ -299,8 +299,8 @@ describe("url controller endpoint /", () => {
                 .set("Accept", "application/json")
                 .set({ Authorization: `Bearer ${token}` })
                 .expect(200)
-                .then(async () => {
-                  await request(application)
+                .then(() => {
+                  request(application)
                     .get("/v1/users/" + id)
                     .set("Content-Type", "application/json")
                     .set("Accept", "application/json")

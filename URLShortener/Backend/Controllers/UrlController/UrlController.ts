@@ -65,7 +65,7 @@ export class UrlController
       const url: string | null = await this.UrlServices.GetUrl(reqUrl);
 
       response.status(HttpCodes.Ok).json({ data: { url: url} });
-      await this.UrlRepository.UpdateTTL(url);
+      await this.UrlRepository.UpdateTTL(reqUrl);
     } catch (error) {
       if (error instanceof NotFoundError)
         response
@@ -88,8 +88,8 @@ export class UrlController
     try {
       const url: string | null = await this.UrlServices.GetUrl(reqUrl);
       response.status(HttpCodes.Ok).json({ data: { url: url } });
-
-      await this.UrlRepository.UpdateTTL(url);
+      
+      await this.UrlRepository.UpdateTTL(reqUrl);
       await this.UserRepository.UpdateHistory(userId, url);
     } catch (error) {
       if (error instanceof NotFoundError)
@@ -112,9 +112,8 @@ export class UrlController
 
     try {
       const url: string = await this.UrlServices.CreateUrl(reqUrl);
-      response.status(HttpCodes.Created).json({ data: { url: url } });
 
-      await this.UrlRepository.UpdateTTL(url);
+      response.status(HttpCodes.Created).json({ data: { url: url } });
     } catch (error) {
       response
         .status(HttpCodes.BadRequest)
@@ -135,10 +134,8 @@ export class UrlController
         reqUrl,
         customUrl
       );
-      response.status(HttpCodes.Created).json({ data: { url: url } });
 
-      await this.UserRepository.UpdateHistory(userId, url);
-      await this.UrlRepository.UpdateTTL(url);
+      response.status(HttpCodes.Created).json({ data: { url: url } });
     } catch (error) {
       console.log(error);
       if (error instanceof ConflictError)

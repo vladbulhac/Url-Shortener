@@ -15,9 +15,14 @@ export class UrlRepository implements IUrlRepository {
     return await UrlModel.findOne({ shortUrl: url }).then(async (data) => {
       if (data) {
         if (data.extendedTTL === true)
-          data.TTL = new Date(data.TTL!.getDate() + 2);
-        else data.TTL = new Date(data.TTL!.getDate() + 1);
-        data.accessNumber = data.accessNumber! + 1;
+          data.TTL = new Date(
+            data.TTL!.getDate() + (+process.env.URL_TTLINCREASE_EXTENDED_DAYS!)
+          );
+        else
+          data.TTL = new Date(
+            data.TTL!.getDate() + (+process.env.URL_TTLINCREASE_DAYS!)
+          );
+        data.accessNumber++;
 
         await UrlModel.findByIdAndUpdate(data._id, data).exec();
       }

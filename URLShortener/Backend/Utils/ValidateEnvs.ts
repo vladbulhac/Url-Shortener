@@ -8,6 +8,8 @@ export function ValidateEnv():void{
         PORT:port(),
         CACHE_ENTRY_TTL_SECONDS:num(),
         CACHE_PERIODIC_UPDATE_MINUTES:num(),
+        URL_TTLINCREASE_DAYS:num(),
+        URL_TTLINCREASE_EXTENDED_DAYS:num(),
         MONGO_USER:str(),
         MONGO_PASSWORD:str(),
         MONGO_PATH:str()
