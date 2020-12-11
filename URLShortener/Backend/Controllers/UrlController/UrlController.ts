@@ -73,7 +73,7 @@ export class UrlController
       else
         response
           .status(HttpCodes.BadRequest)
-          .json(this.Error_BadRequest(String(error)));
+          .json(this.Error_BadRequest(error.message));
     }
   }
 
@@ -102,7 +102,7 @@ export class UrlController
       else
         response
           .status(HttpCodes.BadRequest)
-          .json(this.Error_BadRequest(String(error)));
+          .json(this.Error_BadRequest(error.message));
     }
   }
 
@@ -116,7 +116,7 @@ export class UrlController
     } catch (error) {
       response
         .status(HttpCodes.BadRequest)
-        .json(this.Error_BadRequest(String(error)));
+        .json(this.Error_BadRequest(error.message));
     }
   }
   private async CreateUrlByUser(
@@ -128,9 +128,9 @@ export class UrlController
     const customUrl = request.body.data.custom;
 
     try {
-      const url = await this.UrlServices.CreateUrlByUser(
-        userId,
+      const url = await this.UrlServices.CreateUrl(
         reqUrl,
+        userId,
         customUrl
       );
 
@@ -140,7 +140,7 @@ export class UrlController
       if (error instanceof ConflictError)
         response
           .status(HttpCodes.Conflict)
-          .json(this.Error_Conflict(String(error)));
+          .json(this.Error_Conflict(error.message));
       else response.status(HttpCodes.BadRequest).json(this.Error_BadRequest);
     }
   }
@@ -177,7 +177,7 @@ export class UrlController
       .catch((error) => {
         response
           .status(HttpCodes.BadRequest)
-          .json(this.Error_BadRequest(String(error)));
+          .json(this.Error_BadRequest(error.message));
       });
   }
 }
