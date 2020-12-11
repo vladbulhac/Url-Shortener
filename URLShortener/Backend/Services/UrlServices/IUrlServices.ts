@@ -1,5 +1,3 @@
-import { Url } from "../../Models/Url.model";
-
 export abstract class IUrlServices {
   abstract CreateUrlByUser(
     userId: string,
