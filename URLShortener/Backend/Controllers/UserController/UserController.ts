@@ -65,7 +65,7 @@ export class UserController
       .catch((error) => {
         response
           .status(HttpCodes.BadRequest)
-          .json(this.Error_BadRequest(String(error)));
+          .json(this.Error_BadRequest(error.message));
       });
   }
 
@@ -80,7 +80,7 @@ export class UserController
       .catch((error) => {
         response
           .status(HttpCodes.BadRequest)
-          .json(this.Error_BadRequest(String(error)));
+          .json(this.Error_BadRequest(error.message));
       });
   }
 
@@ -99,7 +99,7 @@ export class UserController
       .catch((error) => {
         response
           .status(HttpCodes.BadRequest)
-          .json(this.Error_BadRequest(String(error)));
+          .json(this.Error_BadRequest(error.message));
       });
   }
 
@@ -121,7 +121,7 @@ export class UserController
       .catch((error) => {
         response
           .status(HttpCodes.BadRequest)
-          .json(this.Error_BadRequest(String(error)));
+          .json(this.Error_BadRequest(error.message));
       });
   }
 
@@ -136,7 +136,7 @@ export class UserController
       .catch((error) => {
         response
           .status(HttpCodes.BadRequest)
-          .json(this.Error_BadRequest(String(error)));
+          .json(this.Error_BadRequest(error.message));
       });
   }
 }
