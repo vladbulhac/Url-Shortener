@@ -181,13 +181,13 @@ describe("user controller endpoint /users", () => {
 
 describe("url controller endpoint /", () => {
   describe("/POST", () => {
-    it("should add url:https://github.com/remy/nodemon#nodemon to database and return its short version: WutmF", () => {
+    it("should add url:https://github.com/remy/nodemon#nodemon to database and return its short version: WvunF", () => {
       return request(application)
         .post("/v1/urls")
         .expect(201)
         .send({ data: { url: UrlData.data[0] } })
         .then((response) => {
-          expect(response.body.data.url).to.be.equal("WutmF");
+          expect(response.body.data.url).to.be.equal("WvunF");
         });
     });
 
@@ -299,8 +299,8 @@ describe("url controller endpoint /", () => {
                 .set("Accept", "application/json")
                 .set({ Authorization: `Bearer ${token}` })
                 .expect(200)
-                .then(() => {
-                    request(application)
+                .then(async() => {
+                  await request(application)
                     .get("/v1/users/" + id)
                     .set("Content-Type", "application/json")
                     .set("Accept", "application/json")
@@ -310,20 +310,20 @@ describe("url controller endpoint /", () => {
                       const user: User = response.body.data.user;
                       expect(
                         user.urlHistory![user.urlHistory!.length - 1]
-                      ).to.contain("https://stackoverflow.com/");
+                      ).to.equal("https://stackoverflow.com/");
                     });
                 });
             });
         });
     });
     describe("/GET", () => {
-      it("should return status code 200 and the original url:https://github.com/remy/nodemon#nodemon after an anonymous request for url:WutmF", () => {
+      it("should return status code 200 and the original url:https://github.com/remy/nodemon#nodemon after an anonymous request for url:WvunF", () => {
         return request(application)
           .post("/v1/urls")
           .expect(201)
           .send({ data: { url: UrlData.data[0] } })
           .then(async (response) => {
-            expect(response.body.data.url).to.be.equal("WutmF");
+            expect(response.body.data.url).to.be.equal("WvunF");
             const url: string = response.body.data.url;
             await request(application)
               .get("/v1/urls/" + url)

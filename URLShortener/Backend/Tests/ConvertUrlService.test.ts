@@ -8,7 +8,7 @@ const UrlData=require('./Resources/UrlTestData.json');
 
 describe("Long URL convert to Short URL",()=>{
 
-    it("Should take url: https://github.com/remy/nodemon#nodemon and return WutmF",(done)=>{
+    it("Should take url: https://github.com/remy/nodemon#nodemon and return WvunF",(done)=>{
         //Arrange
         let ucs:IUrlConversionService=new UrlConversionService();
         let url:string=UrlData.data[0];
@@ -16,7 +16,7 @@ describe("Long URL convert to Short URL",()=>{
         let shortUrl:string=ucs.ShortUrl(url);
         //Assert
         expect(shortUrl).to.be.not.null;
-        expect(shortUrl).to.be.equal("WutmF");
+        expect(shortUrl).to.be.equal("WvunF");
         done();
     });
 });
