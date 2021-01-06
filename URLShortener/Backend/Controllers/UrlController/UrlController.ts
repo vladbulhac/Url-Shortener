@@ -173,8 +173,10 @@ export class UrlController
     this.UrlRepository.DeleteByIdentifier(url)
       .then(() => {
         response.status(HttpCodes.NoContent);
+        this.CacheService.Delete(url);
       })
       .catch((error) => {
+        console.log(error);
         response
           .status(HttpCodes.BadRequest)
           .json(this.Error_BadRequest(error.message));
