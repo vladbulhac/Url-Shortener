@@ -12,6 +12,7 @@ export function ValidateEnv():void{
         DB_URLDISABLE_SCHEDULECRON:str(),
         MONGO_USER:str(),
         MONGO_PASSWORD:str(),
-        MONGO_PATH:str()
+        MONGO_PATH:str(),
+        URL_CONVERSIONCHARACTERS:str()
     });
 }
