@@ -9,6 +9,7 @@ export function ValidateEnv():void{
         CACHE_PERIODIC_UPDATE_MINUTES:num(),
         URL_TTLINCREASE_DAYS:num(),
         URL_TTLINCREASE_EXTENDED_DAYS:num(),
+        DB_URLDISABLE_SCHEDULECRON:str(),
         MONGO_USER:str(),
         MONGO_PASSWORD:str(),
         MONGO_PATH:str()
