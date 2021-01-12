@@ -1,12 +1,12 @@
 # Url Shortener
 
 #### Backend
-* REST API using NodeJs, Typescript, ExpressJs
+* REST API using Node.js, TypeScript, Express.js
 * NoSql Database: MongoDB
 * Object Document Mapper: Mongoose with Typegoose library
-* Task scheduler: Node Cron
+* Task scheduler: Node-Cron
 * Cache: Redis 
-* Authentication: JsonWebTokens
+* Authentication: JSONWebTokens
 * Tests:
    - Mocha
    - Chai
