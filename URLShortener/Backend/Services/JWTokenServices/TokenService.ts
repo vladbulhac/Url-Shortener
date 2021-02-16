@@ -1,18 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import { HttpCodes } from "../../Utils/HttpCodes.enum";
-import { HttpStatusResponse } from "../../Utils/HttpStatusResponse";
+import { IError } from "../../Utils/IError";
 import { ITokenService } from "./ITokenService";
- require("dotenv").config();
+require("dotenv").config();
 
-export class TokenService extends HttpStatusResponse implements ITokenService {
-
-  constructor() {
-    super();
-  }
-
+export class TokenService implements ITokenService {
   public Create(userId: string): string {
-    const secret:string=process.env.JWT_SECRET!;
+    const secret: string = process.env.JWT_SECRET!;
     const token: string = jwt.sign({ id: userId }, secret, {
       expiresIn: +process.env.JWT_DURATION_SECONDS!,
     });
@@ -24,25 +19,34 @@ export class TokenService extends HttpStatusResponse implements ITokenService {
     request: Request,
     response: Response,
     next: NextFunction
-  ): void{
+  ): void {
     let headerData: string | undefined = request.headers["authorization"];
     if (headerData !== undefined) {
       let headerSplit: string[] = headerData.split(" ");
       let tokenData: string = headerSplit[1];
-      const secret:string=process.env.JWT_SECRET!;
-      
+      const secret: string = process.env.JWT_SECRET!;
+
       jwt.verify(tokenData, secret, (error, decoded) => {
         if (error) {
-          response
-            .status(HttpCodes.Unauthorized)
-            .json(this.Error_Unauthorized(String(error)));
+          const errorResponse: IError = {
+            error: {
+              message: String(error),
+              errorCode: HttpCodes.Unauthorized,
+            },
+          };
+          response.status(HttpCodes.Unauthorized).json(errorResponse);
           return;
-        } else if (decoded)next();
+        } else if (decoded) next();
       });
-    } else
-      response
-        .status(HttpCodes.Unauthorized)
-        .json(this.Error_Unauthorized("Token has not been provided"));
-    return;
+    } else {
+      const errorResponse: IError = {
+        error: {
+          message: "Token has not been provided",
+          errorCode: HttpCodes.Unauthorized,
+        },
+      };
+      response.status(HttpCodes.Unauthorized).json(errorResponse);
+      return;
+    }
   }
 }

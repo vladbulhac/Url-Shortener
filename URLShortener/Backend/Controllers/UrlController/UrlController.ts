@@ -8,12 +8,10 @@ import { IUrlServices } from "../../Services/UrlServices/IUrlServices";
 import { ConflictError } from "../../Utils/CustomErrors/Conflict.error";
 import { NotFoundError } from "../../Utils/CustomErrors/NotFound.error";
 import { HttpCodes } from "../../Utils/HttpCodes.enum";
-import { HttpStatusResponse } from "../../Utils/HttpStatusResponse";
-import { IUrlController } from "./IUrlController";
+import { UrlControllerBase } from "./UrlControllerBase";
 
 export class UrlController
-  extends HttpStatusResponse
-  implements IUrlController {
+  extends UrlControllerBase {
   public Path: string = "/v1/urls";
   public Router: Router;
 
@@ -86,10 +84,11 @@ export class UrlController
 
     try {
       const url: string | null = await this.UrlServices.GetUrl(reqUrl);
-      response.status(HttpCodes.Ok).json({ data: { url: url } });
-      
+
       await this.UrlRepository.UpdateTTL(reqUrl);
       await this.UserRepository.UpdateHistory(userId, url);
+
+      response.status(HttpCodes.Ok).json({ data: { url: url } });
     } catch (error) {
       if (error instanceof NotFoundError)
         response

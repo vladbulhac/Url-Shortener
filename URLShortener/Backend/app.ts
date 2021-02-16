@@ -5,8 +5,8 @@ import helmet from "helmet";
 import mongoose from "mongoose";
 import * as cron from "node-cron";
 import { Inject } from "typescript-ioc";
-import { IUrlController } from "./Controllers/UrlController/IUrlController";
-import { IUserController } from "./Controllers/UserController/IUserController";
+import { UrlControllerBase } from "./Controllers/UrlController/UrlControllerBase";
+import { UserControllerBase } from "./Controllers/UserController/UserControllerBase";
 import { IUrlRepository } from "./Repositories/UrlRepositories/IUrlRepository";
 import { ICacheService } from "./Services/CacheServices/ICacheService";
 import { IocContainerConfig } from "./Utils/IoC/IocContainer.config";
@@ -19,9 +19,9 @@ export class Application {
   @Inject
   private UrlRepository!: IUrlRepository;
   @Inject
-  private UrlController!: IUrlController;
+  private UrlController!: UrlControllerBase;
   @Inject
-  private UserController!: IUserController;
+  private UserController!: UserControllerBase;
   @Inject
   private CacheService!: ICacheService;
 

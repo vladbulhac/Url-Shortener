@@ -1,6 +1,10 @@
-import { IError } from "./IErrorBody";
+import { Router } from "express";
+import { IError } from "../Utils/IError";
 
-export abstract class HttpStatusResponse {
+export abstract class ControllerBase {
+  abstract Router: Router;
+  abstract Path: string;
+
   private RespondWith_MessageAndCode(
     message: string,
     errorCode: number

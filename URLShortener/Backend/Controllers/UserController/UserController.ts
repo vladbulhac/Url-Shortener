@@ -6,12 +6,10 @@ import { ICacheService } from "../../Services/CacheServices/ICacheService";
 import { ITokenService } from "../../Services/JWTokenServices/ITokenService";
 import { IUserServices } from "../../Services/UserServices/IUserServices";
 import { HttpCodes } from "../../Utils/HttpCodes.enum";
-import { HttpStatusResponse } from "../../Utils/HttpStatusResponse";
-import { IUserController } from "./IUserController";
+import { UserControllerBase } from "./UserControllerBase";
 
 export class UserController
-  extends HttpStatusResponse
-  implements IUserController {
+  extends UserControllerBase {
   public Path: string = "/v1/users";
   public Router: Router;
 

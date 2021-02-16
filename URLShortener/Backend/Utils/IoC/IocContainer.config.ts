@@ -1,6 +1,6 @@
-import { Container } from "typescript-ioc";
-import { IUrlController } from "../../Controllers/UrlController/IUrlController";
-import { IUserController } from "../../Controllers/UserController/IUserController";
+import { Container, } from "typescript-ioc";
+import { UrlControllerBase } from "../../Controllers/UrlController/UrlControllerBase";
+import { UserControllerBase } from "../../Controllers/UserController/UserControllerBase";
 import { UrlController } from "../../Controllers/UrlController/UrlController";
 import { UserController } from "../../Controllers//UserController/UserController";
 import { IUrlRepository } from "../../Repositories/UrlRepositories/IUrlRepository";
@@ -26,8 +26,8 @@ export class IocContainerConfig {
     Container.bind(ITokenService).to(TokenService);
     Container.bind(IUrlConversionService).to(UrlConversionService);
     Container.bind(IUrlServices).to(UrlServices);
-    Container.bind(IUrlController).to(UrlController);
-    Container.bind(IUserController).to(UserController);
+    Container.bind(UrlControllerBase).to(UrlController);
+    Container.bind(UserControllerBase).to(UserController);
     Container.bind(IUserServices).to(UserServices);
   }
 }
