@@ -1,5 +1,5 @@
-#Backend
-##Requirements
+# Backend
+## Requirements
 Add a .env file in the Backend folder with the following fields that must be filled in with values that correspond with the type in parentheses:
 
 ```
@@ -17,11 +17,11 @@ MONGO_PASSWORD= (string)
 MONGO_PATH=@(*****)/test?retryWrites=true&w=majority
 URL_CONVERSIONCHARACTERS= (string)
 
-> * [Use the syntax from here](https://www.npmjs.com/package/node-cron)
-> ***** [Cluster name provided by MongoDB](https://docs.atlas.mongodb.com/tutorial/create-new-cluster/)
+For (*) [Use the syntax from here](https://www.npmjs.com/package/node-cron)
+For (*****) [Use the cluster name provided by MongoDB](https://docs.atlas.mongodb.com/tutorial/create-new-cluster)
 ```
 
-##Run
+## Run
 `npm run dev`
-##Test
+## Test
 `npm run test`
