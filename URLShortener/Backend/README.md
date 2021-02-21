@@ -17,8 +17,8 @@ MONGO_PASSWORD= (string)
 MONGO_PATH=@(*****)/test?retryWrites=true&w=majority
 URL_CONVERSIONCHARACTERS= (string)
 
-For (*) [Use the syntax from here](https://www.npmjs.com/package/node-cron)
-For (*****) [Use the cluster name provided by MongoDB](https://docs.atlas.mongodb.com/tutorial/create-new-cluster)
+For (*) Use the syntax described here -> https://www.npmjs.com/package/node-cron
+For (*****) Use the cluster name provided by MongoDB -> https://docs.atlas.mongodb.com/tutorial/create-new-cluster
 ```
 
 ## Run
